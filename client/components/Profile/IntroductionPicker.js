@@ -1,0 +1,55 @@
+import React, { useRef, useState, useEffect } from "react";
+import { View, TouchableOpacity, Text, Image, TextInput } from "react-native";
+
+import pen from "../../assets/images/pen.png";
+import check from "../../assets/images/check.png";
+
+const IntroductionPicker = ({ introduction, setIntroduction, placeholder }) => {
+  const [isEditing, setIsEditing] = useState(false);
+
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (isEditing && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isEditing]);
+
+  const toggleVisibility = () => {
+    setIsEditing(!isEditing);
+  };
+
+  return (
+    <View className="flex">
+      <View className="relative flex flex-row justify-start items-center w-full">
+        <Text className=" text-2xl text-black font-garamond-semibold mr-2 text-center">Introduction</Text>
+
+        <TouchableOpacity
+          onPress={() => {
+            toggleVisibility();
+          }}
+          className=" border-[1px] border-gray-400 p-[6px] rounded-full bg-white"
+        >
+          <Image source={isEditing ? check : pen} className="w-5 h-5 aspect-square" />
+        </TouchableOpacity>
+      </View>
+
+      <Text className={`text-lg text-black font-garamond mr-2 ${isEditing && "hidden"} ${introduction === "" && " opacity-50"}`}>{introduction === "" ? placeholder : introduction}</Text>
+
+      <TextInput
+        ref={inputRef}
+        multiline={true}
+        value={introduction}
+        onBlur={() => {
+          setIsEditing(false);
+        }}
+        onChangeText={(text) => {
+          setIntroduction(text);
+        }}
+        className={`text-lg text-black font-garamond mr-2 ${!isEditing && "h-1 w-1"}`}
+      />
+    </View>
+  );
+};
+
+export default IntroductionPicker;
