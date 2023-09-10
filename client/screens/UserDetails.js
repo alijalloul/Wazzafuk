@@ -23,7 +23,9 @@ const UserDetails = ({ route, navigation }) => {
         <Text className=" font-garamond text-center text-5xl text-white">{user?.name}</Text>
       </View>
 
-      <View className="p-32 rounded-full bg-gray-300"></View>
+      <View style={{ width: 250, height: 250 }}>
+        <Image source={{ uri: user.image }} className="rounded-full w-full h-full" />
+      </View>
 
       <Text className=" font-garamond text-center text-xl ">{user?.profession}</Text>
 
@@ -67,7 +69,7 @@ const UserDetails = ({ route, navigation }) => {
 
           <View>
             {user?.education?.length > 0 ? (
-              user?.education.map((educ, index) => (
+              user?.education?.map((educ, index) => (
                 <View key={index} className="relative w-full border-[1px] rounded-2xl p-5 pt-3 pr-3 mb-4">
                   <View className="flex flex-row w-full justify-end items-center"></View>
                   <Text className=" font-garamond text-3xl">
@@ -78,7 +80,7 @@ const UserDetails = ({ route, navigation }) => {
                   <Text className=" font-garamond text-[15px] opacity-70 mb-3">
                     {educ.startYear} -{educ.endYear}
                   </Text>
-                  <Text className=" font-garamond text-lg opacity-70">{education.note}</Text>
+                  <Text className=" font-garamond text-lg opacity-70">{educ.note}</Text>
                 </View>
               ))
             ) : (
@@ -94,8 +96,8 @@ const UserDetails = ({ route, navigation }) => {
             Languages
           </Text>
           <View>
-            {user?.languageArr?.length > 0 ? (
-              user?.languageArr.map((langArr, index) => (
+            {user?.language?.length > 0 ? (
+              user?.language.map((langArr, index) => (
                 <View key={index} className="relative w-full py-3 border-t-[1px] border-b-[1px] mb-4">
                   <View className="flex flex-row justify-center items-center">
                     <View

@@ -11,8 +11,9 @@ const Intoducation = ({ navigation }) => {
   const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.user.userInfo);
 
-  const [professionalRole, setProffesionalRole] = useState("");
-  const [introduction, setIntroduction] = useState("");
+  const [image, setImage] = useState(userInfo?.image || "");
+  const [professionalRole, setProffesionalRole] = useState(userInfo?.profession || "");
+  const [introduction, setIntroduction] = useState(userInfo?.introduction || "");
 
   return (
     <ScrollView
@@ -27,23 +28,14 @@ const Intoducation = ({ navigation }) => {
         <Text className=" text-[20px] font-garamond mb-5">We will need you to fill out some information to get to know you better.</Text>
 
         <View className="w-full flex justify-center items-center mb-2">
-          <UploadImage width={150} isButton={true} />
+          <UploadImage width={150} isButton={true} image={image} setImage={setImage} />
         </View>
 
         <View className="mb-4">
-          <RenderTextInput
-            isForm={false}
-            isNumpad={false}
-            isMultiline={false}
-            title="Professional Role"
-            value={professionalRole}
-            setValue={setProffesionalRole}
-            placeholder="Ex: Web Developer | Translator"
-          />
+          <RenderTextInput isNumpad={false} isMultiline={false} title="Professional Role" value={professionalRole} setValue={setProffesionalRole} placeholder="Ex: Web Developer | Translator" />
         </View>
         <View className="mb-4">
           <RenderTextInput
-            isForm={false}
             isMultiline={true}
             title="Introduction"
             value={introduction}
@@ -58,12 +50,14 @@ const Intoducation = ({ navigation }) => {
               editUser(
                 {
                   ...userInfo,
+                  image: image,
                   profession: professionalRole,
                   introduction: introduction,
                 },
+                "work",
+                navigation,
                 dispatch
               );
-              navigation.navigate("work");
             }}
             className="w-32 bottom-0 right-0 mb-3 bg-[#FE6F07] rounded-xl px-10 py-2"
           >

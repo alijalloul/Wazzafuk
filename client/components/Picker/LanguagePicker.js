@@ -13,9 +13,12 @@ const LanguagePicker = ({ headerSize, headerText, languageArr, setLanguageArr })
   const [language, setLanguage] = useState("");
   const [proficiency, setProficiency] = useState("");
 
+  const [languageError, setLanguageError] = useState(false);
+  const [proficiencyError, setProficiencyError] = useState(false);
+
   const [languageIndex, setLanguageIndex] = useState(null);
 
-  const proficiencies = ["Basic", "Conversational", "Intermediate", "Fluent", "Native"];
+  const proficiencies = ["Basic", "Intermediate", "Fluent", "Native"];
 
   const languages = [
     "Español",
@@ -63,9 +66,48 @@ const LanguagePicker = ({ headerSize, headerText, languageArr, setLanguageArr })
     "Polski",
   ];
 
+  const handleSave = () => {
+    let error = false;
+
+    if (language.trim() === "") {
+      setLanguageError(true);
+      error = true;
+    }
+    if (proficiency.trim() === "") {
+      setProficiencyError(true);
+      error = true;
+    }
+
+    if (!error) {
+      isEditing
+        ? setLanguageArr(
+            languageArr.map((languageArr, index) =>
+              index === languageIndex
+                ? {
+                    language: language,
+                    proficiency: proficiency,
+                  }
+                : languageArr
+            )
+          )
+        : setLanguageArr([
+            ...languageArr,
+            {
+              language: language,
+              proficiency: proficiency,
+            },
+          ]);
+
+      setLanguage("");
+      setProficiency("");
+
+      setBottomSheetVisible(false);
+      setIsEditing(false);
+    }
+  };
   return (
     <View className="flex-1 w-full">
-      <View className="flex-1 w-[90%] self-center">
+      <View className="flex-1 w-full self-center">
         <Text style={{ fontSize: headerSize }} className=" font-garamond-semibold mb-5">
           {headerText}
         </Text>
@@ -155,44 +197,33 @@ const LanguagePicker = ({ headerSize, headerText, languageArr, setLanguageArr })
           >
             <View className="w-[90%]">
               <View className="mb-5">
-                <Text className="text-[20px] font-garamond mb-2">Language *</Text>
-
-                <SingleSelectorModal isForm={false} data={languages} value={language} setValue={setLanguage} />
+                <SingleSelectorModal
+                  title="Language *"
+                  data={languages}
+                  value={language}
+                  setValue={setLanguage}
+                  isError={languageError}
+                  setIsError={setLanguageError}
+                  errorMessage="This field can not be empty"
+                />
               </View>
 
               <View className="mb-5">
-                <Text className="text-[20px] font-garamond mb-2">Proficiency *</Text>
-
-                <SingleSelectorModal isForm={false} data={proficiencies} value={proficiency} setValue={setProficiency} />
+                <SingleSelectorModal
+                  title="Proficiency *"
+                  data={proficiencies}
+                  value={proficiency}
+                  setValue={setProficiency}
+                  isError={proficiencyError}
+                  setIsError={setProficiencyError}
+                  errorMessage="This field can not be empty"
+                />
               </View>
 
               <View className="w-full flex justify-center items-end mb-4">
                 <TouchableOpacity
                   onPress={() => {
-                    isEditing
-                      ? setLanguageArr(
-                          languageArr.map((languageArr, index) =>
-                            index === languageIndex
-                              ? {
-                                  language: language,
-                                  proficiency: proficiency,
-                                }
-                              : languageArr
-                          )
-                        )
-                      : setLanguageArr([
-                          ...languageArr,
-                          {
-                            language: language,
-                            proficiency: proficiency,
-                          },
-                        ]);
-
-                    setLanguage("");
-                    setProficiency("");
-
-                    setBottomSheetVisible(false);
-                    setIsEditing(false);
+                    handleSave();
                   }}
                   className="w-32 bottom-0 right-0 bg-[#FE6F07] rounded-xl px-10 py-2"
                 >

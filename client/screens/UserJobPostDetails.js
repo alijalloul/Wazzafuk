@@ -1,54 +1,55 @@
+import moment from "moment";
 import React from "react";
-import { Text, View, ScrollView, TouchableOpacity } from "react-native";
+import { Text, View, ScrollView, TouchableOpacity, Image } from "react-native";
 import { useSelector } from "react-redux";
 
 const UserJobPostDetails = ({ route, navigation }) => {
-  const baseURL = "http://192.168.1.10:5000";
+  const baseURL = "http://192.168.0.8:5000";
 
   const { itemId } = route.params;
 
   const employees = useSelector((state) => state.user.employeesByJobId);
-  const post = useSelector((state) => state.user.jobPosts).filter((item) => item._id === itemId && item)[0];
+  const job = useSelector((state) => state.user.jobPosts).filter((item) => item._id === itemId && item)[0];
 
   return (
     <ScrollView className=" bg-white" contentContainerStyle={{ flexGrow: 1, justifyContent: "center", alignItems: "center" }}>
       <View className=" w-full items-center mb-10">
         <View className=" w-[90%] mb-8 ">
           <View className="mb-8">
-            <Text className=" font-garamond-semibold text-4xl">{post?.jobTitle}</Text>
-            <Text className=" font-garamond text-[15px] opacity-50">posted 2 hourse ago</Text>
+            <Text className=" font-garamond-semibold text-4xl">{job?.jobTitle}</Text>
+            <Text className=" font-garamond text-[15px] opacity-50">{moment(job?.date).fromNow()}</Text>
           </View>
 
           <View className="flex flex-row justify-between items-center mb-8">
             <Text className=" font-garamond text-lg">
-              {post?.location}-{post?.country}
+              {job?.location}-{job?.country}
             </Text>
-            <Text className=" font-garamond text-lg">{post?.experienceRequired}</Text>
+            <Text className=" font-garamond text-lg">{job?.experienceRequired}</Text>
           </View>
 
-          <Text className=" font-garamond text-lg">{post?.description}</Text>
+          <Text className=" font-garamond text-lg">{job?.description}</Text>
         </View>
 
-        <View className="w-full flex justify-between items-center py-6 border-t-[1px]">
+        <View className="w-full flex justify-between items-center py-3 border-t-[1px]">
           <View className="w-[90%] flex flex-row justify-between items-center">
             <Text className=" font-garamond text-lg">Job Type</Text>
-            <Text className=" font-garamond text-lg">{post?.type}</Text>
+            <Text className=" font-garamond text-lg">{job?.jobType}</Text>
           </View>
         </View>
 
-        <View className="w-full flex justify-between items-center py-6 border-t-[1px]">
+        <View className="w-full flex justify-between items-center py-3 border-t-[1px]">
           <View className="w-[90%] flex flex-row justify-between items-center">
             <Text className=" font-garamond text-lg">Category</Text>
-            <Text className=" font-garamond text-lg">{post?.category}</Text>
+            <Text className=" font-garamond text-lg">{job?.category}</Text>
           </View>
         </View>
 
         <View className="w-full flex justify-center items-center py-6 border-y-[1px] ">
           <View className="w-[90%]">
-            <Text className=" font-garamond text-lg">Skills</Text>
+            <Text className=" font-garamond text-lg mb-2">Skills</Text>
             <View className="flex flex-row flex-wrap">
-              {post?.skills.length > 0 &&
-                post?.skills.map((skill, index) => (
+              {job?.skills.length > 0 &&
+                job?.skills.map((skill, index) => (
                   <View className="inline-block px-2 py-2 rounded-2xl mr-2 mb-2 bg-[#ff8d3c]" key={index.toString()}>
                     <Text className="text-white">{skill}</Text>
                   </View>
@@ -66,22 +67,26 @@ const UserJobPostDetails = ({ route, navigation }) => {
                 navigation.navigate("userDetails", { userId: employee._id });
               }}
               key={index}
-              className="w-[90%] px-4 flex-1 flex-row justify-between items-center rounded-md border-2 h-32 mb-3"
+              className="w-[90%] px-4 flex-row items-center rounded-full border-[1px] h-32 mb-3"
             >
-              <View className="bg-gray-300 rounded-full p-10 mr-2"></View>
+              <View className=" w-20 h-20 mr-2">
+                <Image source={{ uri: employee.image }} className="rounded-full w-full h-full" />
+              </View>
 
-              <View className="flex-1">
+              <View className="">
                 <View className="mb-5">
                   <Text className=" font-garamond text-lg ">{employee.name}</Text>
                   <Text className=" font-garamond opacity-50 text-sm">posted 3hr ago</Text>
                 </View>
 
-                <Text className=" font-garamond">{employee.coverLetter || "fds hflkdshfjlkds jhfkjd dfdsf hfoiewjflk"}</Text>
+                <Text className=" font-garamond">{employee.coverLetter}</Text>
               </View>
             </TouchableOpacity>
           ))
         ) : (
-          <Text>No one has applied yet. Refresh the page in order to update the lise.</Text>
+          <View className="w-[90%] items-center'">
+            <Text className=" font-garamond opacity-50">No one has applied yet. Refresh the page in order to update the lise.</Text>
+          </View>
         )}
       </View>
     </ScrollView>

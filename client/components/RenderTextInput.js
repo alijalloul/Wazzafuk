@@ -4,7 +4,7 @@ import { View, Text, TextInput, Image } from "react-native";
 const RenderTextInput = ({ isMultiline, isNumpad, title, icon, value, setValue, placeholder, isError, setIsError, errorMessage }) => {
   return (
     <View>
-      <Text className={`text-[20px] font-garamond mb-2 ${!title && "hidden"}`}>{title}</Text>
+      <Text className={`text-[20px] font-garamond mb-2 ${!title && "hidden"} ${isError && "text-red-500"}`}>{title}</Text>
 
       <View className={`w-full border-[1px] ${isError ? "border-red-500" : "border-gray-500"}  rounded-lg flex flex-row items-center`}>
         <Image source={icon} className={`w-5 aspect-square ml-4 ${!icon && "hidden"}`} />
@@ -13,11 +13,12 @@ const RenderTextInput = ({ isMultiline, isNumpad, title, icon, value, setValue, 
           multiline={isMultiline}
           keyboardType={isNumpad ? "number-pad" : "default"}
           onChangeText={(text) => {
-            setIsError(false);
+            isError && setIsError(false);
             setValue(text);
           }}
           placeholder={placeholder}
-          className="w-full p-2 min-h-[40px] font-garamond"
+          textAlignVertical={isMultiline ? "top" : "center"}
+          className="w-full p-2 min-h-[40px] font-garamond "
         />
       </View>
 

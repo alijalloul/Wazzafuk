@@ -3,8 +3,9 @@ import { View, Image, Text, TouchableOpacity, TextInput, FlatList } from "react-
 import Modal from "react-native-modal";
 
 import downVector from "../assets/images/downVector.png";
+import downVectorRed from "../assets/images/downVectorRed.png";
 
-const SingleSelectorModal = ({ isForm, data, value, setValue, fieldName }) => {
+const SingleSelectorModal = ({ title, data, value, setValue, isError, setIsError, errorMessage }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -13,7 +14,8 @@ const SingleSelectorModal = ({ isForm, data, value, setValue, fieldName }) => {
       <View className="flex flex-row justify-start items-center pb-4 mb-4 border-b-[1px]">
         <TouchableOpacity
           onPress={() => {
-            isForm ? setValue((prevData) => ({ ...prevData, [fieldName]: item })) : setValue(item);
+            setValue(item);
+            isError && setIsError(false);
             setIsVisible(false);
             setSearch("");
           }}
@@ -28,17 +30,22 @@ const SingleSelectorModal = ({ isForm, data, value, setValue, fieldName }) => {
   const filteredData = data.filter((item) => item.toLowerCase().includes(search.toLowerCase()));
 
   return (
-    <View className="flex flex-row justify-between items-center w-full h-12">
-      <TouchableOpacity
-        onPress={() => {
-          setIsVisible(true);
-        }}
-        className="border-[1px] p-2 w-full rounded-lg flex flex-row justify-between items-center"
-      >
-        <Text className="text-[20px] font-garamond">{value ? value : "_ _ _"}</Text>
-        <Image source={downVector} className=" w-5 aspect-[2/1]" />
-      </TouchableOpacity>
+    <View className="flex w-full">
+      <Text className={`text-[20px] font-garamond mb-2 ${isError && "text-red-500"} ${!title && "hidden"}`}>{title}</Text>
 
+      <View className="w-full">
+        <TouchableOpacity
+          onPress={() => {
+            setIsVisible(true);
+          }}
+          className={`${isError && "border-red-500"} border-[1px] p-2 w-full rounded-lg flex flex-row justify-between items-center`}
+        >
+          <Text className={`text-[20px] font-garamond ${isError && "text-red-500"}`}>{value ? value : "_ _ _"}</Text>
+          <Image source={isError ? downVectorRed : downVector} className=" w-5 aspect-[2/1]" />
+        </TouchableOpacity>
+
+        <Text className={` font-garamond text-sm text-red-500 ${!isError && "hidden"}`}>{errorMessage}</Text>
+      </View>
       <Modal isVisible={isVisible} animationInTiming={700} className="m-0 mt-10 rounded-t-xl">
         <View className=" flex-1 justify-center bg-white">
           <View className={`mb-5 w-full flex flex-row px-5 justify-between items-center ${isVisible && "border-b-[1px]"}`}>

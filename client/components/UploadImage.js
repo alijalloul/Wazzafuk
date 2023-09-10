@@ -10,15 +10,18 @@ const UploadImage = ({ width, isButton, image, setImage }) => {
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
-      base64: true,
     });
 
-    if (!_image.cancelled) {
-      const resizedImage = await ImageManipulator.manipulateAsync(_image.uri, [{ resize: { width: 512, height: 512 } }], { compress: 1, format: "jpeg" });
-      setImage(resizedImage.uri);
+    if (!_image.canceled) {
+      const resizedImage = await ImageManipulator.manipulateAsync(_image.assets[0].uri, [{ resize: { width: 512, height: 512 } }], { base64: true, compress: 1, format: "jpeg" });
+
+      setImage(`data:image/jpeg;base64,${resizedImage.base64}`);
     }
   };
 
+  const removeImage = () => {
+    setImage("");
+  };
   return (
     <View className="flex justify-center items-center">
       <TouchableWithoutFeedback
@@ -30,9 +33,23 @@ const UploadImage = ({ width, isButton, image, setImage }) => {
           {image && <Image source={{ uri: image }} className="w-full h-full" />}
         </View>
       </TouchableWithoutFeedback>
-      <View className={`bg-white border-[1px] border-[#FE6F07] rounded-xl px-2 py-1 ${!isButton && "hidden"}`}>
-        <TouchableOpacity onPress={addImage} className="flex items-center justify-center">
+      <View className="flex flex-row mb-2">
+        <TouchableOpacity
+          onPress={() => {
+            addImage();
+          }}
+          className={`${isButton ? "flex items-center justify-center bg-white border-[1px] border-[#FE6F07] w-24 py-2 rounded-xl mr-2 " : "hidden"}`}
+        >
           <Text className="text-[15px] font-garamond text-[#FE6F07]">{image ? "Edit" : "+ Add Image"}</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => {
+            removeImage();
+          }}
+          className={` ${image ? "flex items-center justify-center bg-white border-[1px] border-red-500 w-24 py-2 rounded-xl" : "hidden"}`}
+        >
+          <Text className="text-[15px] font-garamond text-red-500">Remove</Text>
         </TouchableOpacity>
       </View>
     </View>

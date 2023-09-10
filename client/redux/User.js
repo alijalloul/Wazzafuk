@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const baseURL = "http://192.168.1.10:5000";
+const baseURL = "http://192.168.0.8:5000";
 
 const userSlice = createSlice({
   name: "user",
@@ -31,9 +31,13 @@ const userSlice = createSlice({
       state.pending = false;
       state.jobPosts.push(action.payload);
     },
+    updatePostSuccess: (state, action) => {
+      state.pending = false;
+      state.jobPosts = state.jobPosts.map((job) => (job._id === action.payload._id ? action.payload : job));
+    },
     deleteSuccess: (state, action) => {
       state.pending = false;
-      state.postsInfo = state.postsInfo.filter((post) => post._id !== action.payload);
+      state.jobPosts = state.jobPosts.filter((post) => post._id !== action.payload);
     },
     editSuccess: (state, action) => {
       state.pending = false;
@@ -65,11 +69,19 @@ const userSlice = createSlice({
   },
 });
 
-export const editUser = async (userInfo, dispatch) => {
+export const editUser = async (userInfo, screenName, navigation, dispatch) => {
   dispatch(userSlice.actions.startAPI());
 
   try {
     dispatch(userSlice.actions.editSuccess(userInfo));
+
+    if (screenName) {
+      const token = JSON.parse(await AsyncStorage.getItem("profile"))?.token;
+      await AsyncStorage.setItem("profile", JSON.stringify({ result: userInfo, token: token }));
+      await AsyncStorage.setItem("screenName", screenName);
+
+      navigation?.navigate(screenName);
+    }
   } catch (error) {
     dispatch(userSlice.actions.errorAPI());
     console.log("error: ", error);
@@ -91,6 +103,29 @@ export const createJobPost = async (postsInfo, dispatch) => {
     const data = await res.json();
 
     dispatch(userSlice.actions.createSuccess(data));
+  } catch (error) {
+    dispatch(userSlice.actions.errorAPI());
+    console.log("error: ", error);
+  }
+};
+export const updateJobPost = async (postsInfo, dispatch) => {
+  dispatch(userSlice.actions.startAPI());
+
+  try {
+    const token = JSON.parse(await AsyncStorage.getItem("profile")).token;
+
+    const res = await fetch(`${baseURL}/post`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(postsInfo),
+    });
+
+    const data = await res.json();
+
+    dispatch(userSlice.actions.updatePostSuccess(data));
   } catch (error) {
     dispatch(userSlice.actions.errorAPI());
     console.log("error: ", error);
@@ -132,7 +167,7 @@ export const signup = async (userInfo, navigation, dispatch) => {
     dispatch(userSlice.actions.loginSuccess(data));
 
     await AsyncStorage.setItem("profile", JSON.stringify({ ...data }));
-    await AsyncStorage.setItem("screenName", "CV");
+    await AsyncStorage.setItem("screenName", "contactInfo");
 
     navigation.navigate("verification");
   } catch (error) {
@@ -187,32 +222,13 @@ export const updateUser = async (newUser, navigation, dispatch) => {
   try {
     const token = JSON.parse(await AsyncStorage.getItem("profile")).token;
 
-    // let base64Data;
-    // if (newUser.uri) {
-    //   try {
-    //     console.log("dsaf");
-
-    //     const response = await fetch(newUser.uri);
-    //     const blob = await response.blob();
-    //     const reader = new FileReader();
-
-    //     reader.onloadend = () => {
-    //       base64Data = reader.result;
-    //     };
-
-    //     reader.readAsDataURL(blob);
-    //   } catch (error) {
-    //     console.error("Error converting to base64:", error);
-    //   }
-    // }
-
     const res = await fetch(`${baseURL}/user`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ ...newUser, pdf: setBase64Data }),
+      body: JSON.stringify(newUser),
     });
 
     const data = await res.json();
@@ -221,7 +237,7 @@ export const updateUser = async (newUser, navigation, dispatch) => {
 
     await AsyncStorage.setItem("profile", JSON.stringify({ result: data, token: token }));
 
-    //navigation.navigate("HomeTabs", { screen: "home" });
+    navigation.navigate("HomeTabs", { screen: "home" });
   } catch (error) {
     dispatch(userSlice.actions.errorAPI());
     console.log("error: ", error);
@@ -259,7 +275,6 @@ export const fetchJobsByEmployer = async (userId, page, dispatch) => {
 export const fetchPostsAplliedToByUser = async (userId, page, dispatch) => {
   dispatch(userSlice.actions.startAPI());
 
-  console.log("hello");
   try {
     const res = await fetch(`${baseURL}/employee/${userId}/${page}/posts`, {
       method: "GET",

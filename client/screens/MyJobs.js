@@ -2,7 +2,7 @@ import React, { memo, useState } from "react";
 import { View, TouchableOpacity, Text, ScrollView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
-import editUser from "../redux/User";
+import { editUser } from "../redux/User";
 
 import PostJobModal from "../components/PostJob/PostJobModal";
 import Pagination from "../components/Pagination";
@@ -28,7 +28,7 @@ const MyJobs = ({ navigation }) => {
           onPress={() => {
             setBottomSheetVisible(true);
           }}
-          className="self-end w-32 h-12 flex justify-center items-center mr-3 mb-3 bg-[#FE6F07] rounded-xl"
+          className={`${user?.type === "employee" ? "hidden" : "self-end w-32 h-12 flex justify-center items-center mr-3 mb-3 bg-[#FE6F07] rounded-xl"}`}
         >
           <Text className="text-lg font-garamond text-white">Post Job</Text>
         </TouchableOpacity>
@@ -47,9 +47,8 @@ const MyJobs = ({ navigation }) => {
   };
 
   return (
-    <ScrollView className=" bg-white">
+    <ScrollView className="bg-white" contentContainerStyle={{ flexGrow: 1, justifyContent: "center", alignItems: "center" }}>
       {user?.type === "employee" ? <EmployeeMyJobs /> : <EmployerMyJobs />}
-      <View></View>
     </ScrollView>
   );
 };

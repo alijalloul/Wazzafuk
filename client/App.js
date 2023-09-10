@@ -35,9 +35,18 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { editUser } from "./redux/User.js";
 import EmployeeJobDetails from "./screens/EmployeeJobDetails.js";
+import ContactInfo from "./screens/ContactInfo.js";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 const App = () => {
   const dispatch = useDispatch();
@@ -53,7 +62,7 @@ const App = () => {
 
         if (value) {
           setUser(JSON.parse(value).result);
-          editUser(JSON.parse(value).result, dispatch);
+          editUser(JSON.parse(value).result, null, null, dispatch);
           setScreenName(value2);
         }
       } catch (error) {
@@ -65,7 +74,7 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    console.log(user);
+    //console.log(user);
   }, [user]);
 
   const [fontsLoaded] = useFonts({
@@ -77,7 +86,7 @@ const App = () => {
   const HomeTabs = () => {
     return (
       <Tab.Navigator
-        initialRouteName="home"
+        initialRouteName={user.type === "mployer" ? "myJobs" : "home"}
         tabBar={(props) => <Navbar {...props} />}
         screenOptions={{
           headerShown: false,
@@ -184,6 +193,14 @@ const App = () => {
           <Stack.Screen
             name="introduction"
             component={Introduction}
+            options={{
+              headerTitle: "",
+              headerShadowVisible: false,
+            }}
+          />
+          <Stack.Screen
+            name="contactInfo"
+            component={ContactInfo}
             options={{
               headerTitle: "",
               headerShadowVisible: false,

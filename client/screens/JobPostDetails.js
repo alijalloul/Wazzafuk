@@ -5,10 +5,11 @@ import { useSelector } from "react-redux";
 import RenderTextInput from "../components/RenderTextInput";
 
 const JobPostDetails = ({ route, navigation }) => {
-  const baseURL = "http://192.168.0.5:5000";
+  const baseURL = "http://192.168.0.8:5000";
 
   const { jobId, employerId } = route.params;
 
+  const accountType = useSelector((state) => state.user.userInfo).type;
   const post = useSelector((state) => state.jobPosts.postsInfo).filter((item) => item._id === jobId && item)[0];
   const job_id = jobId;
   const employee_id = useSelector((state) => state.user.userInfo)?._id;
@@ -82,7 +83,7 @@ const JobPostDetails = ({ route, navigation }) => {
           </View>
         </View>
 
-        <View className="flex justify-center items-center w-[90%]">
+        <View className={` ${accountType === "employer" ? "hidden" : "flex justify-center items-center w-[90%]"}`}>
           <RenderTextInput
             title="Cover Letter"
             placeholder="Ex: I have over 5 years of experience in accounting. Moreover, I have a cisco certification in both Excel and Word"
@@ -100,7 +101,7 @@ const JobPostDetails = ({ route, navigation }) => {
         onPress={() => {
           coverLetter.trim() === "" ? setCoverLetterError(true) : handleApply();
         }}
-        className="self-end justify-self-end w-32 h-12 flex justify-center items-center mr-3 my-3 bg-[#FE6F07] rounded-xl"
+        className={` ${accountType === "employer" ? "hidden" : "self-end justify-self-end w-32 h-12 flex justify-center items-center mr-3 my-3 bg-[#FE6F07] rounded-xl"}`}
       >
         <Text className="text-lg font-garamond text-white">Apply</Text>
       </TouchableOpacity>

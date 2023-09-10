@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const baseURL = "http://192.168.1.10:5000";
+const baseURL = "http://192.168.0.8:5000";
 
 const postSlice = createSlice({
   name: "post",

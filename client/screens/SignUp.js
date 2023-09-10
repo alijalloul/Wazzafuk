@@ -12,7 +12,6 @@ import RenderTextInput from "../components/RenderTextInput";
 import { editUser } from "../redux/User";
 
 const SignUp = ({ navigation }) => {
-  console.log("hello");
   const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.user.userInfo);
 
@@ -41,18 +40,17 @@ const SignUp = ({ navigation }) => {
     }
 
     if (!error) {
-      editUser({ ...userInfo, name: name, telephone: telephone, password: password }, dispatch);
-      navigation.navigate("choose");
+      editUser({ ...userInfo, name: name, telephone: telephone, password: password }, "choose", navigation, dispatch);
     }
   };
   return (
     <ScrollView className="flex-1 bg-white " contentContainerStyle={{ justifyContent: "center", alignItems: "center" }}>
-      <Image source={blobright} className="absolute -left-12 -top-72 " />
+      <Image source={blobright} className="absolute -left-12 -top-[310px] " />
 
       <View className="flex-1 w-[90%]">
         <Text className="pl-5 pt-20 text-[40px] text-white font-garamond w-[70%]">Create Account</Text>
 
-        <View className="mt-36">
+        <View className=" mt-32">
           <View className="mb-10">
             <View className="mb-4">
               <RenderTextInput
@@ -116,7 +114,7 @@ const SignUp = ({ navigation }) => {
               onPress={() => {
                 navigation.navigate("login");
               }}
-              className="bg-white border-[1px] border-gray-400 w-full py-3 rounded-3xl flex justify-center items-center"
+              className="bg-white border-[1px] border-gray-400 w-full py-3 rounded-3xl flex justify-center items-center mb-2"
             >
               <Text className=" font-garamond-bold text-xl">Log In</Text>
             </TouchableOpacity>

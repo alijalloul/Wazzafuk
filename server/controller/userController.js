@@ -88,14 +88,23 @@ export async function createJobPost(req, res) {
   }
 }
 
-export async function deleteJobPost(req, res) {
-  const { id } = req.params;
+export async function updateJobPost(req, res) {
+  const body = req.body;
 
   try {
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(404).json({ message: "No post with that id" });
-    }
+    const newJobPost = await jobPostDB.findByIdAndUpdate(body._id, body, { new: true, lean: true }).exec();
+    res.status(200).json(newJobPost);
+  } catch (error) {
+    console.error(error);
+    res.status(409).json({ message: "Error updating job post" });
+  }
+}
 
+export async function deleteJobPost(req, res) {
+  const { id } = req.params;
+  console.log(id);
+
+  try {
     await jobPostDB.findByIdAndRemove(id);
 
     res.json({ message: "Post deleted successfully!" });

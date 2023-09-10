@@ -3,6 +3,9 @@ import mongoose from "mongoose";
 const employerSchema = mongoose.Schema({
   name: { type: String, required: true },
   telephone: { type: String, required: true },
+  email: { type: String },
+  address: { type: String },
+  image: { type: String },
 
   _id: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
 });

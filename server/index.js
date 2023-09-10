@@ -21,7 +21,7 @@ app.use(express.json({ limit: "50mb" }));
 const PORT = process.env.PORT || 5000;
 
 mongoose
-  .connect("mongodb+srv://Zoheir:nm6VVMqGmWwBw8gZ@wazzef.r14oag3.mongodb.net/")
+  .connect("mongodb+srv://Zoheir:nm6VVMqGmWwBw8gZ@wazzef.r14oag3.mongodb.net/Wazzafuk")
   .then(() => app.listen(PORT, () => console.log(`Successfully connected to port ${PORT}`)))
   .catch((error) => console.log("There was an error: ", error));
 
@@ -78,27 +78,36 @@ app.post("/users/login", async (req, res) => {
 });
 
 app.patch("/user", auth, async (req, res) => {
-  const { body, userId, type } = req.body;
+  const body = req.body;
+  console.log(body);
 
   try {
-    await userDB.findByIdAndUpdate(userId, { name: body.name }, { isNew: true });
+    await userDB.findByIdAndUpdate(body._id, { name: body.name }, { isNew: true });
 
-    let newUser;
-    if (type === "employee") {
-      newUser = await employeeDB.findByIdAndUpdate(userId, body, { new: true, lean: true }).exec();
+    let newUser = -1;
+    if (body.type === "employee") {
+      newUser = await employeeDB.findByIdAndUpdate(body._id, body, { new: true, lean: true }).exec();
     } else {
-      newUser = await employerDB.findByIdAndUpdate(userId, body, { new: true, lean: true }).exec();
+      newUser = await employerDB.findByIdAndUpdate(body._id, body, { new: true, lean: true }).exec();
     }
 
-    console.log("newUser: ", newUser);
-
-    res.status(200).json({ ...newUser, type: type });
+    res.status(200).json({ ...newUser, type: body.type });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
-import { getJobPostsForEmployer, getJobPostsForEmployee, getAppliedEmployees, hireEmployee, createJobPost, deleteJobPost, getJobPosts, applyForJob } from "./controller/userController.js";
+import {
+  getJobPostsForEmployer,
+  getJobPostsForEmployee,
+  getAppliedEmployees,
+  hireEmployee,
+  createJobPost,
+  updateJobPost,
+  deleteJobPost,
+  getJobPosts,
+  applyForJob,
+} from "./controller/userController.js";
 
 // Retrieve job posts for a specific employer
 app.get("/employer/:employerId/:page/posts", getJobPostsForEmployer);
@@ -114,6 +123,9 @@ app.get("/job/:jobId/employee/:employeeId", hireEmployee);
 
 // Create a new job post
 app.post("/post", createJobPost);
+
+// Create a new job post
+app.patch("/post", auth, updateJobPost);
 
 // Apply for a job
 app.post("/application", applyForJob);

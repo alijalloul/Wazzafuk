@@ -15,19 +15,23 @@ const Home = ({ navigation }) => {
 
   useEffect(() => {
     const setItem = async () => {
-      await AsyncStorage.setItem("screenName", "HomeTabs");
+      try {
+        await AsyncStorage.setItem("screenName", "HomeTabs");
+      } catch (error) {
+        console.log("async set screenName to hometabs error: ", error);
+      }
     };
 
     setItem();
   }, []);
 
-  const JobSeekerHomePage = () => {
-    return (
+  return (
+    <ScrollView className="flex-1 bg-white">
       <View className="flex-1 items-center mb-8">
         <View className="w-[90%]">
           <View className="mb-5">
             <Text className="font-garamond text-xl text-gray-500">Hello {user?.name?.split(" ")[0]},</Text>
-            <Text className="font-garamond-bold text-2xl">Find your perfect job</Text>
+            <Text className={`font-garamond-bold text-2xl ${user?.type === "employer" && "hidden"}`}>Find your perfect job</Text>
           </View>
 
           <View className="">
@@ -45,32 +49,6 @@ const Home = ({ navigation }) => {
 
         <Pagination fetchType="posts" page={page} numberOfPages={numberOfPages} />
       </View>
-    );
-  };
-
-  const EmployerHomePage = () => {
-    const userId = user?._id;
-
-    return (
-      <View className="flex-1 items-center">
-        {/* <View className="w-[90%]">
-          <View className="mb-5">
-            <Text className="font-garamond text-xl text-gray-500">Hello {user?.name?.split(" ")[0]},</Text>
-            <Text className="font-garamond-bold text-3xl">Hiring History</Text>
-          </View>
-        </View>
-
-        <HiredEmployees />
-
-        <Pagination page={page} userId={userId} numberOfPages={numberOfPages} /> */}
-      </View>
-    );
-  };
-
-  return (
-    <ScrollView className="flex-1 bg-white">
-      {user?.type === "employee" ? <JobSeekerHomePage /> : <EmployerHomePage />}
-      <View></View>
     </ScrollView>
   );
 };

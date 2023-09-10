@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "bb",
-    "slug": "bb",
+    "name": "wazzafuk",
+    "slug": "wazzafuk",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,15 +15,21 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.alizjalloul.wazzafuk"
     },
     "android": {
-      "permissions": ["READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"],
+      "permissions": [
+        "WRITE_EXTERNAL_STORAGE",
+        "READ_EXTERNAL_STORAGE",
+        "CAMERA_ROLL",
+        "NOTIFICATIONS"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.alizjalloul.bb"
+      "package": "com.alizjalloul.wazzafuk"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -39,8 +45,9 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "f326e53d-0520-47d2-bc1f-7950c939bf19"
+        "projectId": "5e988a28-c541-4d51-918d-a7b6310b7b9f"
       }
-    }
+    },
+    "owner": "alizjalloul"
   }
 }

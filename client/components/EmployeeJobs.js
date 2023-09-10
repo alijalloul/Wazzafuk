@@ -1,6 +1,7 @@
 import React from "react";
 import { View, TouchableOpacity, Text } from "react-native";
 import { useSelector } from "react-redux";
+import moment from "moment";
 
 const EmployeeJobs = ({ navigation }) => {
   const jobs = useSelector((state) => state.user.jobPosts);
@@ -24,7 +25,7 @@ const EmployeeJobs = ({ navigation }) => {
                 <Text className=" font-garamond text-3xl">{job.jobTitle}</Text>
               </View>
 
-              <Text className=" font-garamond text-[12px] opacity-50 mb-5">{job.date}</Text>
+              <Text className=" font-garamond text-[12px] opacity-50 mb-5">{moment(job?.date).fromNow()}</Text>
 
               <View className="mb-3 flex flex-row justify-between">
                 <Text className=" font-garamond text-[15px] ">{job.country}</Text>

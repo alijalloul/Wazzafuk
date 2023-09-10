@@ -3,12 +3,15 @@ import mongoose from "mongoose";
 const employeeSchema = mongoose.Schema({
   name: { type: String, required: true },
   telephone: { type: String, required: true },
+  email: { type: String },
+  address: { type: String },
+  pdf: { type: String },
+  image: { type: String },
   profession: { type: String },
   introduction: { type: String },
   workExperience: [],
   education: [],
   language: [],
-  pdf: { type: String },
 
   _id: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
 });

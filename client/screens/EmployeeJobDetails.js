@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import RenderTextInput from "../components/RenderTextInput";
 
 const EmployeeJobDetails = ({ route, navigation }) => {
-  const baseURL = "http://192.168.1.10:5000";
+  const baseURL = "http://192.168.0.8:5000";
 
   const { jobId, employerId } = route.params;
 

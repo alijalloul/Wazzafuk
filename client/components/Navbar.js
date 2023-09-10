@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import { View, Image, Text, TouchableOpacity, Dimensions, Keyboard } from "react-native";
-
-import { useRoute, getFocusedRouteNameFromRoute } from "@react-navigation/native";
+import { View, Image, Text, TouchableOpacity, Dimensions, Keyboard, Alert } from "react-native";
+import { useNavigation, useIsFocused, useRoute, getFocusedRouteNameFromRoute } from "@react-navigation/native";
+import { useBackHandler } from "@react-native-community/hooks";
 
 import homeOrange from "../assets/images/homeOrange.png";
 import graphOrange from "../assets/images/graphOrange.png";
@@ -15,9 +15,53 @@ const Navbar = ({ navigation }) => {
   const route = useRoute();
   const focusedRouteName = getFocusedRouteNameFromRoute(route) || "home";
 
+  const navigator = useNavigation();
+  const isFocused = useIsFocused();
+
+  const handleNavigation = (screenName) => {
+    if (focusedRouteName === "profile") {
+      if (isFocused) {
+        Alert.alert("Confirm Navigation", "Do you want to leave this screen without saving?", [
+          {
+            text: "NO",
+            style: "cancel",
+          },
+          {
+            text: "YES",
+            onPress: () => {
+              navigator.navigate(screenName);
+            },
+          },
+        ]);
+      }
+    } else {
+      navigator.navigate(screenName);
+    }
+  };
+
+  const handleBackPress = () => {
+    if (focusedRouteName === "profile" && isFocused) {
+      Alert.alert("Confirm Navigation", "Do you want to leave this screen without saving?", [
+        {
+          text: "No",
+          style: "cancel",
+        },
+        {
+          text: "Yes",
+          onPress: () => {
+            navigation.goBack(); // Navigate back when confirmed
+          },
+        },
+      ]);
+      return true; // Prevent the default back action
+    }
+    return false; // Allow the default back action for other screens
+  };
+  useBackHandler(handleBackPress);
+
   const barHeight = 70;
   const buttonsMargin = 20;
-  const borderMargin = 65;
+  const borderMargin = 70;
   const windowWidth = Dimensions.get("window").width;
   const navBarWidth = windowWidth;
   const navBarSpacing = navBarWidth / 3;
@@ -67,11 +111,11 @@ const Navbar = ({ navigation }) => {
   const animateSelector = () => {
     if (focusedRouteName === "home") {
       selectorAnimation.animateTo(() => ({
-        translateX: navBarSpacing * 0,
+        translateX: navBarSpacing * 0 - 3,
       }));
     } else if (focusedRouteName === "myJobs") {
       selectorAnimation.animateTo(() => ({
-        translateX: navBarSpacing * 1,
+        translateX: navBarSpacing * 1 - 3,
       }));
     } else if (focusedRouteName === "profile") {
       selectorAnimation.animateTo(() => ({
@@ -136,7 +180,7 @@ const Navbar = ({ navigation }) => {
   }, []);
   return (
     <MotiView state={containerAnimation} transition={{ type: "spring", damping: 300, duration: 100 }} className={`bg-white ${isKeyboardVisible && "hidden opacity-0"}`}>
-      <View style={{ width: navBarWidth }} className={`flex flex-row justify-around self-center items-center w-full h-full px-1 rounded-t-[50px] bg-[#FFE2CD]`}>
+      <View style={{ width: navBarWidth }} className={`flex flex-row justify-around self-center items-center w-full h-full rounded-t-[50px] bg-[#FFE2CD]`}>
         <MotiView
           state={selectorAnimation}
           transition={{ type: "spring", damping: 300 }}
@@ -153,7 +197,7 @@ const Navbar = ({ navigation }) => {
           <MotiView state={homeAnimation} transition={{ type: "spring", damping: 300 }} className="relative">
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("home");
+                handleNavigation("home");
               }}
               className="  rounded-full"
             >
@@ -167,7 +211,7 @@ const Navbar = ({ navigation }) => {
           <MotiView state={graphAnimation} transition={{ type: "spring", damping: 300 }} className="relative">
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("myJobs");
+                handleNavigation("myJobs");
               }}
               className=" p-0 rounded-full"
             >

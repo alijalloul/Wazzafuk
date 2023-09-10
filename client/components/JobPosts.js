@@ -1,13 +1,14 @@
 import { memo } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
+import moment from "moment";
 
 const JobPosts = ({ navigation }) => {
   const postsInfo = useSelector((state) => state.jobPosts.postsInfo);
 
   return (
-    <View className="w-full my-5">
-      {postsInfo.length > 0 &&
+    <View className="flex-1 my-5">
+      {postsInfo.length > 0 ? (
         postsInfo.map((job, index) => (
           <TouchableOpacity
             key={job._id}
@@ -20,7 +21,7 @@ const JobPosts = ({ navigation }) => {
               <Text className=" font-garamond text-3xl">{job.jobTitle}</Text>
             </View>
 
-            <Text className=" font-garamond text-[12px] opacity-50 mb-5">{job.date}</Text>
+            <Text className=" font-garamond text-[12px] opacity-50 mb-5">{moment(job?.date).fromNow()}</Text>
 
             <View className="mb-3 flex flex-row justify-between">
               <Text className=" font-garamond text-[15px] ">{job.country}</Text>
@@ -34,7 +35,12 @@ const JobPosts = ({ navigation }) => {
 
             <Text className=" font-garamond text-[15px] opacity-50 leading-6">{job.description.substring(0, 200)}</Text>
           </TouchableOpacity>
-        ))}
+        ))
+      ) : (
+        <View className="flex-1 justify-center items-center">
+          <Text className=" font-garamond opacity-50 text-sm">No Jobs Available</Text>
+        </View>
+      )}
     </View>
   );
 };

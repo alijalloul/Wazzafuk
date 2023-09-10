@@ -10,7 +10,7 @@ import SingleSelectorModal from "../SingleSelectorModal";
 
 const EducationPicker = ({ headerText, headerSize, education, setEducation }) => {
   const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setEditing] = useState(false);
 
   const [degree, setDegree] = useState("");
   const [major, setMajor] = useState("");
@@ -19,18 +19,15 @@ const EducationPicker = ({ headerText, headerSize, education, setEducation }) =>
   const [endYear, setEndYear] = useState("");
   const [note, setNote] = useState("");
 
-  const [isDegreeError, setIsDegreeError] = useState(false);
-  const [isMajorError, setIsMajorError] = useState(false);
-  const [isSchoolError, setIsSchoolError] = useState(false);
-  const [isStartYearError, setIsStartYearError] = useState(false);
-  const [isEndYearError, setIsEndYearError] = useState(false);
-  const [isNoteError, setIsNoteError] = useState(false);
+  const [degreeError, setDegreeError] = useState("");
+  const [majorError, setMajorError] = useState("");
+  const [schoolError, setSchoolError] = useState("");
 
   const [educationIndex, setEducationIndex] = useState(null);
 
   const closeModal = () => {
     setBottomSheetVisible(false);
-    setIsEditing(false);
+    setEditing(false);
 
     if (isEditing) {
       setDegree("");
@@ -43,8 +40,23 @@ const EducationPicker = ({ headerText, headerSize, education, setEducation }) =>
   };
 
   const saveEducation = () => {
-    const updatedEducation =
-      educationIndex !== null
+    let error = false;
+
+    if (degree.trim() === "") {
+      setDegreeError(true);
+      error = true;
+    }
+    if (major.trim() === "") {
+      setMajorError(true);
+      error = true;
+    }
+    if (school.trim() === "") {
+      setSchoolError(true);
+      error = true;
+    }
+
+    if (!error) {
+      const updatedEducation = isEditing
         ? education.map((item, index) =>
             index === educationIndex
               ? {
@@ -69,12 +81,13 @@ const EducationPicker = ({ headerText, headerSize, education, setEducation }) =>
             },
           ];
 
-    setEducation(updatedEducation);
-    closeModal();
+      setEducation(updatedEducation);
+      closeModal();
+    }
   };
 
-  const handleEdit = () => {
-    setIsEditing(true);
+  const handleEdit = (index) => {
+    setEditing(true);
     setEducationIndex(index);
 
     setDegree(education[index].degree);
@@ -123,7 +136,7 @@ const EducationPicker = ({ headerText, headerSize, education, setEducation }) =>
 
   return (
     <View className="flex-1 w-full">
-      <View className="flex-1 w-[90%] self-center">
+      <View className="flex-1 w-full self-center">
         <Text style={{ fontSize: headerSize }} className=" font-garamond-semibold mb-5">
           {headerText}
         </Text>
@@ -131,35 +144,43 @@ const EducationPicker = ({ headerText, headerSize, education, setEducation }) =>
         <View>
           {education.length > 0 &&
             education.map((educ, index) => (
-              <View key={index} className="relative w-full border-[1px] rounded-2xl p-5 pt-3 pr-3 mb-4">
-                <View className="flex flex-row w-full justify-end items-center">
-                  <TouchableOpacity
-                    onPress={() => {
-                      handleEdit();
-                    }}
-                    className="border-[1px] border-gray-400 rounded-full p-[6px] mr-2"
-                  >
-                    <Image source={pen} className="w-5 h-5 aspect-square" />
-                  </TouchableOpacity>
+              <View key={index} className="relative w-full border-[1px] rounded-2xl p-5 pt-3 pr-3 mb-4 h-60">
+                <View className="w-full flex flex-row justify-between items-center">
+                  <Text className=" font-garamond text-3xl">{educ.degree.split("(")[0].trim()}</Text>
 
-                  <TouchableOpacity
-                    onPress={() => {
-                      setEducation(education.filter((item, index2) => index2 !== index));
-                    }}
-                    className="border-[1px] border-gray-400 rounded-full p-[6px]"
-                  >
-                    <Image source={trash} className="w-5 h-5 aspect-square" />
-                  </TouchableOpacity>
+                  <View className="flex flex-row justify-center items-center">
+                    <TouchableOpacity
+                      onPress={() => {
+                        handleEdit(index);
+                      }}
+                      className="border-[1px] border-gray-400 rounded-full p-[6px] mr-2"
+                    >
+                      <Image source={pen} className="w-5 h-5 aspect-square" />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      onPress={() => {
+                        setEducation(education.filter((item, index2) => index2 !== index));
+                      }}
+                      className="border-[1px] border-gray-400 rounded-full p-[6px]"
+                    >
+                      <Image source={trash} className="w-5 h-5 aspect-square" />
+                    </TouchableOpacity>
+                  </View>
                 </View>
-                <Text className=" font-garamond text-3xl">
-                  {educ.degree} {educ.major ? "in" : "from"}
-                </Text>
-                {educ.major && <Text className=" font-garamond text-[15px]">{educ.major} from</Text>}
-                <Text className=" font-garamond text-lg">{educ.school}</Text>
-                <Text className=" font-garamond text-[15px] opacity-70 mb-3">
-                  {educ.startYear} -{educ.endYear}
-                </Text>
-                <Text className=" font-garamond text-lg opacity-70">{education.note}</Text>
+
+                {educ.major && (
+                  <Text className=" font-garamond text-[15px]">
+                    in <Text className=" font-garamond text-xl">{educ.major}</Text> from
+                  </Text>
+                )}
+                <View className="w-full flex flex-row justify-between items-center mb-4">
+                  <Text className=" font-garamond text-lg">{educ.school}</Text>
+                  <Text className=" font-garamond text-[15px] opacity-70 mb-3">
+                    {educ.startYear} -{educ.endYear}
+                  </Text>
+                </View>
+                <Text className=" font-garamond text-lg opacity-70">{educ.note}</Text>
               </View>
             ))}
         </View>
@@ -198,13 +219,11 @@ const EducationPicker = ({ headerText, headerSize, education, setEducation }) =>
           >
             <View className="w-[90%]">
               <View className="mb-5">
-                <Text className="text-[20px] font-garamond mb-2">Degree *</Text>
-                <SingleSelectorModal data={degrees} value={degree} setValue={setDegree} />
+                <SingleSelectorModal title="Degree *" data={degrees} value={degree} setValue={setDegree} isError={degreeError} setIsError={setDegreeError} errorMessage="This field can not be empty" />
               </View>
 
               <View className="mb-5">
-                <Text className="text-[20px] font-garamond mb-2">Major *</Text>
-                <SingleSelectorModal data={majors} value={major} setValue={setMajor} />
+                <SingleSelectorModal title="Major *" data={majors} value={major} setValue={setMajor} isError={majorError} setIsError={setMajorError} errorMessage="This field can not be empty" />
               </View>
 
               <View className="mb-5">
@@ -212,16 +231,16 @@ const EducationPicker = ({ headerText, headerSize, education, setEducation }) =>
                   isMultiline={false}
                   title="School *"
                   value={school}
-                  handleChange={setSchool}
+                  setValue={setSchool}
                   placeholder="Ex: LU"
-                  error={isSchoolError}
-                  setIsError={setIsSchoolError}
+                  isError={schoolError}
+                  setIsError={setSchoolError}
                   errorMessage="This field can not be empty"
                 />
               </View>
 
               <View className="mb-5">
-                <Text className="text-[20px] font-garamond mb-2">Duration *</Text>
+                <Text className="text-[20px] font-garamond mb-2">Duration</Text>
                 <View className="flex flex-row justify-between items-center">
                   <View className="w-[45%]">
                     <SingleSelectorModal data={years} value={startYear} setValue={setStartYear} />
@@ -234,16 +253,7 @@ const EducationPicker = ({ headerText, headerSize, education, setEducation }) =>
               </View>
 
               <View className="mb-5">
-                <RenderTextInput
-                  isMultiline={true}
-                  title="Add Note"
-                  value={note}
-                  handleChange={setNote}
-                  placeholder="Ex: Minor in cyber security"
-                  error={isNoteError}
-                  setIsError={setIsNoteError}
-                  errorMessage="This field can not be empty"
-                />
+                <RenderTextInput isMultiline={true} title="Add Note" value={note} handleChange={setNote} placeholder="Ex: Minor in cyber security" />
               </View>
 
               <View className="w-full flex justify-center items-end mb-4">

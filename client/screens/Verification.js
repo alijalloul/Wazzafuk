@@ -34,7 +34,7 @@ const Verification = ({ navigation }) => {
 
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("editUser");
+              navigation.navigate("CV");
             }}
           >
             <Text className=" font-garamond opacity-50 border-b-[0.5px]">Change Phone Number</Text>

@@ -9,17 +9,20 @@ import pen from "../../assets/images/pen.png";
 import trash from "../../assets/images/trash.png";
 
 const WorkExperiencePicker = ({ headerSize, headerText, workExperience, setWorkExperience }) => {
-  const [formData, setFormData] = useState({
-    title: "",
-    company: "",
-    location: "",
-    country: "",
-    startMonth: "",
-    startYear: "",
-    endMonth: "",
-    endYear: "",
-    description: "",
-  });
+  const [title, setTitle] = useState("");
+  const [company, setCompany] = useState("");
+  const [location, setLocation] = useState("");
+  const [country, setCountry] = useState("");
+  const [startMonth, setStartMonth] = useState("");
+  const [startYear, setStartYear] = useState("");
+  const [endMonth, setEndMonth] = useState("");
+  const [endYear, setEndYear] = useState("");
+  const [description, setDescription] = useState("");
+
+  const [titleError, setTitleError] = useState(false);
+  const [companyError, setCompanyError] = useState(false);
+  const [locationError, setLocationError] = useState(false);
+  const [countryError, setCountryError] = useState(false);
 
   const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -30,30 +33,87 @@ const WorkExperiencePicker = ({ headerSize, headerText, workExperience, setWorkE
     setBottomSheetVisible(false);
     setIsEditing(false);
 
-    if (isEditing) {
-      setFormData({
-        title: "",
-        company: "",
-        location: "",
-        country: "",
-        startMonth: "",
-        startYear: "",
-        endMonth: "",
-        endYear: "",
-        description: "",
-      });
-    }
+    setTitle("");
+    setCompany("");
+    setLocation("");
+    setCountry("");
+    setStartMonth("");
+    setStartYear("");
+    setEndMonth("");
+    setEndYear("");
+    setDescription("");
+  };
+
+  const handleEdit = (index) => {
+    setIsEditing(true);
+    setWorkIndex(index);
+    setTitle(workExperience[index].title);
+    setCompany(workExperience[index].company);
+    setLocation(workExperience[index].location);
+    setCountry(workExperience[index].country);
+    setStartMonth(workExperience[index].startMonth);
+    setStartYear(workExperience[index].startYear);
+    setEndMonth(workExperience[index].endMonth);
+    setEndYear(workExperience[index].endYear);
+    setDescription(workExperience[index].description);
+    setBottomSheetVisible(true);
   };
 
   const saveWorkExperience = () => {
-    const updatedWorkExperience = workIndex !== null ? workExperience.map((work, index) => (index === workIndex ? formData : work)) : [...workExperience, formData];
+    let error = false;
 
-    setWorkExperience(updatedWorkExperience);
-    closeModal();
-  };
+    if (title.trim() === "") {
+      setTitleError(true);
+      error = true;
+    }
+    if (company.trim() === "") {
+      setCompanyError(true);
+      error = true;
+    }
+    if (location.trim() === "") {
+      setLocationError(true);
+      error = true;
+    }
+    if (country.trim() === "") {
+      setCountryError(true);
+      error = true;
+    }
 
-  const handleChange = (fieldName, text) => {
-    setFormData((prevData) => ({ ...prevData, [fieldName]: text }));
+    if (!error) {
+      const updatedWorkExperience = isEditing
+        ? workExperience.map((work, index) =>
+            index === workIndex
+              ? {
+                  title,
+                  company,
+                  location,
+                  country,
+                  startMonth,
+                  startYear,
+                  endMonth,
+                  endYear,
+                  description,
+                }
+              : work
+          )
+        : [
+            ...workExperience,
+            {
+              title,
+              company,
+              location,
+              country,
+              startMonth,
+              startYear,
+              endMonth,
+              endYear,
+              description,
+            },
+          ];
+
+      setWorkExperience(updatedWorkExperience);
+      closeModal();
+    }
   };
 
   const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -63,43 +123,45 @@ const WorkExperiencePicker = ({ headerSize, headerText, workExperience, setWorkE
 
   return (
     <View className="flex-1 w-full">
-      <View className="flex-1 w-[90%] self-center">
+      <View className="flex-1 w-full self-center">
         <Text style={{ fontSize: headerSize }} className=" font-garamond-semibold mb-5">
           {headerText}
         </Text>
         <View>
           {workExperience.length > 0 &&
             workExperience.map((work, index) => (
-              <View key={index} className="relative w-full border-[1px] rounded-2xl p-5 pt-3 pr-3 mb-4">
-                <View className="flex flex-row w-full justify-end items-center">
-                  <TouchableOpacity
-                    onPress={() => {
-                      setIsEditing(true);
-                      setWorkIndex(index);
-                      setFormData(workExperience[index]);
-                      setBottomSheetVisible(true);
-                    }}
-                    className="border-[1px] border-gray-400 rounded-full p-[6px] mr-2"
-                  >
-                    <Image source={pen} className="w-5 h-5 aspect-square" />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => {
-                      setWorkExperience(workExperience.filter((item, index2) => index2 !== index));
-                    }}
-                    className="border-[1px] border-gray-400 rounded-full p-[6px]"
-                  >
-                    <Image source={trash} className="w-5 h-5 aspect-square" />
-                  </TouchableOpacity>
+              <View key={index} className="relative w-full border-[1px] rounded-2xl p-5 pt-3 pr-3 mb-4 h-60">
+                <View className="w-full flex flex-row justify-between items-center">
+                  <Text className=" font-garamond text-3xl">{work.title}</Text>
+
+                  <View className="flex flex-row justify-center items-center">
+                    <TouchableOpacity
+                      onPress={() => {
+                        handleEdit(index);
+                      }}
+                      className="border-[1px] border-gray-400 rounded-full p-[6px] mr-2"
+                    >
+                      <Image source={pen} className="w-5 h-5 aspect-square" />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => {
+                        setWorkExperience(workExperience.filter((item, index2) => index2 !== index));
+                      }}
+                      className="border-[1px] border-gray-400 rounded-full p-[6px]"
+                    >
+                      <Image source={trash} className="w-5 h-5 aspect-square" />
+                    </TouchableOpacity>
+                  </View>
                 </View>
-                <Text className=" font-garamond text-3xl">{work.title}</Text>
-                <Text className=" font-garamond text-[15px]">{work.company}</Text>
-                <Text className=" font-garamond text-xl">
-                  {work.startMonthWork} {work.startYear} - {work.endMonthWork} {work.endYear}
-                </Text>
-                <Text className=" font-garamond text-[15px] opacity-70 mb-3">
-                  {work.country}, {work.location}
-                </Text>
+                <Text className=" font-garamond text-xl ">{work.company}</Text>
+                <View className="w-full flex my-4">
+                  <Text className=" font-garamond text-[15px]">
+                    {work.country}, {work.location}
+                  </Text>
+                  <Text className=" font-garamond text-[15px]">
+                    {work.startMonth} {work.startYear} - {work.endMonth} {work.endYear}
+                  </Text>
+                </View>
                 <Text className=" font-garamond text-lg opacity-70">{work.description}</Text>
               </View>
             ))}
@@ -132,58 +194,86 @@ const WorkExperiencePicker = ({ headerSize, headerText, workExperience, setWorkE
           >
             <View className="w-[90%] flex-1">
               <View className="mb-5">
-                <RenderTextInput isForm={true} isMultiline={false} title="Title *" value={formData.title} handleChange={handleChange} placeholder="Ex: Accountant" fieldName="title" />
+                <RenderTextInput
+                  isMultiline={false}
+                  title="Title *"
+                  value={title}
+                  setValue={setTitle}
+                  placeholder="Ex: Accountant"
+                  isError={titleError}
+                  setIsError={setTitleError}
+                  errorMessage="This field can not be empty"
+                />
               </View>
-              <View className="mb-5">
-                <RenderTextInput isForm={true} isMultiline={false} title="Company *" value={formData.company} handleChange={handleChange} placeholder="Ex: Amazon" fieldName="company" />
-              </View>
-              <View className="mb-5">
-                <RenderTextInput isForm={true} isMultiline={false} title="Location *" value={formData.location} handleChange={handleChange} placeholder="Ex: Beirut" fieldName="location" />
-              </View>
-              <View className="mb-5">
-                <RenderTextInput isForm={true} isMultiline={false} title="Country *" value={formData.country} handleChange={handleChange} placeholder="Ex: Lebanon" fieldName="country" />
-              </View>
-
-              <View className="mb-5">
-                <Text className="text-[20px] font-garamond mb-2">Start Date *</Text>
-
-                <View className="flex flex-row justify-between items-center w-full">
-                  <View className=" w-[45%] ">
-                    <SingleSelectorModal isForm={true} data={months} value={formData.startMonth} setValue={setFormData} fieldName="startMonth" />
-                  </View>
-
-                  <View className="w-[45%]">
-                    <SingleSelectorModal isForm={true} data={years} value={formData.startYear} setValue={setFormData} fieldName="startYear" />
-                  </View>
-                </View>
-              </View>
-
-              <View className="mb-5">
-                <Text className="text-[20px] font-garamond mb-2">End Date *</Text>
-                <View className="flex flex-row justify-between items-center w-full">
-                  <View className=" w-[45%] ">
-                    <SingleSelectorModal isForm={true} data={months} value={formData.endMonth} setValue={setFormData} fieldName="endMonth" />
-                  </View>
-
-                  <View className="w-[45%]">
-                    <SingleSelectorModal isForm={true} data={years} value={formData.endYear} setValue={setFormData} fieldName="endYear" />
-                  </View>
-                </View>
-              </View>
-
               <View className="mb-5">
                 <RenderTextInput
-                  isForm={true}
-                  isMultiline={true}
-                  title="Description"
-                  value={formData.description}
-                  handleChange={handleChange}
-                  placeholder="Ex: I count money"
-                  fieldName="description"
+                  isMultiline={false}
+                  title="Company *"
+                  value={company}
+                  setValue={setCompany}
+                  placeholder="Ex: Amazon"
+                  isError={companyError}
+                  setIsError={setCompanyError}
+                  errorMessage="This field can not be empty"
+                />
+              </View>
+              <View className="mb-5">
+                <RenderTextInput
+                  isMultiline={false}
+                  title="Location *"
+                  value={location}
+                  setValue={setLocation}
+                  placeholder="Ex: Beirut"
+                  isError={locationError}
+                  setIsError={setLocationError}
+                  errorMessage="This field can not be empty"
+                />
+              </View>
+              <View className="mb-5">
+                <RenderTextInput
+                  isMultiline={false}
+                  title="Country *"
+                  value={country}
+                  setValue={setCountry}
+                  placeholder="Ex: Lebanon"
+                  isError={countryError}
+                  setIsError={setCountryError}
+                  errorMessage="This field can not be empty"
                 />
               </View>
 
-              <View className="w-full flex justify-center items-end mb-24">
+              <View className="mb-5">
+                <Text className="text-[20px] font-garamond mb-2">Start Date</Text>
+
+                <View className="flex flex-row justify-between items-center w-full">
+                  <View className=" w-[48%] ">
+                    <SingleSelectorModal data={months} value={startMonth} setValue={setStartMonth} />
+                  </View>
+
+                  <View className="w-[48%]">
+                    <SingleSelectorModal data={years} value={startYear} setValue={setStartYear} />
+                  </View>
+                </View>
+              </View>
+
+              <View className="mb-5">
+                <Text className="text-[20px] font-garamond mb-2">End Date</Text>
+                <View className="flex flex-row justify-between items-center w-full">
+                  <View className=" w-[48%] ">
+                    <SingleSelectorModal data={months} value={endMonth} setValue={setEndMonth} />
+                  </View>
+
+                  <View className="w-[48%]">
+                    <SingleSelectorModal data={years} value={endYear} setValue={setEndYear} />
+                  </View>
+                </View>
+              </View>
+
+              <View className="mb-5">
+                <RenderTextInput isMultiline={true} title="Description" value={description} setValue={setDescription} placeholder="Ex: I count money" />
+              </View>
+
+              <View className="w-full flex justify-center items-end mb-8">
                 <TouchableOpacity onPress={() => saveWorkExperience()} className="w-32 bottom-0 right-0 bg-[#FE6F07] rounded-xl px-10 py-2">
                   <Text className="text-lg font-garamond text-white">{isEditing ? "Edit" : "Add"}</Text>
                 </TouchableOpacity>

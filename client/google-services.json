@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "848555993785",
+    "project_id": "wazzafuk-ca54e",
+    "storage_bucket": "wazzafuk-ca54e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:848555993785:android:5dfdc83b3d94e30476c968",
+        "android_client_info": {
+          "package_name": "com.alizjalloul.wazzafuk"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5Jc5MgogR8SIbL-94ppVHIevBaZON-mw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -227,7 +227,7 @@ const SkillModal = ({ value, setValue }) => {
             <View className="flex-1 justify-end items-end">
               <TouchableOpacity
                 onPress={() => {
-                  setValue((prevData) => ({ ...prevData, skills: skills }));
+                  setValue(skills);
                   setSkills([]);
                   setIsVisible(false);
                 }}

@@ -3,32 +3,16 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import * as DocumentPicker from "expo-document-picker";
 
-import { updateUser } from "../redux/User";
+import { editUser, updateUser } from "../redux/User";
+import Spinner from "../components/Spinner";
 
 const CV = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.user.userInfo);
+  const pending = useSelector((state) => state.user.pending);
 
-  const [selectedDocument, setSelectedDocument] = useState(null);
-  const [base64Data, setBase64Data] = useState(null);
-
-  const convertToBase64 = async (uri) => {
-    try {
-      const response = await fetch(uri);
-      const blob = await response.blob();
-      const reader = new FileReader();
-
-      reader.onloadend = () => {
-        setBase64Data(reader.result);
-      };
-
-      reader.readAsDataURL(blob);
-    } catch (error) {
-      console.error("Error converting to base64:", error);
-      Alert.alert("Error converting to base64");
-    }
-  };
+  const [pdf, setPdf] = useState(null);
 
   const pickDocument = async () => {
     try {
@@ -42,8 +26,21 @@ const CV = ({ navigation }) => {
           return;
         }
 
-        setSelectedDocument(result);
-        convertToBase64(result.uri);
+        try {
+          const response = await fetch(result.uri);
+          const blob = await response.blob();
+          const reader = new FileReader();
+
+          const base64Data = await new Promise((resolve) => {
+            reader.onloadend = () => {
+              resolve(reader.result);
+            };
+            reader.readAsDataURL(blob);
+          });
+          setPdf(base64Data);
+        } catch (error) {
+          console.error("Error converting to base64:", error);
+        }
       }
     } catch (error) {
       console.error("Error picking document:", error);
@@ -51,64 +48,68 @@ const CV = ({ navigation }) => {
   };
 
   const handleButton = async () => {
-    if (selectedDocument) {
-      console.log(base64Data);
-      //updateUser({ ...user, uri: selectedDocument.uri }, navigation, dispatch);
+    if (pdf) {
+      updateUser({ ...user, pdf: pdf }, navigation, dispatch);
     } else {
       navigation.navigate("HomeTabs", { screen: "home" });
     }
   };
 
   return (
-    <View className="bg-white flex-1 items-center">
-      <View className="w-[90%] h-full">
-        <Text className=" text-4xl font-garamond mb-5">How would you like to introduce yourself?</Text>
-        <Text className=" text-[20px] font-garamond mb-5">
-          It is important to express your education, previous work experience and skills to you potential employer as clearly as possible, as this will set you on the top of your competition.
-        </Text>
+    <View className="flex-1 justify-center bg-white">
+      <View className={`${pending ? "absolute z-30 w-full h-full justify-center items-center" : "hidden"}`}>
+        <Spinner />
+      </View>
+      <View className={`${pending ? " bg-white z-20 absolute h-full w-full opacity-50 " : "hidden"}`}></View>
+      <View className="bg-white flex-1 items-center">
+        <View className="w-[90%] h-full">
+          <Text className=" text-4xl font-garamond mb-5">How would you like to introduce yourself?</Text>
+          <Text className=" text-[20px] font-garamond mb-5">
+            It is important to express your education, previous work experience and skills to you potential employer as clearly as possible, as this will set you on the top of your competition.
+          </Text>
 
-        <View className=" mb-5 felx justify-center items-center">
-          <TouchableOpacity
-            onPress={() => {
-              pickDocument();
-            }}
-            className="bg-white border-[1px] border-[#FE6F07] w-full py-3 rounded-3xl flex justify-center items-center mb-2"
-          >
-            <Text className="text-[#FE6F07] font-garamond-bold text-xl">Upload your CV</Text>
-          </TouchableOpacity>
-
-          <View className={`w-full px-2 flex flex-row justify-between items-center ${!selectedDocument && "hidden"}`}>
-            <Text className="font-garamond">{selectedDocument?.name}</Text>
-
+          <View className=" mb-5 felx justify-center items-center">
             <TouchableOpacity
               onPress={() => {
-                setSelectedDocument(false);
+                pickDocument();
               }}
-              className="border-red-500 border-[1px] rounded-2xl p-2"
+              className="bg-white border-[1px] border-[#FE6F07] w-full py-3 rounded-3xl flex justify-center items-center mb-2"
             >
-              <Text className=" font-garamond text-red-500">Remove</Text>
+              <Text className="text-[#FE6F07] font-garamond-bold text-xl">Upload your CV</Text>
             </TouchableOpacity>
+
+            <View className={`w-full px-2 flex flex-row justify-between items-center ${!pdf && "hidden"}`}>
+              <Text className="font-garamond">{pdf?.name}</Text>
+
+              <TouchableOpacity
+                onPress={() => {
+                  setPdf(false);
+                }}
+                className="border-red-500 border-[1px] rounded-2xl p-2"
+              >
+                <Text className=" font-garamond text-red-500">Remove</Text>
+              </TouchableOpacity>
+            </View>
           </View>
+
+          <TouchableOpacity
+            onPress={() => {
+              pdf ? editUser({ ...user, pdf: pdf }, "contactInfo", navigation, dispatch) : navigation.navigate("contactInfo");
+            }}
+            className="bg-white border-[1px] w-full py-3 rounded-3xl flex justify-center items-center border-[#FE6F07] opacity-1"
+          >
+            <Text className=" font-garamond-bold text-xl text-[#FE6F07]">Fill it out manually</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              handleButton();
+            }}
+            className={` border-[1px] w-full py-3 rounded-3xl flex justify-center items-center absolute bottom-0 mb-10 ${pdf ? "border-[#FE6F07] opacity-1" : "border-black opacity-50"}`}
+          >
+            <Text className={`text-black font-garamond-bold text-xl  ${pdf ? "text-[#FE6F07]" : "border-black"}`}>{pdf ? "Next" : "Skip"}</Text>
+          </TouchableOpacity>
         </View>
-
-        <TouchableOpacity
-          disabled={selectedDocument ? true : false}
-          onPress={() => {
-            navigation.navigate("introduction");
-          }}
-          className={`bg-white border-[1px] w-full py-3 rounded-3xl flex justify-center items-center ${selectedDocument ? "border-black opacity-50" : "border-[#FE6F07] opacity-1"}`}
-        >
-          <Text className={` font-garamond-bold text-xl ${selectedDocument ? "text-black" : "text-[#FE6F07]"}`}>Fill it out manually</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => {
-            handleButton();
-          }}
-          className={` border-[1px] w-full py-3 rounded-3xl flex justify-center items-center absolute bottom-0 mb-10 ${selectedDocument ? "border-[#FE6F07] opacity-1" : "border-black opacity-50"}`}
-        >
-          <Text className={`text-black font-garamond-bold text-xl  ${selectedDocument ? "text-[#FE6F07]" : "border-black"}`}>{selectedDocument ? "Next" : "Skip"}</Text>
-        </TouchableOpacity>
       </View>
     </View>
   );

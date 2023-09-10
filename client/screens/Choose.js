@@ -5,10 +5,12 @@ import { LinearGradient } from "expo-linear-gradient";
 import { MotiView, MotiText, useDynamicAnimation } from "moti";
 
 import { signup } from "../redux/User";
+import Spinner from "../components/Spinner";
 
 const Choose = ({ navigation }) => {
   const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.user.userInfo);
+  const pending = useSelector((state) => state.user.pending);
 
   const [type, setType] = useState(null);
   const [error, setError] = useState(false);
@@ -91,57 +93,63 @@ const Choose = ({ navigation }) => {
   }, [type]);
 
   return (
-    <View className="bg-white flex-1 items-center">
-      <View className="my-5 flex justify-center items-center">
-        <Text className={`font-garamond text-sm text-red-500 ${!error && "hidden"}`}>You need to choose an account type</Text>
-        <Text className=" text-[40px] font-garamond ">I am looking for...</Text>
+    <View className="flex-1 justify-center bg-white">
+      <View className={`${pending ? "z-30 absolute w-full h-full justify-center items-center" : "hidden"}`}>
+        <Spinner />
       </View>
-
-      <MotiView state={JobCardBackgroundAnimaition} className="mb-10 w-[85%] h-[33%]">
-        <View className={`w-full h-full border-[1px] rounded-lg ${error && "border-red-500"}`}>
-          <View className={`absolute right-0 top-0 mr-2 mt-2 ${type === "employee" ? "bg-[#ffffffb5]" : "bg-white"} border-2 rounded-full p-[6px]`}>
-            <LinearGradient colors={["white", type === "employee" ? "#FE6F07" : "rgba(0,0,0,0.4)"]} start={{ x: 0, y: 0.4 }} className="p-[8px] rounded-full" />
-          </View>
-
-          <TouchableOpacity
-            onPress={() => {
-              setType("employee");
-            }}
-            className="w-full h-full flex justify-center items-center"
-          >
-            <MotiText state={JobTextBackgroundAnimaition} className=" font-garamond text-[40px]">
-              A Job
-            </MotiText>
-          </TouchableOpacity>
+      <View className={`${pending ? " bg-white z-20 absolute h-full w-full opacity-50 " : "hidden"}`}></View>
+      <View className="bg-white flex-1 items-center">
+        <View className="my-5 flex justify-center items-center">
+          <Text className={`font-garamond text-sm text-red-500 ${!error && "hidden"}`}>You need to choose an account type</Text>
+          <Text className=" text-[40px] font-garamond ">I am looking for...</Text>
         </View>
-      </MotiView>
 
-      <MotiView state={ClientCardBackgroundAnimaition} className="mb-10 w-[85%] h-[33%]">
-        <View className={`w-full h-full border-[1px] rounded-lg ${error && "border-red-500"}`}>
-          <View className={`absolute right-0 top-0 mr-2 mt-2 ${type === "employer" ? "bg-[#ffffffb5]" : "bg-white"} border-2 rounded-full p-[6px]`}>
-            <LinearGradient colors={["white", type === "employer" ? "#FE6F07" : "rgba(0,0,0,0.4)"]} start={{ x: 0, y: 0.4 }} className="p-[8px] rounded-full" />
+        <MotiView state={JobCardBackgroundAnimaition} className="mb-10 w-[85%] h-[33%]">
+          <View className={`w-full h-full border-[1px] rounded-lg ${error && "border-red-500"}`}>
+            <View className={`absolute right-0 top-0 mr-2 mt-2 ${type === "employee" ? "bg-[#ffffffb5]" : "bg-white"} border-2 rounded-full p-[6px]`}>
+              <LinearGradient colors={["white", type === "employee" ? "#FE6F07" : "rgba(0,0,0,0.4)"]} start={{ x: 0, y: 0.4 }} className="p-[8px] rounded-full" />
+            </View>
+
+            <TouchableOpacity
+              onPress={() => {
+                setType("employee");
+              }}
+              className="w-full h-full flex justify-center items-center"
+            >
+              <MotiText state={JobTextBackgroundAnimaition} className=" font-garamond text-[40px]">
+                A Job
+              </MotiText>
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity
-            onPress={() => {
-              setType("employer");
-            }}
-            className="w-full h-full flex justify-center items-center"
-          >
-            <MotiText state={ClientTextBackgroundAnimaition} className=" font-garamond text-[40px]">
-              An Employee
-            </MotiText>
-          </TouchableOpacity>
-        </View>
-      </MotiView>
+        </MotiView>
 
-      <TouchableOpacity
-        onPress={() => {
-          type ? signup({ ...userInfo, type: type }, navigation, dispatch) : setError(true);
-        }}
-        className="absolute bottom-0 right-0 mb-3 mr-3 bg-[#FE6F07] rounded-xl px-10 py-2"
-      >
-        <Text className="text-lg font-garamond text-white">Sign Up</Text>
-      </TouchableOpacity>
+        <MotiView state={ClientCardBackgroundAnimaition} className="mb-10 w-[85%] h-[33%]">
+          <View className={`w-full h-full border-[1px] rounded-lg ${error && "border-red-500"}`}>
+            <View className={`absolute right-0 top-0 mr-2 mt-2 ${type === "employer" ? "bg-[#ffffffb5]" : "bg-white"} border-2 rounded-full p-[6px]`}>
+              <LinearGradient colors={["white", type === "employer" ? "#FE6F07" : "rgba(0,0,0,0.4)"]} start={{ x: 0, y: 0.4 }} className="p-[8px] rounded-full" />
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                setType("employer");
+              }}
+              className="w-full h-full flex justify-center items-center"
+            >
+              <MotiText state={ClientTextBackgroundAnimaition} className=" font-garamond text-[40px]">
+                An Employee
+              </MotiText>
+            </TouchableOpacity>
+          </View>
+        </MotiView>
+
+        <TouchableOpacity
+          onPress={() => {
+            type ? signup({ ...userInfo, type: type }, navigation, dispatch) : setError(true);
+          }}
+          className="absolute bottom-0 right-0 mb-3 mr-3 bg-[#FE6F07] rounded-xl px-10 py-2"
+        >
+          <Text className="text-lg font-garamond text-white">Sign Up</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
