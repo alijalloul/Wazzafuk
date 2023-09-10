@@ -1,10 +1,11 @@
-import React, { memo, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { View, TouchableOpacity, Text, ScrollView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 import LanguagePicker from "../components/Picker/LanguagePicker";
 import { updateUser } from "../redux/User";
 import Spinner from "../components/Spinner";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Language = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -18,6 +19,10 @@ const Language = ({ navigation }) => {
       { language: "English", proficiency: "Intermediate" },
     ]
   );
+
+  // useEffect(async () => {
+  //   await AsyncStorage.clear();
+  // }, []);
 
   return (
     <View className="flex-1 justify-center bg-white">

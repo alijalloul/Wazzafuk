@@ -5,6 +5,8 @@ const userSchema = mongoose.Schema({
   telephone: { type: String, required: true },
   password: { type: String, required: true },
   type: { type: String, required: true },
+
+  pushToken: { type: String },
 });
 
 const userDB = mongoose.model("user", userSchema);

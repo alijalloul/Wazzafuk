@@ -44,8 +44,6 @@ const PostJobModal = ({ isBottomSheetVisible, setBottomSheetVisible, navigation 
 
   const [isEditing, setIsEditing] = useState(false);
 
-  const [workIndex, setWorkIndex] = useState(null);
-
   const closeModal = () => {
     setBottomSheetVisible(false);
     setIsEditing(false);

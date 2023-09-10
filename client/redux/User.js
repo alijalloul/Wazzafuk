@@ -78,7 +78,10 @@ export const editUser = async (userInfo, screenName, navigation, dispatch) => {
     if (screenName) {
       const token = JSON.parse(await AsyncStorage.getItem("profile"))?.token;
       await AsyncStorage.setItem("profile", JSON.stringify({ result: userInfo, token: token }));
-      await AsyncStorage.setItem("screenName", screenName);
+
+      if (screenName !== "choose") {
+        await AsyncStorage.setItem("screenName", screenName);
+      }
 
       navigation?.navigate(screenName);
     }
@@ -221,6 +224,7 @@ export const updateUser = async (newUser, navigation, dispatch) => {
 
   try {
     const token = JSON.parse(await AsyncStorage.getItem("profile")).token;
+    console.log(token);
 
     const res = await fetch(`${baseURL}/user`, {
       method: "PATCH",
@@ -298,6 +302,7 @@ export const fetchEmployeesByJobId = async (jobId, dispatch) => {
     });
 
     const data = await res.json();
+    console.log(data[0].coverLetter);
 
     dispatch(userSlice.actions.fetchEmployeesSuccess({ data: data, jobId: jobId }));
   } catch (error) {

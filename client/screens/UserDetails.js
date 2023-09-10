@@ -24,7 +24,7 @@ const UserDetails = ({ route, navigation }) => {
       </View>
 
       <View style={{ width: 250, height: 250 }}>
-        <Image source={{ uri: user.image }} className="rounded-full w-full h-full" />
+        <Image source={user?.image !== "" ? { uri: user?.image } : null} className="rounded-full w-full h-full" />
       </View>
 
       <Text className=" font-garamond text-center text-xl ">{user?.profession}</Text>

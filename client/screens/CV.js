@@ -12,7 +12,8 @@ const CV = ({ navigation }) => {
   const user = useSelector((state) => state.user.userInfo);
   const pending = useSelector((state) => state.user.pending);
 
-  const [pdf, setPdf] = useState(null);
+  const [pdf, setPdf] = useState("");
+  const [pdfName, setPdfName] = useState("");
 
   const pickDocument = async () => {
     try {
@@ -20,14 +21,17 @@ const CV = ({ navigation }) => {
         type: "application/pdf",
       });
 
-      if (result.type === "success") {
+      if (result.canceled === false) {
         if (result.size > 1024 * 1024) {
           alert("Selected PDF exceeds the size limit of 1MB.");
           return;
         }
 
+        console.log(result);
+        setPdfName(result.assets[0].name);
+
         try {
-          const response = await fetch(result.uri);
+          const response = await fetch(result.assets[0].uri);
           const blob = await response.blob();
           const reader = new FileReader();
 
@@ -48,10 +52,10 @@ const CV = ({ navigation }) => {
   };
 
   const handleButton = async () => {
-    if (pdf) {
-      updateUser({ ...user, pdf: pdf }, navigation, dispatch);
-    } else {
+    if (pdf === "pdf") {
       navigation.navigate("HomeTabs", { screen: "home" });
+    } else {
+      updateUser({ ...user, pdf: pdf }, navigation, dispatch);
     }
   };
 
@@ -78,12 +82,13 @@ const CV = ({ navigation }) => {
               <Text className="text-[#FE6F07] font-garamond-bold text-xl">Upload your CV</Text>
             </TouchableOpacity>
 
-            <View className={`w-full px-2 flex flex-row justify-between items-center ${!pdf && "hidden"}`}>
-              <Text className="font-garamond">{pdf?.name}</Text>
+            <View className={`w-full px-2 flex flex-row justify-between items-center ${!pdfName && "hidden"}`}>
+              <Text className="font-garamond">{pdfName}</Text>
 
               <TouchableOpacity
                 onPress={() => {
-                  setPdf(false);
+                  setPdf("");
+                  setPdfName("");
                 }}
                 className="border-red-500 border-[1px] rounded-2xl p-2"
               >

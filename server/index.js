@@ -30,7 +30,8 @@ app.get("/", async (req, res) => {
 });
 
 app.post("/users/signup", async (req, res) => {
-  const { name, telephone, password, type } = req.body;
+  console.log("signup user");
+  const { name, telephone, password, pushToken, type } = req.body;
 
   try {
     const existingUser = await userDB.findOne({ telephone });
@@ -42,13 +43,13 @@ app.post("/users/signup", async (req, res) => {
 
     const hashedPass = await bcrypt.hash(password, 12);
 
-    const result = await userDB.create({ name, telephone, password: hashedPass, type });
+    const result = await userDB.create({ name, telephone, password: hashedPass, pushToken, type });
     const token = jwt.sign({ telephone: result.telephone, id: result._id }, "sk");
 
     if (type === "employee") {
-      await employeeDB.create({ name, telephone, profession: "", introduction: "", _id: result._id });
+      await employeeDB.create({ name, telephone, profession: "", introduction: "", pushToken, _id: result._id });
     } else {
-      await employerDB.create({ name, telephone, _id: result._id });
+      await employerDB.create({ name, telephone, pushToken, _id: result._id });
     }
 
     res.status(200).json({ result, token });

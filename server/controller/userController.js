@@ -2,7 +2,11 @@ import jobPostDB from "../schema/JobPostSchema.js";
 import applicationDB from "../schema/applicationSchema.js";
 import employeeDB from "../schema/employeeSchema.js";
 
+import { Expo } from "expo-server-sdk";
+let expo = new Expo({ accessToken: "2iTxaACfLEfIcLrhRHHBXy3LJMOApmSA8ySCP1ok" });
+
 export async function getJobPostsForEmployer(req, res) {
+  console.log("getJobPostsForEmployer"); // Added log
   const { employerId, page } = req.params;
 
   try {
@@ -20,6 +24,7 @@ export async function getJobPostsForEmployer(req, res) {
 }
 
 export async function getJobPostsForEmployee(req, res) {
+  console.log("getJobPostsForEmployee"); // Added log
   const { employeeId, page } = req.params;
 
   console.log(req.params);
@@ -41,6 +46,7 @@ export async function getJobPostsForEmployee(req, res) {
 }
 
 export async function getAppliedEmployees(req, res) {
+  console.log("getAppliedEmployees"); // Added log
   const { jobId } = req.params;
 
   try {
@@ -48,11 +54,16 @@ export async function getAppliedEmployees(req, res) {
 
     const employeeData = await Promise.all(
       applications.map(async (application) => {
-        const employee = await employeeDB.findOne({ _id: application.employee_id });
-        employee._doc.coverLetter = application.coverLetter;
-        return employee;
+        let employee = await employeeDB.findOne({ _id: application.employee_id });
+        if (employee) {
+          employee._doc.coverLetter = application.coverLetter;
+          return employee;
+        }
+        return;
       })
     );
+
+    console.log(employeeData);
 
     res.status(200).json(employeeData);
   } catch (error) {
@@ -62,9 +73,21 @@ export async function getAppliedEmployees(req, res) {
 }
 
 export async function hireEmployee(req, res) {
+  console.log("hireEmployee"); // Added log
   const { jobId, employeeId } = req.params;
 
   try {
+    const employeePushToken = (await employeeDB.findById(employeeId)).pushToken;
+
+    const message = {
+      to: employeePushToken,
+      sound: "default",
+      title: "You got hired!",
+      body: "Congratulations, you have been hired for the job!",
+    };
+
+    await expo.sendPushNotificationsAsync([message]);
+
     await jobPostDB.findByIdAndRemove(jobId);
 
     await applicationDB.findOneAndUpdate({ job_id: jobId, employee_id: employeeId }, { status: "hired" });
@@ -77,6 +100,7 @@ export async function hireEmployee(req, res) {
 }
 
 export async function createJobPost(req, res) {
+  console.log("createJobPost"); // Added log
   const body = req.body;
 
   try {
@@ -89,6 +113,7 @@ export async function createJobPost(req, res) {
 }
 
 export async function updateJobPost(req, res) {
+  console.log("updateJobPost"); // Added log
   const body = req.body;
 
   try {
@@ -101,6 +126,7 @@ export async function updateJobPost(req, res) {
 }
 
 export async function deleteJobPost(req, res) {
+  console.log("deleteJobPost"); // Added log
   const { id } = req.params;
   console.log(id);
 
@@ -115,6 +141,7 @@ export async function deleteJobPost(req, res) {
 }
 
 export async function getJobPosts(req, res) {
+  console.log("getJobPosts"); // Added log
   const { page } = req.params;
 
   try {
@@ -132,6 +159,7 @@ export async function getJobPosts(req, res) {
 }
 
 export async function applyForJob(req, res) {
+  console.log("applyForJob"); // Added log
   const body = req.body;
 
   try {

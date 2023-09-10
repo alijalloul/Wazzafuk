@@ -83,14 +83,14 @@ const Profile = ({ navigation }) => {
         type: "application/pdf",
       });
 
-      if (result.type === "success") {
-        if (result.size > 1024 * 1024) {
+      if (result.canceled === false) {
+        if (result.assets[0].size > 1024 * 1024) {
           alert("Selected PDF exceeds the size limit of 1MB.");
           return;
         }
 
         try {
-          const response = await fetch(result.uri);
+          const response = await fetch(result.assets[0].uri);
           const blob = await response.blob();
           const reader = new FileReader();
 

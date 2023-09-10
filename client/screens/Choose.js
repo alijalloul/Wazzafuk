@@ -6,6 +6,7 @@ import { MotiView, MotiText, useDynamicAnimation } from "moti";
 
 import { signup } from "../redux/User";
 import Spinner from "../components/Spinner";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Choose = ({ navigation }) => {
   const dispatch = useDispatch();

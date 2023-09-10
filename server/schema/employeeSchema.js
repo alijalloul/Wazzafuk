@@ -13,6 +13,7 @@ const employeeSchema = mongoose.Schema({
   education: [],
   language: [],
 
+  pushToken: { type: String },
   _id: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
 });
 

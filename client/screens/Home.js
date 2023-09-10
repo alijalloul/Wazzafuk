@@ -27,7 +27,7 @@ const Home = ({ navigation }) => {
 
   return (
     <ScrollView className="flex-1 bg-white">
-      <View className="flex-1 items-center mb-8">
+      <View className="flex-1 items-center mb-8 w-full ">
         <View className="w-[90%]">
           <View className="mb-5">
             <Text className="font-garamond text-xl text-gray-500">Hello {user?.name?.split(" ")[0]},</Text>

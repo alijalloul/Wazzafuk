@@ -9,7 +9,7 @@ const UserJobPostDetails = ({ route, navigation }) => {
   const { itemId } = route.params;
 
   const employees = useSelector((state) => state.user.employeesByJobId);
-  const job = useSelector((state) => state.user.jobPosts).filter((item) => item._id === itemId && item)[0];
+  const job = useSelector((state) => state.user.jobPosts)?.filter((item) => item._id === itemId && item)[0];
 
   return (
     <ScrollView className=" bg-white" contentContainerStyle={{ flexGrow: 1, justifyContent: "center", alignItems: "center" }}>
@@ -61,16 +61,16 @@ const UserJobPostDetails = ({ route, navigation }) => {
 
       <View className="flex-1 w-full items-center">
         {employees?.length > 0 ? (
-          employees.map((employee, index) => (
+          employees?.map((employee, index) => (
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("userDetails", { userId: employee._id });
+                navigation.navigate("userDetails", { userId: employee?._id });
               }}
               key={index}
               className="w-[90%] px-4 flex-row items-center rounded-full border-[1px] h-32 mb-3"
             >
               <View className=" w-20 h-20 mr-2">
-                <Image source={{ uri: employee.image }} className="rounded-full w-full h-full" />
+                <Image source={employee.image !== "" ? { uri: employee.image } : null} className="rounded-full w-full h-full" />
               </View>
 
               <View className="">
@@ -79,7 +79,7 @@ const UserJobPostDetails = ({ route, navigation }) => {
                   <Text className=" font-garamond opacity-50 text-sm">posted 3hr ago</Text>
                 </View>
 
-                <Text className=" font-garamond">{employee.coverLetter}</Text>
+                <Text className=" font-garamond">{employee?.coverLetter}</Text>
               </View>
             </TouchableOpacity>
           ))

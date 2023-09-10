@@ -1,16 +1,16 @@
 import React from "react";
-import { View, Image, Text, TouchableOpacity } from "react-native";
+import { View, Image, Text, TouchableOpacity, SafeAreaView } from "react-native";
 
 import baladieh from "../assets/images/baladieh.jpeg";
 
 const OnBoarding = ({ navigation }) => {
   return (
-    <View className="bg-white flex-1">
+    <SafeAreaView className="bg-white flex-1">
       <View className="w-full flex justify-center items-center mb-10">
         <Text className="text-5xl text-[#FE6F07] font-garamond-bold">Waazefuk</Text>
       </View>
 
-      <View className="w-full aspect-square mb-24">
+      <View className="w-60 aspect-square mb-24">
         <Image source={baladieh} className="w-full h-full" />
       </View>
 
@@ -35,7 +35,7 @@ const OnBoarding = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

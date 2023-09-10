@@ -7,6 +7,7 @@ const employerSchema = mongoose.Schema({
   address: { type: String },
   image: { type: String },
 
+  pushToken: { type: String },
   _id: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
 });
 

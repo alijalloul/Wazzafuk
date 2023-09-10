@@ -19,7 +19,7 @@ const MyJobs = ({ navigation }) => {
     const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
 
     return (
-      <View className="flex-1 flex justify-center items-center">
+      <View className="flex-1 flex justify-center items-center w-full">
         <PostJobModal isBottomSheetVisible={isBottomSheetVisible} setBottomSheetVisible={setBottomSheetVisible} navigation={navigation} />
 
         <Pagination fetchType="postsById" userId={user?._id} page={page} numberOfPages={numberOfPages} />
