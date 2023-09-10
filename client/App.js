@@ -1,6 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import * as Notifications from "expo-notifications";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Provider } from "react-redux";
@@ -25,7 +26,7 @@ import Profile from "./screens/Profile.js";
 import MyJobs from "./screens/MyJobs.js";
 import JobPostDetails from "./screens/JobPostDetails.js";
 import UserJobPostDetails from "./screens/UserJobPostDetails.js";
-4;
+
 import UserDetails from "./screens/UserDetails.js";
 
 import Navbar from "./components/Navbar.js";
