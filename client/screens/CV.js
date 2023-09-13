@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import * as DocumentPicker from "expo-document-picker";
 
 import { editUser, updateUser } from "../redux/User";
 import Spinner from "../components/Spinner";
+import CustomeBackHeader from "../components/Header/CustomBackHeader";
 
 const CV = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -12,7 +13,7 @@ const CV = ({ navigation }) => {
   const user = useSelector((state) => state.user.userInfo);
   const pending = useSelector((state) => state.user.pending);
 
-  const [pdf, setPdf] = useState("");
+  const [pdf, setPdf] = useState(null);
   const [pdfName, setPdfName] = useState("");
 
   const pickDocument = async () => {
@@ -27,7 +28,6 @@ const CV = ({ navigation }) => {
           return;
         }
 
-        console.log(result);
         setPdfName(result.assets[0].name);
 
         try {
@@ -51,13 +51,9 @@ const CV = ({ navigation }) => {
     }
   };
 
-  const handleButton = async () => {
-    if (pdf === "pdf") {
-      navigation.navigate("HomeTabs", { screen: "home" });
-    } else {
-      updateUser({ ...user, pdf: pdf }, navigation, dispatch);
-    }
-  };
+  useEffect(() => {
+    navigation.setOptions({ headerLeft: () => <CustomeBackHeader navigation={navigation} screenName="onBoarding" /> });
+  }, []);
 
   return (
     <View className="flex-1 justify-center bg-white">
@@ -108,7 +104,7 @@ const CV = ({ navigation }) => {
 
           <TouchableOpacity
             onPress={() => {
-              handleButton();
+              updateUser({ name: user.name, telephone: user.telephone, type: user.type, pushToken: user.pushToken, _id: user._id, pdf: pdf }, navigation, dispatch);
             }}
             className={` border-[1px] w-full py-3 rounded-3xl flex justify-center items-center absolute bottom-0 mb-10 ${pdf ? "border-[#FE6F07] opacity-1" : "border-black opacity-50"}`}
           >

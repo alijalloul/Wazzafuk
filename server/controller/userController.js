@@ -5,8 +5,8 @@ import employeeDB from "../schema/employeeSchema.js";
 import { Expo } from "expo-server-sdk";
 let expo = new Expo({ accessToken: "2iTxaACfLEfIcLrhRHHBXy3LJMOApmSA8ySCP1ok" });
 
-export async function getJobPostsForEmployer(req, res) {
-  console.log("getJobPostsForEmployer"); // Added log
+export async function getJobPostsPostedByUser(req, res) {
+  console.log("getJobPostsPostedByUser"); // Added log
   const { employerId, page } = req.params;
 
   try {
@@ -23,22 +23,31 @@ export async function getJobPostsForEmployer(req, res) {
   }
 }
 
-export async function getJobPostsForEmployee(req, res) {
-  console.log("getJobPostsForEmployee"); // Added log
-  const { employeeId, page } = req.params;
+export async function getJobPostsAppliedToByUser(req, res) {
+  console.log("getJobPostsAppliedToByUser"); // Added log
+  const { employeeId, jobsStatus, page } = req.params;
 
-  console.log(req.params);
   try {
     const LIMIT = 8;
     const startIndex = (page - 1) * LIMIT;
     const totalPosts = await applicationDB.find({ employee_id: employeeId }).populate("job_id").countDocuments();
 
-    const applications = await applicationDB.find({ employee_id: employeeId }).populate("job_id").sort({ _id: -1 }).limit(LIMIT).skip(startIndex).exec();
-    const appliedJobPosts = applications.map((app) => app.job_id);
+    const applications = await applicationDB.find({ employee_id: employeeId }).sort({ _id: -1 }).limit(LIMIT).skip(startIndex).exec();
 
-    console.log(appliedJobPosts);
+    const jobPosts = await Promise.all(
+      applications.map(async (application) => {
+        let jobPost = await jobPostDB.findOne({ _id: application.job_id });
+        if (jobPost) {
+          jobPost._doc.coverLetter = application.coverLetter;
+          return jobPost;
+        }
+        return;
+      })
+    );
 
-    res.status(200).json({ data: appliedJobPosts, numberOfPages: Math.ceil(totalPosts / LIMIT) });
+    console.log(jobPosts);
+
+    res.status(200).json({ data: jobPosts, numberOfPages: Math.ceil(totalPosts / LIMIT) });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error fetching job posts" });
@@ -63,8 +72,6 @@ export async function getAppliedEmployees(req, res) {
       })
     );
 
-    console.log(employeeData);
-
     res.status(200).json(employeeData);
   } catch (error) {
     console.error(error);
@@ -88,9 +95,8 @@ export async function hireEmployee(req, res) {
 
     await expo.sendPushNotificationsAsync([message]);
 
-    await jobPostDB.findByIdAndRemove(jobId);
-
-    await applicationDB.findOneAndUpdate({ job_id: jobId, employee_id: employeeId }, { status: "hired" });
+    await jobPostDB.findOneAndUpdate({ _id: jobId }, { status: "hired" }, { new: true, lean: true });
+    await applicationDB.findOneAndUpdate({ job_id: jobId, employee_id: employeeId }, { status: "hired" }, { new: true, lean: true });
 
     res.status(200).send("Hired successfully");
   } catch (error) {
@@ -149,12 +155,82 @@ export async function getJobPosts(req, res) {
     const startIndex = (page - 1) * LIMIT;
     const totalPosts = await jobPostDB.countDocuments({});
 
-    const jobPosts = await jobPostDB.find().sort({ _id: -1 }).limit(LIMIT).skip(startIndex);
+    const jobPosts = await jobPostDB.find({ status: "pending" }).sort({ _id: -1 }).limit(LIMIT).skip(startIndex);
 
     res.json({ data: jobPosts, numberOfPages: Math.ceil(totalPosts / LIMIT) });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error fetching job posts" });
+  }
+}
+
+export async function getJobPostsBySearch(req, res) {
+  console.log("getJobPostsBySearch");
+
+  const { searchQuery, page } = req.params;
+
+  try {
+    const LIMIT = 8;
+    const startIndex = (Number(page) - 1) * LIMIT;
+
+    const searchRegex = searchQuery === "none" ? /.*/ : new RegExp(searchQuery, "i");
+    const totalPosts = await jobPostDB.countDocuments({ $or: [{ jobTitle: searchRegex }, { description: searchRegex }] });
+
+    const posts = await jobPostDB
+      .find({ $or: [{ jobTitle: searchRegex }, { description: searchRegex }] })
+      .sort({ _id: -1 })
+      .limit(LIMIT)
+      .skip(startIndex);
+
+    console.log(totalPosts);
+
+    res.json({ data: posts, numberOfPages: Math.ceil(totalPosts / LIMIT) });
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+  }
+}
+
+export async function getJobPostsByFilter(req, res) {
+  console.log("getJobPostsByFilter");
+
+  const criteria = req.query;
+  const { page } = req.params;
+
+  try {
+    const LIMIT = 8;
+    const startIndex = (Number(page) - 1) * LIMIT;
+
+    const filter = {
+      $and: [
+        {
+          $or: [
+            {
+              company: criteria.company !== "none" ? new RegExp(criteria.company || "", "i") : { $exists: true },
+            },
+            {
+              location: criteria.location !== "none" ? new RegExp(criteria.location || "", "i") : { $exists: true },
+            },
+            {
+              country: criteria.country !== "none" ? new RegExp(criteria.country || "", "i") : { $exists: true },
+            },
+          ],
+        },
+        { category: criteria.category || { $exists: true } },
+        { skills: criteria.skills || { $exists: true } },
+        { jobExperience: criteria.jobExperience || { $exists: true } },
+        { jobType: criteria.jobType || { $exists: true } },
+      ],
+    };
+
+    const totalPosts = await jobPostDB.countDocuments(filter);
+
+    const posts = await jobPostDB.find(filter).sort({ _id: -1 }).limit(LIMIT).skip(startIndex);
+
+    console.log(totalPosts);
+
+    res.json({ data: posts, numberOfPages: Math.ceil(totalPosts / LIMIT) });
+  } catch (err) {
+    res.status(409).json({ message: error.message });
   }
 }
 

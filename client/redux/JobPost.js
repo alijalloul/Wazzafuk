@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const baseURL = "http://192.168.0.8:5000";
+const baseURL = "http://192.168.1.3:5000";
 
 const postSlice = createSlice({
   name: "post",
@@ -52,6 +52,51 @@ export const fetchPosts = async (page, dispatch) => {
       method: "GET",
     });
 
+    const data = await res.json();
+
+    dispatch(postSlice.actions.fetchSuccess(data));
+  } catch (error) {
+    dispatch(postSlice.actions.errorAPI());
+    console.log("error: ", error);
+  }
+};
+
+export const fetchPostsBySearch = async (searchQuery, page, dispatch) => {
+  dispatch(postSlice.actions.startAPI());
+
+  try {
+    const res = await fetch(`${baseURL}/posts/search/${searchQuery || "none"}/${page}`, {
+      mode: "cors",
+    });
+    const data = await res.json();
+
+    dispatch(postSlice.actions.fetchSuccess(data));
+  } catch (error) {
+    dispatch(postSlice.actions.errorAPI());
+    console.log("error: ", error);
+  }
+};
+
+export const fetchPostsByFilter = async (company, location, country, category, skills, jobExperience, jobType, page, dispatch) => {
+  dispatch(postSlice.actions.startAPI());
+
+  try {
+    const queryParams = new URLSearchParams({
+      company: company || "none",
+      location: location || "none",
+      country: country || "none",
+      category: category || "none",
+      skills: skills || "none",
+      jobExperience: jobExperience || "none",
+      jobType: jobType || "none",
+      page: page || "1", // Set a default value for page if it's not provided
+    });
+
+    const url = `${baseURL}/filter?${queryParams.toString()}`;
+
+    const res = await fetch(url, {
+      mode: "cors",
+    });
     const data = await res.json();
 
     dispatch(postSlice.actions.fetchSuccess(data));

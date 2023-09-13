@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const baseURL = "http://192.168.0.8:5000";
+const baseURL = "http://192.168.1.3:5000";
 
 const userSlice = createSlice({
   name: "user",
   initialState: {
+    appLanguage: null,
     userInfo: {},
     jobPosts: [],
     employeesByJobId: [],
@@ -14,10 +15,16 @@ const userSlice = createSlice({
     numberOfPages: null,
     pending: false,
     error: false,
+    errorType: null,
   },
   reducers: {
     startAPI: (state) => {
       state.pending = true;
+      state.errorType = null;
+    },
+    editLanguageSuccess: (state, action) => {
+      state.pending = false;
+      state.appLanguage = action?.payload;
     },
     loginSuccess: (state, action) => {
       state.pending = false;
@@ -37,7 +44,7 @@ const userSlice = createSlice({
     },
     deleteSuccess: (state, action) => {
       state.pending = false;
-      state.jobPosts = state.jobPosts.filter((post) => post._id !== action.payload);
+      state.jobPosts = state.jobPosts?.filter((post) => post._id !== action.payload);
     },
     editSuccess: (state, action) => {
       state.pending = false;
@@ -60,14 +67,30 @@ const userSlice = createSlice({
     hireSuccess: (state, action) => {
       state.pending = false;
       state.employeesByJobId = [];
-      state.jobPosts = state.jobPosts.filter((item, index) => item._id !== action.payload);
+      state.jobPosts = state.jobPosts?.filter((item, index) => item._id !== action.payload);
     },
-    errorAPI: (state) => {
+    errorAPI: (state, action) => {
       state.pending = null;
       state.error = true;
+      state.errorType = action.payload?.errorType;
     },
   },
 });
+
+export const editAppLanguage = async (language, navigation, dispatch) => {
+  dispatch(userSlice.actions.startAPI());
+
+  try {
+    dispatch(userSlice.actions.editLanguageSuccess(language));
+
+    await AsyncStorage.setItem("language", language);
+
+    navigation.navigate("onBoarding");
+  } catch (error) {
+    dispatch(userSlice.actions.errorAPI());
+    console.log("error: ", error);
+  }
+};
 
 export const editUser = async (userInfo, screenName, navigation, dispatch) => {
   dispatch(userSlice.actions.startAPI());
@@ -163,14 +186,16 @@ export const signup = async (userInfo, navigation, dispatch) => {
 
     const data = await res.json();
 
-    if (data?.message === "Account already exists.") {
-      return data;
+    if (res.status === 400) {
+      dispatch(userSlice.actions.errorAPI({ errorType: "user already exists" }));
+
+      return;
     }
 
     dispatch(userSlice.actions.loginSuccess(data));
 
     await AsyncStorage.setItem("profile", JSON.stringify({ ...data }));
-    await AsyncStorage.setItem("screenName", "contactInfo");
+    await AsyncStorage.setItem("screenName", "verification");
 
     navigation.navigate("verification");
   } catch (error) {
@@ -224,7 +249,6 @@ export const updateUser = async (newUser, navigation, dispatch) => {
 
   try {
     const token = JSON.parse(await AsyncStorage.getItem("profile")).token;
-    console.log(token);
 
     const res = await fetch(`${baseURL}/user`, {
       method: "PATCH",
@@ -237,6 +261,7 @@ export const updateUser = async (newUser, navigation, dispatch) => {
 
     const data = await res.json();
 
+    console.log(data);
     dispatch(userSlice.actions.editSuccess(data));
 
     await AsyncStorage.setItem("profile", JSON.stringify({ result: data, token: token }));
@@ -302,7 +327,6 @@ export const fetchEmployeesByJobId = async (jobId, dispatch) => {
     });
 
     const data = await res.json();
-    console.log(data[0].coverLetter);
 
     dispatch(userSlice.actions.fetchEmployeesSuccess({ data: data, jobId: jobId }));
   } catch (error) {

@@ -12,6 +12,8 @@ import Spinner from "../components/Spinner";
 
 const LogIn = ({ navigation }) => {
   const dispatch = useDispatch();
+  const appLanguage = useSelector((state) => state.user.appLanguage);
+
   const pending = useSelector((state) => state.user.pending);
 
   const [telephone, setTelephone] = useState("");

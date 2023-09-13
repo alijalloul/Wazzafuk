@@ -6,6 +6,7 @@ import { editUser } from "../redux/User";
 
 import UploadImage from "../components/UploadImage";
 import RenderTextInput from "../components/RenderTextInput";
+import CustomeBackHeader from "../components/Header/CustomBackHeader";
 
 const Intoducation = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -14,6 +15,10 @@ const Intoducation = ({ navigation }) => {
   const [image, setImage] = useState(userInfo?.image || "");
   const [professionalRole, setProffesionalRole] = useState(userInfo?.profession || "");
   const [introduction, setIntroduction] = useState(userInfo?.introduction || "");
+
+  useEffect(() => {
+    navigation.setOptions({ headerLeft: () => <CustomeBackHeader navigation={navigation} screenName="contactInfo" /> });
+  }, []);
 
   return (
     <ScrollView

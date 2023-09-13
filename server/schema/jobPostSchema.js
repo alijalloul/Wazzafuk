@@ -11,6 +11,7 @@ const JobPostSchema = mongoose.Schema({
   jobType: { type: String },
   description: { type: String },
   date: { type: Date, default: new Date() },
+  status: { type: String, required: true },
 
   employer_id: { type: mongoose.Schema.Types.ObjectId, ref: "employer", required: true },
 });

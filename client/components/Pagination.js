@@ -1,6 +1,7 @@
 import React, { memo, useEffect, useState } from "react";
 import { View, Text, TouchableWithoutFeedback, Image } from "react-native";
 import { useDispatch } from "react-redux";
+import { useIsFocused } from "@react-navigation/native";
 
 import chevronRight from "../assets/images/chevronRight.png";
 import doubleChevronRight from "../assets/images/doubleChevronRight.png";
@@ -11,6 +12,7 @@ import { changeUserPostsPage, fetchJobsByEmployer, fetchPostsAplliedToByUser } f
 
 const Pagination = ({ fetchType, userId, page, numberOfPages }) => {
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -22,7 +24,7 @@ const Pagination = ({ fetchType, userId, page, numberOfPages }) => {
     } else if (fetchType === "postsByEmployeeId") {
       fetchPostsAplliedToByUser(userId, page, dispatch);
     }
-  }, [page]);
+  }, [page, isFocused]);
   useEffect(() => {
     if (currentPage !== page) {
       if (fetchType === "postsById") {

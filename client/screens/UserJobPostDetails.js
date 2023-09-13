@@ -4,7 +4,7 @@ import { Text, View, ScrollView, TouchableOpacity, Image } from "react-native";
 import { useSelector } from "react-redux";
 
 const UserJobPostDetails = ({ route, navigation }) => {
-  const baseURL = "http://192.168.0.8:5000";
+  const baseURL = "http://192.168.1.3:5000";
 
   const { itemId } = route.params;
 
@@ -79,7 +79,7 @@ const UserJobPostDetails = ({ route, navigation }) => {
                   <Text className=" font-garamond opacity-50 text-sm">posted 3hr ago</Text>
                 </View>
 
-                <Text className=" font-garamond">{employee?.coverLetter}</Text>
+                <Text className=" font-garamond">{employee.coverLetter}</Text>
               </View>
             </TouchableOpacity>
           ))

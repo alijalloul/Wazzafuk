@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import LanguagePicker from "../components/Picker/LanguagePicker";
 import { updateUser } from "../redux/User";
 import Spinner from "../components/Spinner";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import CustomeBackHeader from "../components/Header/CustomBackHeader";
 
 const Language = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -20,9 +20,9 @@ const Language = ({ navigation }) => {
     ]
   );
 
-  // useEffect(async () => {
-  //   await AsyncStorage.clear();
-  // }, []);
+  useEffect(() => {
+    navigation.setOptions({ headerLeft: () => <CustomeBackHeader navigation={navigation} screenName="education" /> });
+  }, []);
 
   return (
     <View className="flex-1 justify-center bg-white">

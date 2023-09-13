@@ -1,8 +1,9 @@
-import React, { memo, useState } from "react";
+import React, { memo, useState, useEffect } from "react";
 import { View, TouchableOpacity, Text, ScrollView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 import EducationPicker from "../components/Picker/EducationPicker";
+import CustomeBackHeader from "../components/Header/CustomBackHeader";
 
 import { editUser } from "../redux/User";
 
@@ -38,6 +39,10 @@ const Education = ({ navigation }) => {
       },
     ]
   );
+
+  useEffect(() => {
+    navigation.setOptions({ headerLeft: () => <CustomeBackHeader navigation={navigation} screenName="work" /> });
+  }, []);
 
   return (
     <ScrollView className=" bg-white" contentContainerStyle={{ flexGrow: 1, justifyContent: "center", alignItems: "center" }}>

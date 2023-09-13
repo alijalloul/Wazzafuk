@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
 const employeeSchema = mongoose.Schema({
-  name: { type: String, required: true },
-  telephone: { type: String, required: true },
+  name: { type: String, required: true, trim: true },
+  telephone: { type: String, required: true, trim: true },
   email: { type: String },
   address: { type: String },
   pdf: { type: String },

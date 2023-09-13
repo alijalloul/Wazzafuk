@@ -160,7 +160,7 @@ const EducationPicker = ({ headerText, headerSize, education, setEducation }) =>
 
                     <TouchableOpacity
                       onPress={() => {
-                        setEducation(education.filter((item, index2) => index2 !== index));
+                        setEducation(education?.filter((item, index2) => index2 !== index));
                       }}
                       className="border-[1px] border-gray-400 rounded-full p-[6px]"
                     >

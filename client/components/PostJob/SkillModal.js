@@ -139,7 +139,7 @@ const SkillModal = ({ value, setValue }) => {
     "Language Teaching",
   ];
 
-  const filteredSkills = search !== "" ? data.filter((item) => item.toLowerCase().includes(search.toLowerCase())) : [];
+  const filteredSkills = search !== "" ? data?.filter((item) => item.toLowerCase().includes(search.toLowerCase())) : [];
 
   return (
     <View className="flex justify-between w-full">
@@ -197,7 +197,7 @@ const SkillModal = ({ value, setValue }) => {
                 skills.map((skill, index) => (
                   <TouchableOpacity
                     onPress={() => {
-                      setSkills(skills.filter((item) => item !== skill));
+                      setSkills(skills?.filter((item) => item !== skill));
                     }}
                     className="inline-block px-2 py-2 rounded-2xl mr-2 mb-2 bg-[#ff8d3c]"
                     key={index.toString()}
@@ -214,7 +214,7 @@ const SkillModal = ({ value, setValue }) => {
               {filteredSkills.map((skill, index) => (
                 <TouchableOpacity
                   onPress={() => {
-                    skills.includes(skill) ? setSkills(skills.filter((item) => item !== skill)) : setSkills([...skills, skill]);
+                    skills.includes(skill) ? setSkills(skills?.filter((item) => item !== skill)) : setSkills([...skills, skill]);
                   }}
                   className={` inline-block px-2 py-2 bg-gray-200 rounded-2xl mr-2 mb-2 ${skills.includes(skill) && "bg-[#ff8d3c]"}`}
                   key={index.toString()}

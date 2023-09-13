@@ -34,7 +34,7 @@ const Verification = ({ navigation }) => {
 
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("CV");
+              navigation.navigate("signUp");
             }}
           >
             <Text className=" font-garamond opacity-50 border-b-[0.5px]">Change Phone Number</Text>
@@ -78,7 +78,7 @@ const Verification = ({ navigation }) => {
         <View className="relative w-[90%]">
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("CV");
+              navigation.navigate("choose");
             }}
             className="bg-[#FE6F07] w-full py-3 rounded-3xl flex justify-center items-center mb-3"
           >

@@ -1,8 +1,6 @@
-import React, { memo, useState } from "react";
-import { View, TouchableOpacity, Text, ScrollView } from "react-native";
+import React, { memo, useCallback, useState } from "react";
+import { View, TouchableOpacity, Text, ScrollView, RefreshControl } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-
-import { editUser } from "../redux/User";
 
 import PostJobModal from "../components/PostJob/PostJobModal";
 import Pagination from "../components/Pagination";
@@ -15,12 +13,23 @@ const MyJobs = ({ navigation }) => {
   const page = useSelector((state) => state.user.currentPage);
   const numberOfPages = useSelector((state) => state.user.numberOfPages);
 
+  const [jobsStatus, setJobsStatus] = useState("pending");
+
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
   const EmployerMyJobs = () => {
     const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
 
     return (
       <View className="flex-1 flex justify-center items-center w-full">
-        <PostJobModal isBottomSheetVisible={isBottomSheetVisible} setBottomSheetVisible={setBottomSheetVisible} navigation={navigation} />
+        <PostJobModal isBottomSheetVisible={isBottomSheetVisible} setBottomSheetVisible={setBottomSheetVisible} navigation={navigation} jobsStatus={jobsStatus} />
 
         <Pagination fetchType="postsById" userId={user?._id} page={page} numberOfPages={numberOfPages} />
 
@@ -39,7 +48,7 @@ const MyJobs = ({ navigation }) => {
   const EmployeeMyJobs = () => {
     return (
       <View className="flex-1 flex justify-center items-center">
-        <EmployeeJobs navigation={navigation} />
+        <EmployeeJobs navigation={navigation} jobsStatus={jobsStatus} />
 
         <Pagination fetchType="postsByEmployeeId" userId={user?._id} page={page} numberOfPages={numberOfPages} />
       </View>
@@ -47,7 +56,31 @@ const MyJobs = ({ navigation }) => {
   };
 
   return (
-    <ScrollView className="bg-white" contentContainerStyle={{ flexGrow: 1, justifyContent: "center", alignItems: "center" }}>
+    <ScrollView
+      className="bg-white"
+      contentContainerStyle={{ flexGrow: 1, justifyContent: "center", alignItems: "center" }}
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+    >
+      <View className=" flex flex-row justify-center items-center mb-5">
+        <TouchableOpacity
+          onPress={() => {
+            setJobsStatus("pending");
+          }}
+          className={`${jobsStatus === "pending" ? "bg-[#FE6F07]" : "bg-white"} flex justify-center items-center rounded-xl border-[1px] border-[#FE6F07] rounded-r-none w-[20%] p-2`}
+        >
+          <Text className={`${jobsStatus === "pending" ? "text-white" : "text-[#FE6F07]"}`}>pending</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => {
+            setJobsStatus("hired");
+          }}
+          className={`${jobsStatus === "hired" ? "bg-[#FE6F07]" : "bg-white"} flex justify-center items-center rounded-xl border-[1px] border-[#FE6F07] rounded-l-none w-[20%] p-2`}
+        >
+          <Text className={`${jobsStatus === "hired" ? "text-white" : "text-[#FE6F07]"}`}>Hired</Text>
+        </TouchableOpacity>
+      </View>
+
       {user?.type === "employee" ? <EmployeeMyJobs /> : <EmployerMyJobs />}
     </ScrollView>
   );

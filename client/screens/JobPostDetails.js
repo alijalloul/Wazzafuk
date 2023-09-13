@@ -5,17 +5,18 @@ import { useSelector } from "react-redux";
 import RenderTextInput from "../components/RenderTextInput";
 
 const JobPostDetails = ({ route, navigation }) => {
-  const baseURL = "http://192.168.0.8:5000";
+  const baseURL = "http://192.168.1.3:5000";
 
   const { jobId, employerId } = route.params;
 
   const accountType = useSelector((state) => state.user.userInfo).type;
-  const post = useSelector((state) => state.jobPosts.postsInfo).filter((item) => item._id === jobId && item)[0];
+  const post = useSelector((state) => state.jobPosts.postsInfo)?.filter((item) => item._id === jobId && item)[0];
   const job_id = jobId;
   const employee_id = useSelector((state) => state.user.userInfo)?._id;
   const employer_id = employerId;
   const status = "pending";
   const category = post?.category || "";
+  const applied = useSelector((state) => state.user.jobPosts).some((item) => item._id === jobId);
 
   const [coverLetter, setCoverLetter] = useState("");
   const [coverLetterError, setCoverLetterError] = useState(false);
@@ -69,7 +70,7 @@ const JobPostDetails = ({ route, navigation }) => {
           </View>
         </View>
 
-        <View className="w-full flex justify-center items-center py-6 border-y-[1px] mb-5">
+        <View className="w-full flex justify-center items-center py-6 border-y-[1px]">
           <View className="w-[90%]">
             <Text className=" font-garamond text-lg">Skills</Text>
             <View className="flex flex-row flex-wrap">
@@ -83,7 +84,7 @@ const JobPostDetails = ({ route, navigation }) => {
           </View>
         </View>
 
-        <View className={` ${accountType === "employer" ? "hidden" : "flex justify-center items-center w-[90%]"}`}>
+        <View className={` ${accountType === "employer" || applied ? "hidden" : "flex justify-center items-center w-[90%] mt-5"}`}>
           <RenderTextInput
             title="Cover Letter"
             placeholder="Ex: I have over 5 years of experience in accounting. Moreover, I have a cisco certification in both Excel and Word"
@@ -101,10 +102,14 @@ const JobPostDetails = ({ route, navigation }) => {
         onPress={() => {
           coverLetter.trim() === "" ? setCoverLetterError(true) : handleApply();
         }}
-        className={` ${accountType === "employer" ? "hidden" : "self-end justify-self-end w-32 h-12 flex justify-center items-center mr-3 my-3 bg-[#FE6F07] rounded-xl"}`}
+        className={` ${accountType === "employer" || applied ? "hidden" : "self-end justify-self-end w-32 h-12 flex justify-center items-center mr-3 my-3 bg-[#FE6F07] rounded-xl"}`}
       >
         <Text className="text-lg font-garamond text-white">Apply</Text>
       </TouchableOpacity>
+
+      <View className={`${applied ? "flex-1 justify-center items-center w-full " : "hidden"}`}>
+        <Text className="font-garamond text-sm opacity-50 ">You have already applied for this job.</Text>
+      </View>
     </ScrollView>
   );
 };

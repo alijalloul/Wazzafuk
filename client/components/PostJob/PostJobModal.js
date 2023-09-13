@@ -17,10 +17,10 @@ import SkillModal from "./SkillModal";
 import { deletePost, createJobPost, updateJobPost } from "../../redux/User";
 import { fetchEmployeesByJobId } from "../../redux/User";
 
-const PostJobModal = ({ isBottomSheetVisible, setBottomSheetVisible, navigation }) => {
+const PostJobModal = ({ isBottomSheetVisible, setBottomSheetVisible, navigation, jobsStatus }) => {
   const dispatch = useDispatch();
   const employerID = useSelector((state) => state?.user.userInfo)?._id;
-  const jobs = useSelector((state) => state.user.jobPosts);
+  const jobs = useSelector((state) => state.user.jobPosts)?.filter((job) => job.status === jobsStatus);
 
   const [id, setId] = useState(null);
 
@@ -99,6 +99,7 @@ const PostJobModal = ({ isBottomSheetVisible, setBottomSheetVisible, navigation 
               description,
               date: new Date(),
               employer_id: employerID,
+              status: "pending",
               _id: id,
             },
             dispatch
@@ -116,6 +117,7 @@ const PostJobModal = ({ isBottomSheetVisible, setBottomSheetVisible, navigation 
               description,
               date: new Date(),
               employer_id: employerID,
+              status: "pending",
             },
             dispatch
           );

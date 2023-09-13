@@ -1,17 +1,33 @@
-import { Text, TouchableOpacity, ScrollView, TextInput, View, Image } from "react-native";
+import { Text, TouchableOpacity, ScrollView, TextInput, View, Image, RefreshControl } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { memo, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useLayoutEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import search from "../assets/images/search.png";
+import searchIMG from "../assets/images/search.png";
 
 import Pagination from "../components/Pagination";
 import JobPosts from "../components/JobPosts";
+import { fetchPostsBySearch } from "../redux/JobPost";
+import FilterModal from "../components/FilterModal";
+import HeaderLeft from "../components/Header/HeaderLeft";
 
 const Home = ({ navigation }) => {
+  const dispatch = useDispatch();
+
+  const [numberOfFilters, setNumberOfFilters] = useState(0);
+  const [search, setSearch] = useState("");
+  const [refreshing, setRefreshing] = useState(false);
+  const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
+
   const user = useSelector((state) => state.user.userInfo);
-  const page = useSelector((state) => state.jobPosts.page);
+  const page = useSelector((state) => state.jobPosts.currentPage);
   const numberOfPages = useSelector((state) => state.jobPosts.numberOfPages);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => <HeaderLeft setBottomSheetVisible={setBottomSheetVisible} numberOfFilters={numberOfFilters} />,
+    });
+  }, [navigation, numberOfFilters]);
 
   useEffect(() => {
     const setItem = async () => {
@@ -25,30 +41,50 @@ const Home = ({ navigation }) => {
     setItem();
   }, []);
 
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
   return (
-    <ScrollView className="flex-1 bg-white">
-      <View className="flex-1 items-center mb-8 w-full ">
-        <View className="w-[90%]">
-          <View className="mb-5">
-            <Text className="font-garamond text-xl text-gray-500">Hello {user?.name?.split(" ")[0]},</Text>
-            <Text className={`font-garamond-bold text-2xl ${user?.type === "employer" && "hidden"}`}>Find your perfect job</Text>
-          </View>
-
-          <View className="">
-            <View className="flex flex-row mb-4">
-              <TextInput value="" onChange={() => {}} placeholder="Find your job" className="w-[85%] rounded-xl bg-gray-100 mr-2 pl-4" />
-
-              <TouchableOpacity onPress={() => {}} className="w-[15%] p-2 aspect-square rounded-xl bg-orange-400">
-                <Image source={search} resizeMode="contain" className="w-full h-full" />
-              </TouchableOpacity>
-            </View>
-          </View>
+    <ScrollView className="flex-1 bg-white py-8 " contentContainerStyle={{ alignItems: "center" }} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+      <View className="w-[90%]">
+        <View className="mb-5">
+          <Text className="font-garamond text-xl text-gray-500">Hello {user?.name?.split(" ")[0]},</Text>
+          <Text className={`font-garamond-bold text-2xl ${user?.type === "employer" && "hidden"}`}>Find your perfect job</Text>
         </View>
 
-        <JobPosts navigation={navigation} />
+        <View className="">
+          <View className="flex flex-row mb-4">
+            <TextInput
+              value={search}
+              onChangeText={(text) => {
+                setSearch(text);
+              }}
+              placeholder="Find your job"
+              className="w-[85%] rounded-xl bg-gray-100 mr-2 pl-4"
+            />
 
-        <Pagination fetchType="posts" page={page} numberOfPages={numberOfPages} />
+            <TouchableOpacity
+              onPress={() => {
+                fetchPostsBySearch(search, page, dispatch);
+              }}
+              className="w-[15%] p-2 aspect-square rounded-xl bg-orange-400"
+            >
+              <Image source={searchIMG} resizeMode="contain" className="w-full h-full" />
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
+
+      <JobPosts navigation={navigation} />
+
+      <Pagination fetchType="posts" page={page} numberOfPages={numberOfPages} />
+
+      <FilterModal bottomSheetVisible={bottomSheetVisible} setBottomSheetVisible={setBottomSheetVisible} navigation={navigation} page={page} setNumberOfFilters={setNumberOfFilters} />
     </ScrollView>
   );
 };

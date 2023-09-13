@@ -3,13 +3,13 @@ import { View, TouchableOpacity, Text } from "react-native";
 import { useSelector } from "react-redux";
 import moment from "moment";
 
-const EmployeeJobs = ({ navigation }) => {
-  const jobs = useSelector((state) => state.user.jobPosts);
+const EmployeeJobs = ({ navigation, jobsStatus }) => {
+  const jobs = useSelector((state) => state.user.jobPosts)?.filter((job) => job.status === jobsStatus);
 
   return (
     <View className="flex-1 w-[90%] ">
       <View className={`flex-1 justify-center items-center ${jobs?.length > 0 && "hidden"}`}>
-        <Text className="font-garamond mb-5 text-lg opacity-60">You Have Not Applied to Any Job Yet.</Text>
+        <Text className="font-garamond mb-5 text-lg opacity-60">{jobsStatus === "pending" ? "You Have Not Applied to Any Job Yet." : "You Have Not Been Hired to Any Job Yet."}</Text>
       </View>
       <View>
         {jobs?.length > 0 &&

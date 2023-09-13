@@ -27,7 +27,7 @@ const SingleSelectorModal = ({ title, data, value, setValue, isError, setIsError
     );
   };
 
-  const filteredData = data.filter((item) => item.toLowerCase().includes(search.toLowerCase()));
+  const filteredData = data?.filter((item) => item.toLowerCase().includes(search.toLowerCase()));
 
   return (
     <View className="flex w-full">

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { View, TouchableOpacity, Text, ScrollView, Image, Platform } from "react-native";
-import { useNavigation, useIsFocused, useRoute, getFocusedRouteNameFromRoute } from "@react-navigation/native";
+import { View, TouchableOpacity, Text, ScrollView, Image } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import * as FileSystem from "expo-file-system";
 import * as Notifications from "expo-notifications";
@@ -26,6 +26,7 @@ const Profile = ({ navigation }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.userInfo);
   const pending = useSelector((state) => state.user.pending);
+  console.log(user?.type);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");

@@ -1,10 +1,11 @@
-import React, { memo, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { View, TouchableOpacity, Text, ScrollView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 import { editUser } from "../redux/User";
 
 import WorkExperiencePicker from "../components/Picker/WorkExperiencePicker";
+import CustomeBackHeader from "../components/Header/CustomBackHeader";
 
 const Work = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -47,6 +48,10 @@ const Work = ({ navigation }) => {
       },
     ]
   );
+
+  useEffect(() => {
+    navigation.setOptions({ headerLeft: () => <CustomeBackHeader navigation={navigation} screenName="introduction" /> });
+  }, []);
 
   return (
     <ScrollView className=" bg-white" contentContainerStyle={{ flexGrow: 1, justifyContent: "center", alignItems: "center" }}>

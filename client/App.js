@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
+import { useNavigation } from "@react-navigation/native";
 import Constants from "expo-constants";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -29,17 +30,19 @@ import Profile from "./screens/Profile.js";
 import MyJobs from "./screens/MyJobs.js";
 import JobPostDetails from "./screens/JobPostDetails.js";
 import UserJobPostDetails from "./screens/UserJobPostDetails.js";
-
 import UserDetails from "./screens/UserDetails.js";
-
 import Navbar from "./components/Navbar.js";
+
+import CustomBackHeader from "./components/Header/CustomBackHeader.js";
 
 import { useFonts } from "expo-font";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { editUser } from "./redux/User.js";
+import { editAppLanguage, editUser } from "./redux/User.js";
 import EmployeeJobDetails from "./screens/EmployeeJobDetails.js";
 import ContactInfo from "./screens/ContactInfo.js";
+import HeaderRight from "./components/Header/HeaderRight.js";
+import ChooseLanguage from "./screens/ChooseLanguage.js";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -89,7 +92,6 @@ async function registerForPushNotificationsAsync() {
     token = await Notifications.getExpoPushTokenAsync({
       projectId: Constants.expoConfig.extra.eas.projectId,
     });
-    console.log("token: ", token);
   } else {
     alert("Must use physical device for Push Notifications");
   }
@@ -111,6 +113,7 @@ const App = () => {
 
   const [user, setUser] = useState(null);
   const [screenName, setScreenName] = useState(null);
+  const [language, setLanguage] = useState(null);
 
   const [expoPushToken, setExpoPushToken] = useState("");
   const [notification, setNotification] = useState(false);
@@ -125,7 +128,7 @@ const App = () => {
     });
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
-      console.log("addNotificationResponseReceivedListener: ", response);
+      console.log(response);
     });
 
     return () => {
@@ -139,11 +142,15 @@ const App = () => {
       try {
         const value = await AsyncStorage.getItem("profile");
         const value2 = await AsyncStorage.getItem("screenName");
+        const value3 = await AsyncStorage.getItem("language");
 
         if (value) {
           setUser(JSON.parse(value).result);
           editUser(JSON.parse(value).result, null, null, dispatch);
           setScreenName(value2);
+
+          setLanguage(value3);
+          editAppLanguage(JSON.parse(value3), null, dispatch);
         }
       } catch (error) {
         console.log("error message: ", error);
@@ -157,6 +164,10 @@ const App = () => {
     editUser({ ...user, pushToken: expoPushToken.data }, null, null, dispatch);
   }, [expoPushToken]);
 
+  useEffect(() => {
+    //console.log("user: ", user);
+  }, [user]);
+
   const [fontsLoaded] = useFonts({
     "EB-Garamond": require("./assets/fonts/EBGaramond-Medium.ttf"),
     "EB-Garamond-Bold": require("./assets/fonts/EBGaramond-Bold.ttf"),
@@ -166,10 +177,15 @@ const App = () => {
   const HomeTabs = () => {
     return (
       <Tab.Navigator
-        initialRouteName={user?.type === "employer" ? "myJobs" : "home"}
+        initialRouteName="home"
         tabBar={(props) => <Navbar {...props} />}
         screenOptions={{
-          headerShown: false,
+          headerTitle: "",
+          headerShadowVisible: false,
+          headerStyle: {
+            height: 120,
+          },
+          headerRight: () => <HeaderRight />,
         }}
       >
         <Tab.Screen name="home" component={Home} />
@@ -181,7 +197,17 @@ const App = () => {
   if (fontsLoaded) {
     return (
       <NavigationContainer className=" border-box padding-0 margin-0">
-        <Stack.Navigator initialRouteName={user ? screenName : "home"}>
+        <Stack.Navigator initialRouteName={language ? (user?.telephone ? screenName : "home") : "chooseLanguage"}>
+          <Stack.Screen
+            name="chooseLanguage"
+            component={ChooseLanguage}
+            options={{
+              headerTitle: "",
+              headerShadowVisible: false,
+              headerBackVisible: false,
+            }}
+          />
+
           <Stack.Screen
             name="onBoarding"
             component={OnBoarding}
@@ -195,9 +221,11 @@ const App = () => {
             name="HomeTabs"
             component={HomeTabs}
             options={{
-              headerTitle: "",
-              headerShadowVisible: false,
-              headerBackVisible: false,
+              headerShown: false,
+              headerStyle: {
+                height: 100,
+                marginHorizantal: 10,
+              },
             }}
           />
           <Stack.Screen

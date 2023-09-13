@@ -31,7 +31,7 @@ app.get("/", async (req, res) => {
 
 app.post("/users/signup", async (req, res) => {
   console.log("signup user");
-  const { name, telephone, password, pushToken, type } = req.body;
+  const { name, telephone, password, pushToken } = req.body;
 
   try {
     const existingUser = await userDB.findOne({ telephone });
@@ -43,26 +43,21 @@ app.post("/users/signup", async (req, res) => {
 
     const hashedPass = await bcrypt.hash(password, 12);
 
-    const result = await userDB.create({ name, telephone, password: hashedPass, pushToken, type });
+    const result = await userDB.create({ name, telephone, password: hashedPass, pushToken });
     const token = jwt.sign({ telephone: result.telephone, id: result._id }, "sk");
-
-    if (type === "employee") {
-      await employeeDB.create({ name, telephone, profession: "", introduction: "", pushToken, _id: result._id });
-    } else {
-      await employerDB.create({ name, telephone, pushToken, _id: result._id });
-    }
 
     res.status(200).json({ result, token });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error });
   }
 });
 
 app.post("/users/login", async (req, res) => {
+  console.log("login");
   const { telephone, password } = req.body;
 
   try {
-    const existingUser = await userDB.findOne({ telephone });
+    const existingUser = await userDB.findOne({ telephone: telephone });
 
     if (!existingUser) return res.status(404).json({ message: "User doesn't exist" });
 
@@ -72,35 +67,57 @@ app.post("/users/login", async (req, res) => {
 
     const token = jwt.sign({ telephone: existingUser.telephone, id: existingUser._id }, "sk");
 
-    res.status(200).json({ result: existingUser, token });
+    const isEmployee = await employeeDB.findOne({ telephone: telephone });
+    const user = isEmployee ? { ...(await employeeDB.findOne({ telephone: telephone }))._doc, type: "employee" } : { ...(await employerDB.findOne({ telephone: telephone }))._doc, type: "employer" };
+
+    console.log(user);
+
+    res.status(200).json({ result: user, token });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
 app.patch("/user", auth, async (req, res) => {
+  console.log("update user");
+
   const body = req.body;
-  console.log(body);
+  console.log(body.type);
 
   try {
-    await userDB.findByIdAndUpdate(body._id, { name: body.name }, { isNew: true });
+    await userDB.findByIdAndUpdate(body._id, { name: body.name }, { new: true });
 
     let newUser = -1;
     if (body.type === "employee") {
-      newUser = await employeeDB.findByIdAndUpdate(body._id, body, { new: true, lean: true }).exec();
+      const employeeExists = await employeeDB.findOne({ _id: body._id });
+
+      if (employeeExists) {
+        newUser = await employeeDB.findByIdAndUpdate(body._id, body, { new: true });
+      } else {
+        newUser = await employeeDB.create({ ...body, _id: body._id });
+        await userDB.findByIdAndUpdate(body._id, { type: body.type }, { new: true });
+      }
     } else {
-      newUser = await employerDB.findByIdAndUpdate(body._id, body, { new: true, lean: true }).exec();
+      const employerExists = await employerDB.findOne({ _id: body._id });
+
+      if (employerExists) {
+        newUser = await employerDB.findByIdAndUpdate(body._id, body, { new: true });
+      } else {
+        newUser = await employerDB.create({ ...body, _id: body._id });
+        await userDB.findByIdAndUpdate(body._id, { type: body.type }, { new: true });
+      }
     }
 
-    res.status(200).json({ ...newUser, type: body.type });
+    console.log({ ...newUser._doc, type: body.type });
+    res.status(200).json({ ...newUser._doc, type: body.type });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
 import {
-  getJobPostsForEmployer,
-  getJobPostsForEmployee,
+  getJobPostsPostedByUser,
+  getJobPostsAppliedToByUser,
   getAppliedEmployees,
   hireEmployee,
   createJobPost,
@@ -108,13 +125,15 @@ import {
   deleteJobPost,
   getJobPosts,
   applyForJob,
+  getJobPostsBySearch,
+  getJobPostsByFilter,
 } from "./controller/userController.js";
 
 // Retrieve job posts for a specific employer
-app.get("/employer/:employerId/:page/posts", getJobPostsForEmployer);
+app.get("/employer/:employerId/:page/posts", getJobPostsPostedByUser);
 
 // Retrieve job posts for a specific employee
-app.get("/employee/:employeeId/:page/posts", getJobPostsForEmployee);
+app.get("/employee/:employeeId/:page/posts", getJobPostsAppliedToByUser);
 
 // Retrieve data of employyes that applied for a specific job
 app.get("/job/:jobId/employees", getAppliedEmployees);
@@ -136,3 +155,9 @@ app.delete("/post/:id", deleteJobPost);
 
 // Retrieve job posts
 app.get("/posts/:page", getJobPosts);
+
+// Retrieve job posts by search
+app.get("/posts/search/:searchQuery/:page", getJobPostsBySearch);
+
+// Retrieve job posts by filter
+app.get("/filter", getJobPostsByFilter);

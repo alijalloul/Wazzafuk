@@ -145,7 +145,7 @@ const WorkExperiencePicker = ({ headerSize, headerText, workExperience, setWorkE
                     </TouchableOpacity>
                     <TouchableOpacity
                       onPress={() => {
-                        setWorkExperience(workExperience.filter((item, index2) => index2 !== index));
+                        setWorkExperience(workExperience?.filter((item, index2) => index2 !== index));
                       }}
                       className="border-[1px] border-gray-400 rounded-full p-[6px]"
                     >

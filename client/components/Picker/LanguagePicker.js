@@ -149,7 +149,7 @@ const LanguagePicker = ({ headerSize, headerText, languageArr, setLanguageArr })
 
                   <TouchableOpacity
                     onPress={() => {
-                      setLanguageArr(languageArr.filter((item, index2) => index2 !== index));
+                      setLanguageArr(languageArr?.filter((item, index2) => index2 !== index));
                     }}
                     className="flex justify-center items-center border-[1px] border-gray-400 rounded-full w-10 aspect-square"
                   >
