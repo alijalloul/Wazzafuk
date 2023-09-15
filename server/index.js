@@ -4,6 +4,7 @@ import cors from "cors";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import * as dotenv from "dotenv";
+import https from "https";
 
 import employeeDB from "./schema/employeeSchema.js";
 import employerDB from "./schema/employerSchema.js";
@@ -19,9 +20,26 @@ app.use(cors());
 app.use(express.json({ limit: "50mb" }));
 
 const PORT = process.env.PORT || 5000;
+const atlasURL = process.env.MONGODB_URL;
+
+if (process.env.PORT) {
+  console.log("PORT EXISTS");
+  function pingWebsite() {
+    https
+      .get("https://aihubcentral-server.onrender.com/", (res) => {
+        console.log("Website pinged successfully");
+      })
+      .on("error", (err) => {
+        console.error("Error while pinging website:", err);
+      });
+  }
+
+  // Ping website every 14 minutes (840000 milliseconds)
+  setInterval(pingWebsite, 840000);
+}
 
 mongoose
-  .connect("mongodb+srv://Zoheir:nm6VVMqGmWwBw8gZ@wazzef.r14oag3.mongodb.net/Wazzafuk")
+  .connect(atlasURL)
   .then(() => app.listen(PORT, () => console.log(`Successfully connected to port ${PORT}`)))
   .catch((error) => console.log("There was an error: ", error));
 
