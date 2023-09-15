@@ -26,7 +26,7 @@ if (process.env.PORT) {
   console.log("PORT EXISTS");
   function pingWebsite() {
     https
-      .get("https://aihubcentral-server.onrender.com/", (res) => {
+      .get("https://wazzafuk-server.onrender.com/", (res) => {
         console.log("Website pinged successfully");
       })
       .on("error", (err) => {
