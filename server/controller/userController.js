@@ -1,4 +1,4 @@
-import jobPostDB from "../schema/JobPostSchema.js";
+import jobPostDB from "../schema/jobPostSchema.js";
 import applicationDB from "../schema/applicationSchema.js";
 import employeeDB from "../schema/employeeSchema.js";
 
