@@ -1,7 +1,11 @@
 import React from "react";
-import { View, TouchableOpacity, Text } from "react-native";
+import { View, TouchableOpacity, Text, I18nManager } from "react-native";
 import { useSelector } from "react-redux";
 import moment from "moment";
+
+const translateText = (text, arabicText) => {
+  return I18nManager.isRTL ? arabicText : text;
+};
 
 const EmployeeJobs = ({ navigation, jobsStatus }) => {
   const jobs = useSelector((state) => state.user.jobPosts)?.filter((job) => job.status === jobsStatus);
@@ -9,7 +13,11 @@ const EmployeeJobs = ({ navigation, jobsStatus }) => {
   return (
     <View className="flex-1 w-[90%] ">
       <View className={`flex-1 justify-center items-center ${jobs?.length > 0 && "hidden"}`}>
-        <Text className="font-garamond mb-5 text-lg opacity-60">{jobsStatus === "pending" ? "You Have Not Applied to Any Job Yet." : "You Have Not Been Hired to Any Job Yet."}</Text>
+        <Text className="font-garamond mb-5 text-lg opacity-60">
+          {jobsStatus === "pending"
+            ? translateText("You Have Not Applied to Any Job Yet.", "لم تقم بالتقديم على أي وظيفة بعد.")
+            : translateText("You Have Not Been Hired to Any Job Yet.", "لم تعمل في أي وظيفة بعد.")}
+        </Text>
       </View>
       <View>
         {jobs?.length > 0 &&

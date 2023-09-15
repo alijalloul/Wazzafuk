@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { View, Image, Text, TouchableOpacity, Dimensions, Keyboard, Alert } from "react-native";
+import { View, Image, Text, TouchableOpacity, Dimensions, Keyboard, Alert, I18nManager } from "react-native";
 import { useNavigation, useIsFocused, useRoute, getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { useBackHandler } from "@react-native-community/hooks";
 
@@ -11,6 +11,10 @@ import graphWhite from "../assets/images/graphWhite.png";
 import userWhite from "../assets/images/userWhite.png";
 import { MotiView, useDynamicAnimation } from "moti";
 
+const translateText = (text, arabicText) => {
+  return I18nManager.isRTL ? arabicText : text;
+};
+
 const Navbar = ({ navigation }) => {
   const route = useRoute();
   const focusedRouteName = getFocusedRouteNameFromRoute(route) || "home";
@@ -21,13 +25,13 @@ const Navbar = ({ navigation }) => {
   const handleNavigation = (screenName) => {
     if (focusedRouteName === "profile") {
       if (isFocused) {
-        Alert.alert("Confirm Navigation", "Do you want to leave this screen without saving?", [
+        Alert.alert(translateText("Confirm Navigation", "تأكيد الملاحة"), translateText("Do you want to leave this screen without saving?", "هل ترغب في مغادرة هذا الشاشة دون حفظ؟"), [
           {
-            text: "NO",
+            text: translateText("NO", "لا"),
             style: "cancel",
           },
           {
-            text: "YES",
+            text: translateText("YES", "نعم"),
             onPress: () => {
               navigator.navigate(screenName);
             },
@@ -41,13 +45,13 @@ const Navbar = ({ navigation }) => {
 
   const handleBackPress = () => {
     if (focusedRouteName === "profile" && isFocused) {
-      Alert.alert("Confirm Navigation", "Do you want to leave this screen without saving?", [
+      Alert.alert(translateText("Confirm Navigation", "تأكيد الملاحة"), translateText("Do you want to leave this screen without saving?", "هل ترغب في مغادرة هذا الشاشة دون حفظ؟"), [
         {
-          text: "No",
+          text: translateText("No", "لا"),
           style: "cancel",
         },
         {
-          text: "Yes",
+          text: translateText("Yes", "نعم"),
           onPress: () => {
             navigation.goBack(); // Navigate back when confirmed
           },
@@ -109,17 +113,19 @@ const Navbar = ({ navigation }) => {
   };
 
   const animateSelector = () => {
+    const isRTL = I18nManager.isRTL;
+
     if (focusedRouteName === "home") {
       selectorAnimation.animateTo(() => ({
-        translateX: navBarSpacing * 0 - 3,
+        translateX: isRTL ? -(navBarSpacing * 0 + 12) : navBarSpacing * 0 + 3,
       }));
     } else if (focusedRouteName === "myJobs") {
       selectorAnimation.animateTo(() => ({
-        translateX: navBarSpacing * 1 - 3,
+        translateX: isRTL ? -(navBarSpacing * 1 + 3) : navBarSpacing * 1 - 3,
       }));
     } else if (focusedRouteName === "profile") {
       selectorAnimation.animateTo(() => ({
-        translateX: navBarSpacing * 2,
+        translateX: isRTL ? -(navBarSpacing * 2 - 8) : navBarSpacing * 2,
       }));
     }
   };
@@ -205,7 +211,7 @@ const Navbar = ({ navigation }) => {
             </TouchableOpacity>
           </MotiView>
 
-          <Text className="text-[#FE6F07] font-garamond text-lg">home</Text>
+          <Text className="text-[#FE6F07] font-garamond text-lg">{translateText("home", "الصفحة الرئيسية")}</Text>
         </View>
         <View className="z-20 relative flex justify-center items-center">
           <MotiView state={graphAnimation} transition={{ type: "spring", damping: 300 }} className="relative">
@@ -218,7 +224,7 @@ const Navbar = ({ navigation }) => {
               <Image source={focusedRouteName === "myJobs" ? graphWhite : graphOrange} className="w-8 h-8" />
             </TouchableOpacity>
           </MotiView>
-          <Text className="text-[#FE6F07] font-garamond text-lg">myJobs</Text>
+          <Text className="text-[#FE6F07] font-garamond text-lg">{translateText("myJobs", "وظائفي")}</Text>
         </View>
         <View className="z-20 flex justify-center items-center">
           <MotiView state={userAnimation} transition={{ type: "spring", damping: 300 }} className="relative">
@@ -231,7 +237,7 @@ const Navbar = ({ navigation }) => {
               <Image source={focusedRouteName === "profile" ? userWhite : userOrange} className="w-8 h-8" />
             </TouchableOpacity>
           </MotiView>
-          <Text className="text-[#FE6F07] font-garamond text-lg">profile</Text>
+          <Text className="text-[#FE6F07] font-garamond text-lg">{translateText("profile", "الملف الشخصي")}</Text>
         </View>
       </View>
     </MotiView>

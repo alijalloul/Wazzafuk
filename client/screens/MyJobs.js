@@ -1,10 +1,14 @@
 import React, { memo, useCallback, useState } from "react";
-import { View, TouchableOpacity, Text, ScrollView, RefreshControl } from "react-native";
+import { View, TouchableOpacity, Text, ScrollView, RefreshControl, I18nManager } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 import PostJobModal from "../components/PostJob/PostJobModal";
 import Pagination from "../components/Pagination";
 import EmployeeJobs from "../components/EmployeeJobs";
+
+const translateText = (text, arabicText) => {
+  return I18nManager.isRTL ? arabicText : text;
+};
 
 const MyJobs = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -68,7 +72,7 @@ const MyJobs = ({ navigation }) => {
           }}
           className={`${jobsStatus === "pending" ? "bg-[#FE6F07]" : "bg-white"} flex justify-center items-center rounded-xl border-[1px] border-[#FE6F07] rounded-r-none w-[20%] p-2`}
         >
-          <Text className={`${jobsStatus === "pending" ? "text-white" : "text-[#FE6F07]"}`}>pending</Text>
+          <Text className={`${jobsStatus === "pending" ? "text-white" : "text-[#FE6F07]"}`}>{translateText("Pending", "قيد الانتظار")}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -77,7 +81,7 @@ const MyJobs = ({ navigation }) => {
           }}
           className={`${jobsStatus === "hired" ? "bg-[#FE6F07]" : "bg-white"} flex justify-center items-center rounded-xl border-[1px] border-[#FE6F07] rounded-l-none w-[20%] p-2`}
         >
-          <Text className={`${jobsStatus === "hired" ? "text-white" : "text-[#FE6F07]"}`}>Hired</Text>
+          <Text className={`${jobsStatus === "hired" ? "text-white" : "text-[#FE6F07]"}`}>{translateText("Hired", "تم")}</Text>
         </TouchableOpacity>
       </View>
 

@@ -1,29 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, I18nManager } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { LinearGradient } from "expo-linear-gradient";
 import { MotiView, MotiText, useDynamicAnimation } from "moti";
 
-import { editUser, signup } from "../redux/User";
-import Spinner from "../components/Spinner";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { editUser } from "../redux/User";
 
 const Choose = ({ navigation }) => {
   const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.user.userInfo);
-  const pending = useSelector((state) => state.user.pending);
 
   const [type, setType] = useState(null);
   const [error, setError] = useState(false);
 
-  const JobCardBackgroundAnimaition = useDynamicAnimation(() => {
+  const JobCardBackgroundAnimation = useDynamicAnimation(() => {
     return {
       backgroundColor: "white",
       borderColor: "black",
     };
   });
 
-  const JobTextBackgroundAnimaition = useDynamicAnimation(() => {
+  const JobTextBackgroundAnimation = useDynamicAnimation(() => {
     return {
       color: "black",
     };
@@ -31,34 +28,43 @@ const Choose = ({ navigation }) => {
 
   const animateJobCardBackground = () => {
     if (type === "employee") {
-      JobCardBackgroundAnimaition.animateTo(() => ({
+      JobCardBackgroundAnimation.animateTo(() => ({
         backgroundColor: "#FE6F07",
         borderColor: "#FE6F07",
       }));
 
-      JobTextBackgroundAnimaition.animateTo(() => ({
+      JobTextBackgroundAnimation.animateTo(() => ({
         color: "white",
       }));
-    } else {
-      JobCardBackgroundAnimaition.animateTo(() => ({
+    } else if (type === "employer") {
+      JobCardBackgroundAnimation.animateTo(() => ({
         backgroundColor: "white",
         borderColor: "black",
       }));
 
-      JobTextBackgroundAnimaition.animateTo(() => ({
+      JobTextBackgroundAnimation.animateTo(() => ({
         color: "black",
+      }));
+    } else if (error) {
+      console.log(error);
+      JobCardBackgroundAnimation.animateTo(() => ({
+        borderColor: "red",
+      }));
+    } else {
+      JobCardBackgroundAnimation.animateTo(() => ({
+        borderColor: "black",
       }));
     }
   };
 
-  const ClientCardBackgroundAnimaition = useDynamicAnimation(() => {
+  const ClientCardBackgroundAnimation = useDynamicAnimation(() => {
     return {
       backgroundColor: "white",
       borderColor: "black",
     };
   });
 
-  const ClientTextBackgroundAnimaition = useDynamicAnimation(() => {
+  const ClientTextBackgroundAnimation = useDynamicAnimation(() => {
     return {
       color: "black",
     };
@@ -66,22 +72,30 @@ const Choose = ({ navigation }) => {
 
   const animateClientCardBackground = () => {
     if (type === "employer") {
-      ClientCardBackgroundAnimaition.animateTo(() => ({
+      ClientCardBackgroundAnimation.animateTo(() => ({
         backgroundColor: "#FE6F07",
         borderColor: "#FE6F07",
       }));
 
-      ClientTextBackgroundAnimaition.animateTo(() => ({
+      ClientTextBackgroundAnimation.animateTo(() => ({
         color: "white",
       }));
-    } else {
-      ClientCardBackgroundAnimaition.animateTo(() => ({
+    } else if (type === "employee") {
+      ClientCardBackgroundAnimation.animateTo(() => ({
         backgroundColor: "white",
         borderColor: "black",
       }));
 
-      ClientTextBackgroundAnimaition.animateTo(() => ({
+      ClientTextBackgroundAnimation.animateTo(() => ({
         color: "black",
+      }));
+    } else if (error) {
+      ClientCardBackgroundAnimation.animateTo(() => ({
+        borderColor: "red",
+      }));
+    } else {
+      ClientCardBackgroundAnimation.animateTo(() => ({
+        borderColor: "black",
       }));
     }
   };
@@ -90,18 +104,24 @@ const Choose = ({ navigation }) => {
     animateClientCardBackground();
     animateJobCardBackground();
 
-    setError(false);
-  }, [type]);
+    if (type) {
+      setError(false);
+    }
+  }, [type, error]);
+
+  const translateText = (englishText, arabicText) => {
+    return I18nManager.isRTL ? arabicText : englishText;
+  };
 
   return (
-    <View className="bg-white flex-1 items-center">
+    <View className="flex-1 bg-white items-center">
       <View className="my-5 flex justify-center items-center">
-        <Text className={`font-garamond text-sm text-red-500 ${!error && "hidden"}`}>You need to choose an account type</Text>
-        <Text className=" text-[40px] font-garamond ">I am looking for...</Text>
+        <Text className={`font-garamond text-sm text-red-500 ${!error && "hidden"}`}>{translateText("You need to choose an account type", "يجب عليك اختيار نوع الحساب")}</Text>
+        <Text className="text-[40px] font-garamond">{translateText("I am looking for...", "أبحث عن...")}</Text>
       </View>
 
-      <MotiView state={JobCardBackgroundAnimaition} className="mb-10 w-[85%] h-[33%]">
-        <View className={`w-full h-full border-[1px] rounded-lg ${error && "border-red-500"}`}>
+      <MotiView state={JobCardBackgroundAnimation} className={`mb-10 w-[85%] h-[33%] border-[1px] rounded-lg `}>
+        <View className="w-full h-full ">
           <View className={`absolute right-0 top-0 mr-2 mt-2 ${type === "employee" ? "bg-[#ffffffb5]" : "bg-white"} border-2 rounded-full p-[6px]`}>
             <LinearGradient colors={["white", type === "employee" ? "#FE6F07" : "rgba(0,0,0,0.4)"]} start={{ x: 0, y: 0.4 }} className="p-[8px] rounded-full" />
           </View>
@@ -112,15 +132,15 @@ const Choose = ({ navigation }) => {
             }}
             className="w-full h-full flex justify-center items-center"
           >
-            <MotiText state={JobTextBackgroundAnimaition} className=" font-garamond text-[40px]">
-              A Job
+            <MotiText state={JobTextBackgroundAnimation} className=" font-garamond text-[40px]">
+              {translateText("A Job", "وظيفة")}
             </MotiText>
           </TouchableOpacity>
         </View>
       </MotiView>
 
-      <MotiView state={ClientCardBackgroundAnimaition} className="mb-10 w-[85%] h-[33%]">
-        <View className={`w-full h-full border-[1px] rounded-lg ${error && "border-red-500"}`}>
+      <MotiView state={ClientCardBackgroundAnimation} className={`mb-10 w-[85%] h-[33%] border-[1px] rounded-lg `}>
+        <View className="w-full h-full">
           <View className={`absolute right-0 top-0 mr-2 mt-2 ${type === "employer" ? "bg-[#ffffffb5]" : "bg-white"} border-2 rounded-full p-[6px]`}>
             <LinearGradient colors={["white", type === "employer" ? "#FE6F07" : "rgba(0,0,0,0.4)"]} start={{ x: 0, y: 0.4 }} className="p-[8px] rounded-full" />
           </View>
@@ -130,8 +150,8 @@ const Choose = ({ navigation }) => {
             }}
             className="w-full h-full flex justify-center items-center"
           >
-            <MotiText state={ClientTextBackgroundAnimaition} className=" font-garamond text-[40px]">
-              An Employee
+            <MotiText state={ClientTextBackgroundAnimation} className=" font-garamond text-[40px]">
+              {translateText("An Employee", "موظف")}
             </MotiText>
           </TouchableOpacity>
         </View>
@@ -143,7 +163,7 @@ const Choose = ({ navigation }) => {
         }}
         className="absolute bottom-0 right-0 mb-3 mr-3 bg-[#FE6F07] rounded-xl px-10 py-2"
       >
-        <Text className="text-lg font-garamond text-white">Next</Text>
+        <Text className="text-lg font-garamond text-white">{translateText("Next", "التالي")}</Text>
       </TouchableOpacity>
     </View>
   );

@@ -1,11 +1,15 @@
 import React, { memo, useEffect, useState } from "react";
-import { View, TouchableOpacity, Text, ScrollView } from "react-native";
+import { View, TouchableOpacity, Text, ScrollView, I18nManager } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 import LanguagePicker from "../components/Picker/LanguagePicker";
 import { updateUser } from "../redux/User";
 import Spinner from "../components/Spinner";
 import CustomeBackHeader from "../components/Header/CustomBackHeader";
+
+const translateText = (text, arabicText) => {
+  return I18nManager.isRTL ? arabicText : text;
+};
 
 const Language = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -14,14 +18,14 @@ const Language = ({ navigation }) => {
 
   const [languageArr, setLanguageArr] = useState(
     userInfo?.language || [
-      { language: "Deutsch", proficiency: "Fluent" },
-      { language: "العربية", proficiency: "Basic" },
-      { language: "English", proficiency: "Intermediate" },
+      { language: translateText("Deutsch", "الألمانية"), proficiency: translateText("Fluent", "طلاقة") },
+      { language: translateText("العربية", "العربية"), proficiency: translateText("Basic", "أساسي") },
+      { language: translateText("English", "الإنجليزية"), proficiency: translateText("Intermediate", "متوسط") },
     ]
   );
 
   useEffect(() => {
-    navigation.setOptions({ headerLeft: () => <CustomeBackHeader navigation={navigation} screenName="education" /> });
+    navigation.setOptions({ headerLeft: () => <CustomeBackHeader navigation={navigation} screenName={translateText("education", "التعليم")} /> });
   }, []);
 
   return (
@@ -32,7 +36,12 @@ const Language = ({ navigation }) => {
       <View className={`${pending ? " bg-white z-20 absolute h-full w-full opacity-50 " : "hidden"}`}></View>
       <ScrollView className=" bg-white" contentContainerStyle={{ flexGrow: 1, justifyContent: "center", alignItems: "center" }}>
         <View className="w-[90%] items-center flex-1">
-          <LanguagePicker headerSize={35} headerText="One last thing. Tell us what languages do you speak." languageArr={languageArr} setLanguageArr={setLanguageArr} />
+          <LanguagePicker
+            headerSize={35}
+            headerText={translateText("One last thing. Tell us what languages do you speak.", "آخر شيء. قل لنا ما هي اللغات التي تتحدثها.")}
+            languageArr={languageArr}
+            setLanguageArr={setLanguageArr}
+          />
         </View>
 
         <TouchableOpacity
@@ -41,7 +50,7 @@ const Language = ({ navigation }) => {
           }}
           className="self-end w-32 h-12 flex justify-center items-center bottom-0 right-0 mr-3 mb-3 bg-[#FE6F07] rounded-xl"
         >
-          <Text className="text-lg font-garamond text-white">Next</Text>
+          <Text className="text-lg font-garamond text-white">{translateText("Next", "التالي")}</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>

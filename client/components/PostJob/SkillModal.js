@@ -1,5 +1,5 @@
 import React, { useState, memo, useEffect } from "react";
-import { View, Image, Text, TouchableOpacity, TextInput, FlatList, ScrollView } from "react-native";
+import { View, Image, Text, TouchableOpacity, TextInput, FlatList, ScrollView, I18nManager } from "react-native";
 import Modal from "react-native-modal";
 
 import downVector from "../../assets/images/downVector.png";
@@ -164,21 +164,21 @@ const SkillModal = ({ value, setValue }) => {
             className="border-[1px] p-2 w-full rounded-lg flex flex-row justify-between items-center"
           >
             <Text className="text-[20px] font-garamond">_ _ _</Text>
-            <Image source={downVector} className=" w-5 aspect-[2/1]" />
+            <Image source={downVector} className="w-5 aspect-[2/1]" />
           </TouchableOpacity>
         )}
       </View>
 
       <Modal isVisible={isVisible} animationInTiming={700} className="m-0 mt-10 rounded-t-xl">
-        <View className=" flex-1 justify-center bg-white">
+        <View className="flex-1 justify-center bg-white">
           <View className={`mb-5 w-full flex flex-row px-5 justify-between items-center ${isVisible && "border-b-[1px]"}`}>
             <TextInput
               value={search}
               onChangeText={(text) => {
                 setSearch(text);
               }}
-              className=" text-3xl font-garamond w-[90%]"
-              placeholder="Search"
+              className="text-3xl font-garamond w-[90%]"
+              placeholder="بحث"
             ></TextInput>
 
             <TouchableOpacity
@@ -187,7 +187,7 @@ const SkillModal = ({ value, setValue }) => {
                 setSearch("");
               }}
             >
-              <Text className=" text-5xl font-garamond-bold">×</Text>
+              <Text className="text-5xl font-garamond-bold">×</Text>
             </TouchableOpacity>
           </View>
 
@@ -206,7 +206,7 @@ const SkillModal = ({ value, setValue }) => {
                   </TouchableOpacity>
                 ))
               ) : (
-                <Text className=" font-garamond opacity-60 text-xl">Search in order to find skills</Text>
+                <Text className="font-garamond opacity-60 text-xl">ابحث للعثور على مهارات</Text>
               )}
             </View>
 
@@ -216,10 +216,10 @@ const SkillModal = ({ value, setValue }) => {
                   onPress={() => {
                     skills.includes(skill) ? setSkills(skills?.filter((item) => item !== skill)) : setSkills([...skills, skill]);
                   }}
-                  className={` inline-block px-2 py-2 bg-gray-200 rounded-2xl mr-2 mb-2 ${skills.includes(skill) && "bg-[#ff8d3c]"}`}
+                  className={`inline-block px-2 py-2 bg-gray-200 rounded-2xl mr-2 mb-2 ${skills.includes(skill) && "bg-[#ff8d3c]"}`}
                   key={index.toString()}
                 >
-                  <Text className={` ${skills.includes(skill) && "text-white"}`}>{skill}</Text>
+                  <Text className={`${skills.includes(skill) && "text-white"}`}>{skill}</Text>
                 </TouchableOpacity>
               ))}
             </View>
@@ -231,9 +231,9 @@ const SkillModal = ({ value, setValue }) => {
                   setSkills([]);
                   setIsVisible(false);
                 }}
-                className=" w-32 h-12 flex justify-center items-center mr-3 mb-3 bg-[#FE6F07] rounded-xl"
+                className="w-32 h-12 flex justify-center items-center mr-3 mb-3 bg-[#FE6F07] rounded-xl"
               >
-                <Text className="text-lg font-garamond text-white">Save</Text>
+                <Text className="text-lg font-garamond text-white">حفظ</Text>
               </TouchableOpacity>
             </View>
           </ScrollView>

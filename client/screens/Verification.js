@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { View, Image, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, ScrollView } from "react-native";
+import { View, Image, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, ScrollView, I18nManager } from "react-native";
 
 import mail from "../assets/images/mail.png";
 
@@ -17,6 +17,12 @@ const Verification = ({ navigation }) => {
     };
   }, []);
 
+  console.log("I18nManager.isRTL: ", I18nManager.isRTL);
+
+  const translateText = (englishText, arabicText) => {
+    return I18nManager.isRTL ? arabicText : englishText;
+  };
+
   return (
     <KeyboardAvoidingView behavior="height" enabled className="bg-white flex-1">
       <ScrollView contentContainerStyle={{ flexGrow: 1, alignItems: "center", justifyContent: "center" }}>
@@ -25,10 +31,10 @@ const Verification = ({ navigation }) => {
         </View>
 
         <View className="flex justify-center items-center mb-16">
-          <Text className="text-[#FE6F07] font-garamond-bold text-4xl">Verification Code</Text>
+          <Text className="text-[#FE6F07] font-garamond-bold text-4xl">{translateText("Verification Code", "رمز التحقق")}</Text>
 
           <View className="flex justify-center items-center mb-3">
-            <Text className=" font-garamond text-[16px]">Please enter the code sent to </Text>
+            <Text className=" font-garamond text-[16px]">{translateText("Please enter the code sent to", "الرجاء إدخال الرمز المرسل إليه")}</Text>
             <Text className=" font-garamond text-[#FE6F07] text-[16px]">76131445</Text>
           </View>
 
@@ -37,7 +43,7 @@ const Verification = ({ navigation }) => {
               navigation.navigate("signUp");
             }}
           >
-            <Text className=" font-garamond opacity-50 border-b-[0.5px]">Change Phone Number</Text>
+            <Text className=" font-garamond opacity-50 border-b-[0.5px]">{translateText("Change Phone Number", "تغيير رقم الهاتف")}</Text>
           </TouchableOpacity>
         </View>
 
@@ -82,10 +88,10 @@ const Verification = ({ navigation }) => {
             }}
             className="bg-[#FE6F07] w-full py-3 rounded-3xl flex justify-center items-center mb-3"
           >
-            <Text className="text-white font-garamond-bold text-xl">Verify</Text>
+            <Text className="text-white font-garamond-bold text-xl">{translateText("Verify", "تحقق")}</Text>
           </TouchableOpacity>
           <TouchableOpacity className="bg-white w-full py-3 rounded-3xl flex justify-center items-center">
-            <Text className="text-[#FE6F07] font-garamond-bold text-xl">Resend Code</Text>
+            <Text className="text-[#FE6F07] font-garamond-bold text-xl">{translateText("Resend Code", "إعادة إرسال الرمز")}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

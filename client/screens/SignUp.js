@@ -14,7 +14,6 @@ import Spinner from "../components/Spinner";
 
 const SignUp = ({ navigation }) => {
   const dispatch = useDispatch();
-  const appLanguage = useSelector((state) => state.user.appLanguage);
 
   const userInfo = useSelector((state) => state.user.userInfo);
   const pending = useSelector((state) => state.user.pending);
@@ -56,14 +55,8 @@ const SignUp = ({ navigation }) => {
   }, [errorType]);
 
   const translateText = (englishText, arabicText) => {
-    return appLanguage === "arabic" ? arabicText : englishText;
+    return I18nManager.isRTL ? arabicText : englishText;
   };
-
-  if (appLanguage === "arabic") {
-    I18nManager.forceRTL(true);
-  } else {
-    I18nManager.forceRTL(false);
-  }
 
   return (
     <View className="flex-1 justify-center bg-white">
@@ -90,7 +83,7 @@ const SignUp = ({ navigation }) => {
                   isError={nameError}
                   setIsError={setNameError}
                   errorMessage={translateText("This field can not be empty", "هذا الحقل لا يمكن أن يكون فارغًا")}
-                  isArabic={appLanguage === "arabic" && true}
+                  isArabic={I18nManager.isRTL && true}
                 />
               </View>
 
@@ -109,7 +102,7 @@ const SignUp = ({ navigation }) => {
                       ? translateText("This phone number is taken. Try logging in", "تم استخدام هذا الرقم مسبقًا. جرب تسجيل الدخول")
                       : translateText("This field can not be empty", "هذا الحقل لا يمكن أن يكون فارغًا")
                   }
-                  isArabic={appLanguage === "arabic" && true}
+                  isArabic={I18nManager.isRTL && true}
                 />
               </View>
 
@@ -124,7 +117,7 @@ const SignUp = ({ navigation }) => {
                   isError={passwordError}
                   setIsError={setPasswordError}
                   errorMessage={translateText("This field can not be empty", "هذا الحقل لا يمكن أن يكون فارغًا")}
-                  isArabic={appLanguage === "arabic" && true}
+                  isArabic={I18nManager.isRTL && true}
                 />
               </View>
             </View>

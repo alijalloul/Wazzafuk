@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, ScrollView, TextInput, View, Image, RefreshControl } from "react-native";
+import { Text, TouchableOpacity, ScrollView, TextInput, View, Image, RefreshControl, I18nManager } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { memo, useCallback, useEffect, useLayoutEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -10,6 +10,10 @@ import JobPosts from "../components/JobPosts";
 import { fetchPostsBySearch } from "../redux/JobPost";
 import FilterModal from "../components/FilterModal";
 import HeaderLeft from "../components/Header/HeaderLeft";
+
+const translateText = (text, arabicText) => {
+  return I18nManager.isRTL ? arabicText : text;
+};
 
 const Home = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -53,8 +57,10 @@ const Home = ({ navigation }) => {
     <ScrollView className="flex-1 bg-white py-8 " contentContainerStyle={{ alignItems: "center" }} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
       <View className="w-[90%]">
         <View className="mb-5">
-          <Text className="font-garamond text-xl text-gray-500">Hello {user?.name?.split(" ")[0]},</Text>
-          <Text className={`font-garamond-bold text-2xl ${user?.type === "employer" && "hidden"}`}>Find your perfect job</Text>
+          <Text className="font-garamond text-xl text-gray-500">
+            {translateText("Hello", "مرحبًا")} {user?.name?.split(" ")[0]},
+          </Text>
+          <Text className={`font-garamond-bold text-2xl ${user?.type === "employer" && "hidden"}`}>{translateText("Find your perfect job", "ابحث عن وظيفتك المثالية")}</Text>
         </View>
 
         <View className="">
@@ -64,7 +70,7 @@ const Home = ({ navigation }) => {
               onChangeText={(text) => {
                 setSearch(text);
               }}
-              placeholder="Find your job"
+              placeholder={translateText("Find your job", "ابحث عن وظيفتك")}
               className="w-[85%] rounded-xl bg-gray-100 mr-2 pl-4"
             />
 
@@ -82,7 +88,7 @@ const Home = ({ navigation }) => {
 
       <JobPosts navigation={navigation} />
 
-      <Pagination fetchType="posts" page={page} numberOfPages={numberOfPages} />
+      <Pagination fetchType={translateText("posts", "المشاركات")} page={page} numberOfPages={numberOfPages} />
 
       <FilterModal bottomSheetVisible={bottomSheetVisible} setBottomSheetVisible={setBottomSheetVisible} navigation={navigation} page={page} setNumberOfFilters={setNumberOfFilters} />
     </ScrollView>

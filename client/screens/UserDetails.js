@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, ScrollView, Image, TouchableOpacity } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
+import { I18nManager } from "react-native"; // Import I18nManager
 
 import blobTop from "../assets/images/blobTop.png";
 import { hireEmployee } from "../redux/User";
@@ -15,47 +16,53 @@ const UserDetails = ({ route, navigation }) => {
   const handleHire = () => {
     hireEmployee(jobPostId, userId, navigation, dispatch);
   };
+
+  const translateText = (text, arabicText) => {
+    return I18nManager.isRTL ? arabicText : text;
+  };
+
   return (
     <ScrollView className="flex-1 bg-white" contentContainerStyle={{ justifyContent: "center", alignItems: "center" }}>
-      <Image source={blobTop} className="absolute -top-72  opacity-90" />
+      <Image source={blobTop} className="absolute -top-72 opacity-90" />
 
       <View className="my-8 w-full">
-        <Text className=" font-garamond text-center text-5xl text-white">{user?.name}</Text>
+        <Text className="font-garamond text-center text-5xl text-white">{translateText(user?.name, "اسم المستخدم")}</Text>
       </View>
 
       <View style={{ width: 250, height: 250 }}>
         <Image source={user?.image !== "" ? { uri: user?.image } : null} className="rounded-full w-full h-full" />
       </View>
 
-      <Text className=" font-garamond text-center text-xl ">{user?.profession}</Text>
+      <Text className="font-garamond text-center text-xl ">{translateText(user?.profession, "المهنة")}</Text>
 
       <View className="w-[90%] my-8">
-        <Text className=" font-garamond text-center text-xl ">{user?.introduction}</Text>
+        <Text className="font-garamond text-center text-xl ">{translateText(user?.introduction, "مقدمة")}</Text>
       </View>
 
       <View className="w-full my-5 flex-1">
         <View className="flex-1 w-[90%] self-center">
-          <Text style={{ fontSize: 32 }} className=" font-garamond-semibold mb-5">
-            Work Experience
+          <Text style={{ fontSize: 32 }} className="font-garamond-semibold mb-5">
+            {translateText("Work Experience", "خبرة العمل")}
           </Text>
           <View>
             {user?.workExperience?.length > 0 ? (
               user?.workExperience.map((work, index) => (
                 <View key={index} className="relative w-full border-[1px] rounded-2xl p-5 pt-3 pr-3 mb-4">
                   <View className="flex flex-row w-full justify-end items-center"></View>
-                  <Text className=" font-garamond text-3xl">{work.title}</Text>
-                  <Text className=" font-garamond text-[15px]">{work.company}</Text>
-                  <Text className=" font-garamond text-xl">
-                    {work.startMonthWork} {work.startYear} - {work.endMonthWork} {work.endYear}
+                  <Text className="font-garamond text-3xl">{translateText(work.title, work.title)}</Text>
+                  <Text className="font-garamond text-[15px]">{translateText(work.company, work.company)}</Text>
+                  <Text className="font-garamond text-xl">
+                    {translateText(
+                      work.startMonthWork + " " + work.startYear + " - " + work.endMonthWork + " " + work.endYear,
+                      work.startMonthWork + " " + work.startYear + " - " + work.endMonthWork + " " + work.endYear
+                    )}
                   </Text>
-                  <Text className=" font-garamond text-[15px] opacity-70 mb-3">
-                    {work.country}, {work.location}
-                  </Text>
-                  <Text className=" font-garamond text-lg opacity-70">{work.description}</Text>
+                  <Text className="font-garamond text-[15px] opacity-70 mb-3">{translateText(work.country + ", " + work.location, work.country + ", " + work.location)}</Text>
+                  <Text className="font-garamond text-lg opacity-70">{translateText(work.description, work.description)}</Text>
                 </View>
               ))
             ) : (
-              <Text className="text-center opacity-50 font-garamond">no workexperience</Text>
+              <Text className="text-center opacity-50 font-garamond">{translateText("no work experience", "لا توجد خبرة عمل")}</Text>
             )}
           </View>
         </View>
@@ -63,8 +70,8 @@ const UserDetails = ({ route, navigation }) => {
 
       <View className="w-full my-5 flex-1">
         <View className="flex-1 w-[90%] self-center">
-          <Text style={{ fontSize: 32 }} className=" font-garamond-semibold mb-5">
-            Education
+          <Text style={{ fontSize: 32 }} className="font-garamond-semibold mb-5">
+            {translateText("Education", "التعليم")}
           </Text>
 
           <View>
@@ -72,19 +79,15 @@ const UserDetails = ({ route, navigation }) => {
               user?.education?.map((educ, index) => (
                 <View key={index} className="relative w-full border-[1px] rounded-2xl p-5 pt-3 pr-3 mb-4">
                   <View className="flex flex-row w-full justify-end items-center"></View>
-                  <Text className=" font-garamond text-3xl">
-                    {educ.degree} {educ.major ? "in" : "from"}
-                  </Text>
-                  {educ.major && <Text className=" font-garamond text-[15px]">{educ.major} from</Text>}
-                  <Text className=" font-garamond text-lg">{educ.school}</Text>
-                  <Text className=" font-garamond text-[15px] opacity-70 mb-3">
-                    {educ.startYear} -{educ.endYear}
-                  </Text>
-                  <Text className=" font-garamond text-lg opacity-70">{educ.note}</Text>
+                  <Text className="font-garamond text-3xl">{translateText(educ.degree + (educ.major ? " in" : " from"), educ.degree + (educ.major ? " في" : " من"))}</Text>
+                  {educ.major && <Text className="font-garamond text-[15px]">{translateText(educ.major + " from", educ.major + " من")}</Text>}
+                  <Text className="font-garamond text-lg">{translateText(educ.school, educ.school)}</Text>
+                  <Text className="font-garamond text-[15px] opacity-70 mb-3">{translateText(educ.startYear + " - " + educ.endYear, educ.startYear + " - " + educ.endYear)}</Text>
+                  <Text className="font-garamond text-lg opacity-70">{translateText(educ.note, educ.note)}</Text>
                 </View>
               ))
             ) : (
-              <Text className="text-center opacity-50 font-garamond">no education</Text>
+              <Text className="text-center opacity-50 font-garamond">{translateText("no education", "لا توجد تعليم")}</Text>
             )}
           </View>
         </View>
@@ -92,8 +95,8 @@ const UserDetails = ({ route, navigation }) => {
 
       <View className="w-full my-5 flex-1">
         <View className="flex-1 w-[90%] self-center">
-          <Text style={{ fontSize: 32 }} className=" font-garamond-semibold mb-5">
-            Languages
+          <Text style={{ fontSize: 32 }} className="font-garamond-semibold mb-5">
+            {translateText("Languages", "اللغات")}
           </Text>
           <View>
             {user?.language?.length > 0 ? (
@@ -110,9 +113,9 @@ const UserDetails = ({ route, navigation }) => {
 
                         setBottomSheetVisible(true);
                       }}
-                      className="border-[1px] rounded-2xl  px-2 py-2 mr-2 w-[35%] flex flex-row justify-between items-center"
+                      className="border-[1px] rounded-2xl px-2 py-2 mr-2 w-[35%] flex flex-row justify-between items-center"
                     >
-                      <Text className=" font-garamond text-xl">{langArr.language}</Text>
+                      <Text className="font-garamond text-xl">{translateText(langArr.language, langArr.language)}</Text>
                     </View>
                     <View
                       onPress={() => {
@@ -124,24 +127,24 @@ const UserDetails = ({ route, navigation }) => {
 
                         setBottomSheetVisible(true);
                       }}
-                      className="border-[1px] rounded-2xl  px-2 py-2 mr-3 w-[45%] flex flex-row justify-between items-center"
+                      className="border-[1px] rounded-2xl px-2 py-2 mr-3 w-[45%] flex flex-row justify-between items-center"
                     >
-                      <Text className=" font-garamond text-xl">{langArr.proficiency}</Text>
+                      <Text className="font-garamond text-xl">{translateText(langArr.proficiency, langArr.proficiency)}</Text>
                     </View>
                   </View>
                 </View>
               ))
             ) : (
-              <Text className="text-center opacity-50 font-garamond">no languages</Text>
+              <Text className="text-center opacity-50 font-garamond">{translateText("no languages", "لا توجد لغات")}</Text>
             )}
           </View>
         </View>
 
         <View className="w-[90%] flex self-center">
-          <Text className=" font-garamond text-2xl mb-4">Cover Letter</Text>
+          <Text className="font-garamond text-2xl mb-4">{translateText("Cover Letter", "رسالة تغطية")}</Text>
 
           <View className="border-[1px] rounded-xl p-5">
-            <Text className=" font-garamond">{user?.coverLetter}</Text>
+            <Text className="font-garamond">{translateText(user?.coverLetter, user?.coverLetter)}</Text>
           </View>
         </View>
       </View>
@@ -152,7 +155,7 @@ const UserDetails = ({ route, navigation }) => {
         }}
         className="self-end w-32 h-12 flex justify-center items-center bottom-0 right-0 mr-3 mb-3 bg-[#FE6F07] rounded-xl"
       >
-        <Text className="text-lg font-garamond text-white">Hire</Text>
+        <Text className="text-lg font-garamond text-white">{translateText("Hire", "توظيف")}</Text>
       </TouchableOpacity>
     </ScrollView>
   );

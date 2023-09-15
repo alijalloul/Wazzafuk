@@ -1,10 +1,14 @@
 import React, { memo, useState } from "react";
-import { View, Image, Text, TouchableOpacity, ScrollView } from "react-native";
+import { View, Image, Text, TouchableOpacity, ScrollView, I18nManager } from "react-native";
 import Modal from "react-native-modal";
 
 import downVector from "../../assets/images/downVector.png";
 import trash from "../../assets/images/trash.png";
 import SingleSelectorModal from "../SingleSelectorModal";
+
+const translateText = (text, arabicText) => {
+  return I18nManager.isRTL ? arabicText : text;
+};
 
 const LanguagePicker = ({ headerSize, headerText, languageArr, setLanguageArr }) => {
   const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
@@ -18,7 +22,7 @@ const LanguagePicker = ({ headerSize, headerText, languageArr, setLanguageArr })
 
   const [languageIndex, setLanguageIndex] = useState(null);
 
-  const proficiencies = ["Basic", "Intermediate", "Fluent", "Native"];
+  const proficiencies = [translateText("Basic", "أساسي"), translateText("Intermediate", "متوسط"), translateText("Fluent", "طلاقة"), translateText("Native", "أصلي")];
 
   const languages = [
     "Español",
@@ -109,7 +113,7 @@ const LanguagePicker = ({ headerSize, headerText, languageArr, setLanguageArr })
     <View className="flex-1 w-full">
       <View className="flex-1 w-full self-center">
         <Text style={{ fontSize: headerSize }} className=" font-garamond-semibold mb-5">
-          {headerText}
+          {translateText(headerText, "اخبرنا عن اللغات التي تتحدثها")}
         </Text>
         <View>
           {languageArr?.length > 0 &&
@@ -166,13 +170,13 @@ const LanguagePicker = ({ headerSize, headerText, languageArr, setLanguageArr })
           }}
           className="bg-white border-[1px] border-[#FE6F07] w-full py-3 rounded-3xl flex justify-center items-center mb-5"
         >
-          <Text className="text-[#FE6F07] font-garamond-bold text-xl">+ Add language</Text>
+          <Text className="text-[#FE6F07] font-garamond-bold text-xl">{translateText("+ Add language", "+ إضافة لغة")}</Text>
         </TouchableOpacity>
       </View>
       <Modal isVisible={isBottomSheetVisible} animationInTiming={700} className=" m-0 mt-10">
         <View className="flex-1 justify-center bg-white rounded-t-xl">
           <View className={`w-full flex flex-row px-5 justify-between items-center ${isBottomSheetVisible && "border-b-[1px]"}`}>
-            <Text className=" text-3xl font-garamond">{isEditing ? "Edit" : "Add Language"}</Text>
+            <Text className=" text-3xl font-garamond">{isEditing ? translateText("Edit", "تعديل") : translateText("Add Language", "إضافة لغة")}</Text>
 
             <TouchableOpacity
               onPress={() => {
@@ -198,25 +202,25 @@ const LanguagePicker = ({ headerSize, headerText, languageArr, setLanguageArr })
             <View className="w-[90%]">
               <View className="mb-5">
                 <SingleSelectorModal
-                  title="Language *"
+                  title={translateText("Language *", "اللغة *")}
                   data={languages}
                   value={language}
                   setValue={setLanguage}
                   isError={languageError}
                   setIsError={setLanguageError}
-                  errorMessage="This field can not be empty"
+                  errorMessage={translateText("This field can not be empty", "لا يمكن ترك هذا الحقل فارغًا")}
                 />
               </View>
 
               <View className="mb-5">
                 <SingleSelectorModal
-                  title="Proficiency *"
+                  title={translateText("Proficiency *", "الإلمام *")}
                   data={proficiencies}
                   value={proficiency}
                   setValue={setProficiency}
                   isError={proficiencyError}
                   setIsError={setProficiencyError}
-                  errorMessage="This field can not be empty"
+                  errorMessage={translateText("This field can not be empty", "لا يمكن ترك هذا الحقل فارغًا")}
                 />
               </View>
 
@@ -227,7 +231,7 @@ const LanguagePicker = ({ headerSize, headerText, languageArr, setLanguageArr })
                   }}
                   className="w-32 bottom-0 right-0 bg-[#FE6F07] rounded-xl px-10 py-2"
                 >
-                  <Text className="text-lg font-garamond text-white">{isEditing ? "Edit" : "Add"}</Text>
+                  <Text className="text-lg font-garamond text-white">{isEditing ? translateText("Edit", "تعديل") : translateText("Add", "إضافة")}</Text>
                 </TouchableOpacity>
               </View>
             </View>

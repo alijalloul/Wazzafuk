@@ -1,8 +1,12 @@
 import React, { useRef, useState, useEffect } from "react";
-import { View, TouchableOpacity, Text, Image, TextInput } from "react-native";
+import { View, TouchableOpacity, Text, Image, TextInput, I18nManager } from "react-native";
 
 import pen from "../../assets/images/pen.png";
 import check from "../../assets/images/check.png";
+
+const translateText = (text, arabicText) => {
+  return I18nManager.isRTL ? arabicText : text;
+};
 
 const IntroductionPicker = ({ introduction, setIntroduction, placeholder }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -22,7 +26,7 @@ const IntroductionPicker = ({ introduction, setIntroduction, placeholder }) => {
   return (
     <View className="flex">
       <View className="relative flex flex-row justify-start items-center w-full">
-        <Text className=" text-2xl text-black font-garamond-semibold mr-2 text-center">Introduction</Text>
+        <Text className=" text-2xl text-black font-garamond-semibold mr-2 text-center">{translateText("Introduction", "مقدمة")}</Text>
 
         <TouchableOpacity
           onPress={() => {
@@ -34,7 +38,9 @@ const IntroductionPicker = ({ introduction, setIntroduction, placeholder }) => {
         </TouchableOpacity>
       </View>
 
-      <Text className={`text-lg text-black font-garamond mr-2 ${isEditing && "hidden"} ${introduction === "" && " opacity-50"}`}>{introduction === "" ? placeholder : introduction}</Text>
+      <Text className={`text-lg text-black font-garamond mr-2 ${isEditing && "hidden"} ${introduction === "" && " opacity-50"}`}>
+        {introduction === "" ? translateText(placeholder, "النص البديل") : introduction}
+      </Text>
 
       <TextInput
         ref={inputRef}

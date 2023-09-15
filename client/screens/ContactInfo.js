@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, I18nManager } from "react-native"; // Import I18nManager
 import { useDispatch, useSelector } from "react-redux";
 
 import { editUser, updateUser } from "../redux/User";
@@ -15,12 +15,8 @@ const CV = ({ navigation }) => {
   const [email, setEmail] = useState(user?.email || "");
   const [address, setAddress] = useState(user?.address || "");
 
-  const handleButton = async () => {
-    if (selectedDocument) {
-      editUser({ ...user, uri: selectedDocument.uri }, "introducation", navigation, dispatch);
-    } else {
-      navigation.navigate("HomeTabs", { screen: "home" });
-    }
+  const translateText = (englishText, arabicText) => {
+    return I18nManager.isRTL ? arabicText : englishText;
   };
 
   useEffect(() => {
@@ -30,17 +26,34 @@ const CV = ({ navigation }) => {
   return (
     <View className="bg-white flex-1 items-center">
       <View className="w-[90%] flex-1">
-        <Text className=" text-4xl font-garamond mb-5">First, tell the employer of how they would contact you.</Text>
+        <Text className=" text-4xl font-garamond mb-5">
+          {translateText(
+            user?.type === "employer" ? "First, tell the employee of how they would contact you." : "First, tell the employer of how they would contact you.",
+            "أولاً، قل للموظف كيفية التواصل معك."
+          )}
+        </Text>
 
-        <View className="w-full flex justify-center items-center mb-2">
+        <View className={`w-full flex justify-center items-center mb-2 ${user?.type !== "employer" && "hidden"}`}>
           <UploadImage width={150} isButton={true} image={image} setImage={setImage} />
         </View>
 
-        <RenderTextInput isMultiline={false} title="E-Mail" value={email} setValue={setEmail} placeholder="Ex: mohammed.h@hotmail.com" />
+        <RenderTextInput
+          isMultiline={false}
+          title={translateText("E-Mail", "البريد الإلكتروني")}
+          value={email}
+          setValue={setEmail}
+          placeholder={translateText("Ex: mohammed.h@hotmail.com", "مثال: mohammed.h@hotmail.com")}
+        />
 
         <View className="my-2"></View>
 
-        <RenderTextInput isMultiline={false} title="Address" value={address} setValue={setAddress} placeholder="Ex: Lebanon - Beirut - Hamera - Sadat St." />
+        <RenderTextInput
+          isMultiline={false}
+          title={translateText("Address", "العنوان")}
+          value={address}
+          setValue={setAddress}
+          placeholder={translateText("Ex: Lebanon - Beirut - Hamera - Sadat St.", "مثال: لبنان - بيروت - حمرا - شارع سادات")}
+        />
       </View>
 
       <TouchableOpacity
@@ -51,7 +64,7 @@ const CV = ({ navigation }) => {
         }}
         className="self-end w-32 h-12 flex justify-center items-center mr-3 mb-3 bg-[#FE6F07] rounded-xl"
       >
-        <Text className="text-lg font-garamond text-white">Next</Text>
+        <Text className="text-lg font-garamond text-white">{translateText("Next", "التالي")}</Text>
       </TouchableOpacity>
     </View>
   );

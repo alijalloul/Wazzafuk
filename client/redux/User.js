@@ -85,7 +85,7 @@ export const editAppLanguage = async (language, navigation, dispatch) => {
 
     await AsyncStorage.setItem("language", language);
 
-    navigation.navigate("onBoarding");
+    navigation?.navigate("onBoarding");
   } catch (error) {
     dispatch(userSlice.actions.errorAPI());
     console.log("error: ", error);

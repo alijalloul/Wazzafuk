@@ -1,5 +1,5 @@
 import React, { useState, memo } from "react";
-import { View, TouchableOpacity, Text, ScrollView, Image } from "react-native";
+import { View, TouchableOpacity, Text, ScrollView, Image, I18nManager } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 
@@ -17,6 +17,10 @@ import SkillModal from "./SkillModal";
 import { deletePost, createJobPost, updateJobPost } from "../../redux/User";
 import { fetchEmployeesByJobId } from "../../redux/User";
 
+const translateText = (text, arabicText) => {
+  return I18nManager.isRTL ? arabicText : text;
+};
+
 const PostJobModal = ({ isBottomSheetVisible, setBottomSheetVisible, navigation, jobsStatus }) => {
   const dispatch = useDispatch();
   const employerID = useSelector((state) => state?.user.userInfo)?._id;
@@ -24,15 +28,17 @@ const PostJobModal = ({ isBottomSheetVisible, setBottomSheetVisible, navigation,
 
   const [id, setId] = useState(null);
 
-  const [jobTitle, setJobTitle] = useState("Software Engineer");
-  const [company, setCompany] = useState("TechCo");
-  const [location, setLocation] = useState("San Francisco");
-  const [country, setCountry] = useState("United States");
-  const [category, setCategory] = useState("Information Technology");
+  const [jobTitle, setJobTitle] = useState(translateText("Software Engineer", "مهندس البرمجيات"));
+  const [company, setCompany] = useState(translateText("TechCo", "شركة تكنولوجيا"));
+  const [location, setLocation] = useState(translateText("San Francisco", "سان فرانسيسكو"));
+  const [country, setCountry] = useState(translateText("United States", "الولايات المتحدة"));
+  const [category, setCategory] = useState(translateText("Information Technology", "تكنولوجيا المعلومات"));
   const [skills, setSkills] = useState(["JavaScript", "React", "Node.js"]);
-  const [experienceRequired, setExperienceRequired] = useState("3-4 years");
-  const [jobType, setJobType] = useState("Full-Time");
-  const [description, setDescription] = useState("We are looking for a skilled Software Engineer to join our dynamic team...");
+  const [experienceRequired, setExperienceRequired] = useState(translateText("3-4 years", "3-4 سنوات"));
+  const [jobType, setJobType] = useState(translateText("Full-Time", "دوام كامل"));
+  const [description, setDescription] = useState(
+    translateText("We are looking for a skilled Software Engineer to join our dynamic team...", "نبحث عن مهندس برمجيات ماهر للانضمام إلى فريقنا الديناميكي...")
+  );
 
   const [date, setDate] = useState(new Date());
 
@@ -223,7 +229,7 @@ const PostJobModal = ({ isBottomSheetVisible, setBottomSheetVisible, navigation,
   return (
     <View className="flex-1 w-[90%]">
       <View className={`flex-1 justify-center items-center ${jobs?.length > 0 && "hidden"}`}>
-        <Text className="font-garamond mb-5 text-lg opacity-60">You Have Not Posted Any Job Yet.</Text>
+        <Text className="font-garamond mb-5 text-lg opacity-60">{translateText("You Have Not Posted Any Job Yet.", "لم تقم بنشر أي وظيفة بعد.")}</Text>
       </View>
       <View>
         {jobs?.length > 0 &&
@@ -237,7 +243,7 @@ const PostJobModal = ({ isBottomSheetVisible, setBottomSheetVisible, navigation,
               className="flex justify-center w-full border-[1px] rounded-2xl p-5 mb-4 h-64"
             >
               <View className="flex flex-row justify-between items-center">
-                <Text className=" font-garamond text-3xl">{job?.jobTitle}</Text>
+                <Text className=" font-garamond text-3xl">{translateText(job?.jobTitle, "عنوان الوظيفة")}</Text>
 
                 <View className="flex flex-row justify-end items-center">
                   {<EditBtn index={index} />}
@@ -245,19 +251,7 @@ const PostJobModal = ({ isBottomSheetVisible, setBottomSheetVisible, navigation,
                 </View>
               </View>
 
-              <Text className=" font-garamond text-[12px] opacity-50 mb-5">{moment(job?.date).fromNow()}</Text>
-
-              <View className="mb-3 flex flex-row justify-between">
-                <Text className=" font-garamond text-[15px] ">{job?.country}</Text>
-                <Text className=" font-garamond text-[15px] ">{job?.location}</Text>
-              </View>
-
-              <View className="mb-3 flex flex-row justify-between">
-                <Text className=" font-garamond text-[15px] ">{job?.experienceRequired}</Text>
-                <Text className=" font-garamond text-[15px] ">{job?.jobType}</Text>
-              </View>
-
-              <Text className=" font-garamond text-[15px] opacity-50 leading-6">{job?.description?.substring(0, 200)}</Text>
+              <Text className=" font-garamond text-[12px] opacity-50 mb-5">{translateText(job?.description?.substring(0, 200), "نبذة عن الوظيفة...")}</Text>
             </TouchableOpacity>
           ))}
       </View>
@@ -265,7 +259,7 @@ const PostJobModal = ({ isBottomSheetVisible, setBottomSheetVisible, navigation,
       <Modal isVisible={isBottomSheetVisible} animationInTiming={700} className=" m-0 mt-10 rounded-t-xl">
         <View className="flex-1 justify-center bg-white">
           <View className={`mb-5 w-full flex flex-row px-5 justify-between items-center ${isBottomSheetVisible && "border-b-[1px]"}`}>
-            <Text className=" text-3xl font-garamond">{isEditing ? "Edit" : "Post a Job"}</Text>
+            <Text className=" text-3xl font-garamond">{isEditing ? translateText("Edit", "تحرير") : translateText("Post a Job", "نشر وظيفة")}</Text>
 
             <TouchableOpacity onPress={() => closeModal()}>
               <Text className=" text-5xl font-garamond-bold">×</Text>
@@ -283,103 +277,109 @@ const PostJobModal = ({ isBottomSheetVisible, setBottomSheetVisible, navigation,
               <View className="mb-5">
                 <RenderTextInput
                   isMultiline={false}
-                  title="Job Title *"
+                  title={translateText("Job Title *", "عنوان الوظيفة *")}
                   value={jobTitle}
                   setValue={setJobTitle}
-                  placeholder="Ex: Accountant"
+                  placeholder={translateText("Ex: Accountant", "مثال: محاسب")}
                   isError={jobTitleError}
                   setIsError={setJobTitleError}
-                  errorMessage="This field can not be empty"
+                  errorMessage={translateText("This field can not be empty", "هذا الحقل لا يمكن أن يكون فارغًا")}
                 />
               </View>
               <View className="mb-5">
                 <RenderTextInput
                   isMultiline={false}
-                  title="Company *"
+                  title={translateText("Company *", "الشركة *")}
                   value={company}
                   setValue={setCompany}
-                  placeholder="Ex: Amazon"
+                  placeholder={translateText("Ex: Amazon", "مثال: أمازون")}
                   isError={companyError}
                   setIsError={setCategoryError}
-                  errorMessage="This field can not be empty"
+                  errorMessage={translateText("This field can not be empty", "هذا الحقل لا يمكن أن يكون فارغًا")}
                 />
               </View>
               <View className="mb-5">
                 <RenderTextInput
                   isMultiline={false}
-                  title="Location *"
+                  title={translateText("Location *", "الموقع *")}
                   value={location}
                   setValue={setLocation}
-                  placeholder="Ex: Beirut"
+                  placeholder={translateText("Ex: Beirut", "مثال: بيروت")}
                   isError={locationError}
                   setIsError={setLocationError}
-                  errorMessage="This field can not be empty"
+                  errorMessage={translateText("This field can not be empty", "هذا الحقل لا يمكن أن يكون فارغًا")}
                 />
               </View>
               <View className="mb-5">
                 <RenderTextInput
                   isMultiline={false}
-                  title="Country *"
+                  title={translateText("Country *", "الدولة *")}
                   value={country}
                   setValue={setCountry}
-                  placeholder="Ex: Lebanon"
+                  placeholder={translateText("Ex: Lebanon", "مثال: لبنان")}
                   isError={countryError}
                   setIsError={setCountryError}
-                  errorMessage="This field can not be empty"
+                  errorMessage={translateText("This field can not be empty", "هذا الحقل لا يمكن أن يكون فارغًا")}
                 />
               </View>
 
               <View className="mb-5">
                 <SingleSelectorModal
-                  title="Category *"
+                  title={translateText("Category *", "الفئة *")}
                   data={categories}
                   value={category}
                   setValue={setCategory}
                   isError={categoryError}
                   setIsError={setCategoryError}
-                  errorMessage="This field can not be empty"
+                  errorMessage={translateText("This field can not be empty", "هذا الحقل لا يمكن أن يكون فارغًا")}
                 />
               </View>
 
               <View className="mb-5">
-                <Text className="text-[20px] font-garamond mb-2">Skills</Text>
+                <Text className="text-[20px] font-garamond mb-2">{translateText("Skills", "المهارات")}</Text>
 
                 <SkillModal value={skills} setValue={setSkills} />
               </View>
 
               <View className="mb-5">
-                <Text className="text-[20px] font-garamond mb-2">Job Experience</Text>
+                <Text className="text-[20px] font-garamond mb-2">{translateText("Job Experience", "خبرة الوظيفة")}</Text>
 
                 <View>
-                  {<CheckMarkForm value={experienceRequired} setValue={setExperienceRequired} conditional="No Experience" />}
+                  {<CheckMarkForm value={experienceRequired} setValue={setExperienceRequired} conditional={translateText("No Experience", "لا تجربة")} />}
 
-                  {<CheckMarkForm value={experienceRequired} setValue={setExperienceRequired} conditional="1-2 years" />}
+                  {<CheckMarkForm value={experienceRequired} setValue={setExperienceRequired} conditional={translateText("1-2 years", "1-2 سنوات")} />}
 
-                  {<CheckMarkForm value={experienceRequired} setValue={setExperienceRequired} conditional="3-4 years" />}
+                  {<CheckMarkForm value={experienceRequired} setValue={setExperienceRequired} conditional={translateText("3-4 years", "3-4 سنوات")} />}
 
-                  {<CheckMarkForm value={experienceRequired} setValue={setExperienceRequired} conditional="5+ years" />}
+                  {<CheckMarkForm value={experienceRequired} setValue={setExperienceRequired} conditional={translateText("5+ years", "5+ سنوات")} />}
                 </View>
               </View>
 
               <View className="mb-5">
-                <Text className="text-[20px] font-garamond mb-2">Job Type</Text>
+                <Text className="text-[20px] font-garamond mb-2">{translateText("Job Type", "نوع الوظيفة")}</Text>
 
                 <View>
-                  {<CheckMarkForm value={jobType} setValue={setJobType} conditional="Full-Time" />}
+                  {<CheckMarkForm value={jobType} setValue={setJobType} conditional={translateText("Full-Time", "دوام كامل")} />}
 
-                  {<CheckMarkForm value={jobType} setValue={setJobType} conditional="Part-Time" />}
+                  {<CheckMarkForm value={jobType} setValue={setJobType} conditional={translateText("Part-Time", "دوام جزئي")} />}
 
-                  {<CheckMarkForm value={jobType} setValue={setJobType} conditional="Contract" />}
+                  {<CheckMarkForm value={jobType} setValue={setJobType} conditional={translateText("Contract", "عقد")} />}
                 </View>
               </View>
 
               <View className="mb-5">
-                <RenderTextInput isMultiline={true} title="Description" value={description} setValue={setDescription} placeholder="Ex: I count money" />
+                <RenderTextInput
+                  isMultiline={true}
+                  title={translateText("Description", "الوصف")}
+                  value={description}
+                  setValue={setDescription}
+                  placeholder={translateText("Ex: I count money", "مثال: أنا أحسب المال")}
+                />
               </View>
 
               <View className="w-full flex justify-center items-end mb-8">
                 <TouchableOpacity onPress={() => saveWorkExperience()} className="w-32 bottom-0 right-0 bg-[#FE6F07] rounded-xl px-10 py-2">
-                  <Text className="text-lg fontW-garamond text-white">{isEditing ? "Edit" : "Post"}</Text>
+                  <Text className="text-lg fontW-garamond text-white">{isEditing ? translateText("Edit", "تحرير") : translateText("Post", "نشر")}</Text>
                 </TouchableOpacity>
               </View>
             </View>

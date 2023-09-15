@@ -1,8 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, TouchableOpacity, Image, TextInput, Text } from "react-native";
+import { View, TouchableOpacity, Image, TextInput, Text, I18nManager } from "react-native";
 
 import pen from "../../assets/images/pen.png";
 import check from "../../assets/images/check.png";
+
+const translateText = (text, arabicText) => {
+  return I18nManager.isRTL ? arabicText : text;
+};
 
 const ContactInfoEditor = ({ textSize, textColor, value, setValue, placeholder }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -22,7 +26,7 @@ const ContactInfoEditor = ({ textSize, textColor, value, setValue, placeholder }
   return (
     <View className="relative flex flex-row justify-between items-center flex-1 ">
       <Text style={{ fontSize: textSize, color: textColor }} className={`font-garamond text-center ${isEditing && "h-0 w-0"} ${value === "" && " opacity-50"}`}>
-        {value === "" ? placeholder : value}
+        {value === "" ? translateText(placeholder, "النص البديل") : value}
       </Text>
 
       <TextInput

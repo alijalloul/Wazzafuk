@@ -43,6 +43,7 @@ import EmployeeJobDetails from "./screens/EmployeeJobDetails.js";
 import ContactInfo from "./screens/ContactInfo.js";
 import HeaderRight from "./components/Header/HeaderRight.js";
 import ChooseLanguage from "./screens/ChooseLanguage.js";
+import { I18nManager } from "react-native";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -150,10 +151,15 @@ const App = () => {
           setScreenName(value2);
 
           setLanguage(value3);
-          editAppLanguage(JSON.parse(value3), null, dispatch);
+          editAppLanguage(value3, null, dispatch);
+          if (value3 === "arabic") {
+            I18nManager.forceRTL(true);
+          } else {
+            I18nManager.forceRTL(false);
+          }
         }
       } catch (error) {
-        console.log("error message: ", error);
+        console.log("error message from App.js: ", error);
       }
     };
 

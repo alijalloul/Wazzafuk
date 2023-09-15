@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Image, Text, TouchableOpacity, ScrollView } from "react-native";
+import { View, Image, Text, TouchableOpacity, ScrollView, I18nManager } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 import blobleft from "../assets/images/blobleft.png";
@@ -12,7 +12,6 @@ import Spinner from "../components/Spinner";
 
 const LogIn = ({ navigation }) => {
   const dispatch = useDispatch();
-  const appLanguage = useSelector((state) => state.user.appLanguage);
 
   const pending = useSelector((state) => state.user.pending);
 
@@ -39,6 +38,10 @@ const LogIn = ({ navigation }) => {
     }
   };
 
+  const translateText = (englishText, arabicText) => {
+    return I18nManager.isRTL ? arabicText : englishText;
+  };
+
   return (
     <View className="flex-1 justify-center bg-white">
       <View className={`${pending ? "z-30 absolute w-full h-full justify-center items-center" : "hidden"}`}>
@@ -51,46 +54,46 @@ const LogIn = ({ navigation }) => {
         <View className="flex-1 w-[90%]">
           <Text
             style={{ textShadowColor: "rgba(0, 0, 0, 0.75)", textShadowOffset: { width: -1, height: 1 }, textShadowRadius: 10 }}
-            className="relative top-12 text-[40px] text-white font-garamond-bold w-[70%]"
+            className="relative top-12 text-[40px] text-white font-garamond-bold w-[50%]"
           >
-            Welcome Back
+            {translateText("Welcome Back", "مرحبًا بعودتك")}
           </Text>
 
           <View className="mt-48">
             <View className="mb-10">
               <View className="mb-4">
                 <RenderTextInput
-                  isForm={false}
                   isNumpad={true}
                   isMultiline={false}
                   icon={phone}
                   value={telephone}
                   setValue={setTelephone}
-                  placeholder="Phone Number"
+                  placeholder={translateText("Phone Number", "رقم الهاتف")}
                   isError={telephoneError}
                   setIsError={setTelephoneError}
-                  errorMessage="This field can not be empty"
+                  errorMessage={translateText("This field can not be empty", "هذا الحقل لا يمكن أن يكون فارغًا")}
+                  isArabic={I18nManager.isRTL && true}
                 />
               </View>
 
               <View className="mb-4">
                 <RenderTextInput
-                  isForm={false}
                   isNumpad={false}
                   isMultiline={false}
                   icon={key}
                   value={password}
                   setValue={setPassword}
-                  placeholder="Password"
+                  placeholder={translateText("Password", "كلمة المرور")}
                   isError={passwordError}
                   setIsError={setPasswordError}
-                  errorMessage="This field can not be empty"
+                  errorMessage={translateText("This field can not be empty", "هذا الحقل لا يمكن أن يكون فارغًا")}
+                  isArabic={I18nManager.isRTL && true}
                 />
               </View>
 
               <View className="w-full flex justify-end items-end">
                 <TouchableOpacity className=" opacity-60">
-                  <Text className=" font-garamond border-b-[1px]">Forgot Password</Text>
+                  <Text className=" font-garamond border-b-[1px]">{translateText("Forgot Password", "نسيت كلمة السر")}</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -102,11 +105,11 @@ const LogIn = ({ navigation }) => {
                 }}
                 className="bg-[#FE6F07] w-full py-3 rounded-3xl flex justify-center items-center"
               >
-                <Text className="text-white font-garamond-bold text-xl">Log In</Text>
+                <Text className="text-white font-garamond-bold text-xl">{translateText("Sign Up", "سجل")}</Text>
               </TouchableOpacity>
 
               <View className=" relative flex justify-center items-center w-full my-4">
-                <Text className="text-opacity-50 font-garamond bg-white px-1 py-1 z-10">or</Text>
+                <Text className="text-opacity-50 font-garamond bg-white px-1 py-1 z-10">{translateText("or", "او")}</Text>
                 <View className="opacity-50 absolute w-full border-b-[1px] "></View>
               </View>
 
@@ -116,7 +119,7 @@ const LogIn = ({ navigation }) => {
                 }}
                 className="bg-white border-[1px] border-gray-400 w-full py-3 rounded-3xl flex justify-center items-center"
               >
-                <Text className=" font-garamond-bold text-xl">Sign Up</Text>
+                <Text className=" font-garamond-bold text-xl">{translateText("Log In", "تسجيل الدخول")}</Text>
               </TouchableOpacity>
             </View>
           </View>

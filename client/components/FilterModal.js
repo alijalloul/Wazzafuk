@@ -1,5 +1,5 @@
 import React, { useState, memo, useEffect } from "react";
-import { View, TouchableOpacity, Text, ScrollView, Image } from "react-native";
+import { View, TouchableOpacity, Text, ScrollView, Image, I18nManager } from "react-native";
 import { useDispatch } from "react-redux";
 
 import Modal from "react-native-modal";
@@ -11,6 +11,10 @@ import check from "../assets/images/checkWhite.png";
 import SingleSelectorModal from "./SingleSelectorModal";
 import SkillModal from "./PostJob/SkillModal";
 import { fetchPosts, fetchPostsByFilter } from "../redux/JobPost";
+
+const translateText = (text, arabicText) => {
+  return I18nManager.isRTL ? arabicText : text;
+};
 
 const FilterModal = ({ bottomSheetVisible, setBottomSheetVisible, page, setNumberOfFilters }) => {
   const dispatch = useDispatch();
@@ -119,7 +123,7 @@ const FilterModal = ({ bottomSheetVisible, setBottomSheetVisible, page, setNumbe
           {value === conditional && <Image source={check} className="w-full h-full" />}
         </TouchableOpacity>
 
-        <Text className="text-lg font-garamond ">{conditional}</Text>
+        <Text className="text-lg font-garamond ">{translateText(conditional, conditional)}</Text>
       </View>
     );
   };
@@ -129,7 +133,7 @@ const FilterModal = ({ bottomSheetVisible, setBottomSheetVisible, page, setNumbe
       <Modal isVisible={bottomSheetVisible} animationInTiming={700} className=" m-0 mt-10 rounded-t-xl">
         <View className="flex-1 justify-center bg-white">
           <View className={`mb-5 w-full flex flex-row px-5 justify-between items-center ${bottomSheetVisible && "border-b-[1px]"}`}>
-            <Text className=" text-3xl font-garamond">Filter</Text>
+            <Text className=" text-3xl font-garamond">{translateText("Filter", "تصفية")}</Text>
 
             <TouchableOpacity onPress={() => closeModal()}>
               <Text className=" text-5xl font-garamond-bold">×</Text>
@@ -145,58 +149,58 @@ const FilterModal = ({ bottomSheetVisible, setBottomSheetVisible, page, setNumbe
           >
             <View className="w-[90%] flex-1">
               <View className="mb-5">
-                <RenderTextInput isMultiline={false} title="Company" value={company} setValue={setCompany} placeholder="Ex: Amazon" />
+                <RenderTextInput isMultiline={false} title={translateText("Company", "الشركة")} value={company} setValue={setCompany} placeholder={translateText("Ex: Amazon", "مثال: أمازون")} />
               </View>
               <View className="mb-5">
-                <RenderTextInput isMultiline={false} title="Location" value={location} setValue={setLocation} placeholder="Ex: Beirut" />
+                <RenderTextInput isMultiline={false} title={translateText("Location", "الموقع")} value={location} setValue={setLocation} placeholder={translateText("Ex: Beirut", "مثال: بيروت")} />
               </View>
               <View className="mb-5">
-                <RenderTextInput isMultiline={false} title="Country" value={country} setValue={setCountry} placeholder="Ex: Lebanon" />
-              </View>
-
-              <View className="mb-5">
-                <SingleSelectorModal title="Category" data={categories} value={category} setValue={setCategory} />
+                <RenderTextInput isMultiline={false} title={translateText("Country", "البلد")} value={country} setValue={setCountry} placeholder={translateText("Ex: Lebanon", "مثال: لبنان")} />
               </View>
 
               <View className="mb-5">
-                <Text className="text-[20px] font-garamond mb-2">Skills</Text>
+                <SingleSelectorModal title={translateText("Category", "الفئة")} data={categories} value={category} setValue={setCategory} />
+              </View>
+
+              <View className="mb-5">
+                <Text className="text-[20px] font-garamond mb-2">{translateText("Skills", "المهارات")}</Text>
 
                 <SkillModal value={skills} setValue={setSkills} />
               </View>
 
               <View className="mb-5">
-                <Text className="text-[20px] font-garamond mb-2">Job Experience</Text>
+                <Text className="text-[20px] font-garamond mb-2">{translateText("Job Experience", "خبرة العمل")}</Text>
 
                 <View>
-                  {<CheckMarkForm value={experienceRequired} setValue={setExperienceRequired} conditional="No Experience" />}
+                  {<CheckMarkForm value={experienceRequired} setValue={setExperienceRequired} conditional={translateText("No Experience", "بدون خبرة")} />}
 
-                  {<CheckMarkForm value={experienceRequired} setValue={setExperienceRequired} conditional="1-2 years" />}
+                  {<CheckMarkForm value={experienceRequired} setValue={setExperienceRequired} conditional={translateText("1-2 years", "1-2 سنوات")} />}
 
-                  {<CheckMarkForm value={experienceRequired} setValue={setExperienceRequired} conditional="3-4 years" />}
+                  {<CheckMarkForm value={experienceRequired} setValue={setExperienceRequired} conditional={translateText("3-4 years", "3-4 سنوات")} />}
 
-                  {<CheckMarkForm value={experienceRequired} setValue={setExperienceRequired} conditional="5+ years" />}
+                  {<CheckMarkForm value={experienceRequired} setValue={setExperienceRequired} conditional={translateText("5+ years", "5+ سنوات")} />}
                 </View>
               </View>
 
               <View className="mb-5">
-                <Text className="text-[20px] font-garamond mb-2">Job Type</Text>
+                <Text className="text-[20px] font-garamond mb-2">{translateText("Job Type", "نوع الوظيفة")}</Text>
 
                 <View>
-                  {<CheckMarkForm value={jobType} setValue={setJobType} conditional="Full-Time" />}
+                  {<CheckMarkForm value={jobType} setValue={setJobType} conditional={translateText("Full-Time", "وقت كامل")} />}
 
-                  {<CheckMarkForm value={jobType} setValue={setJobType} conditional="Part-Time" />}
+                  {<CheckMarkForm value={jobType} setValue={setJobType} conditional={translateText("Part-Time", "وقت جزئي")} />}
 
-                  {<CheckMarkForm value={jobType} setValue={setJobType} conditional="Contract" />}
+                  {<CheckMarkForm value={jobType} setValue={setJobType} conditional={translateText("Contract", "عقد")} />}
                 </View>
               </View>
 
               <View className="w-full flex-row justify-between items-end mb-8">
                 <TouchableOpacity onPress={() => clear()} className="flex justify-center items-center w-32 bottom-0 right-0 border-[1px] border-[#FE6F07] bg-white rounded-xl py-2">
-                  <Text className="text-lg fontW-garamond text-[#FE6F07]">Clear</Text>
+                  <Text className="text-lg fontW-garamond text-[#FE6F07]">{translateText("Clear", "مسح")}</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => saveWorkExperience()} className="flex justify-center items-center w-32 bottom-0 right-0 bg-[#FE6F07] rounded-xl py-2">
-                  <Text className="text-lg fontW-garamond text-white">Filter</Text>
+                  <Text className="text-lg fontW-garamond text-white">{translateText("Filter", "تصفية")}</Text>
                 </TouchableOpacity>
               </View>
             </View>

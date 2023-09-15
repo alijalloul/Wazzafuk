@@ -1,5 +1,5 @@
 import React, { useState, memo } from "react";
-import { View, Image, Text, TouchableOpacity, TextInput, FlatList } from "react-native";
+import { View, Image, Text, TouchableOpacity, TextInput, FlatList, I18nManager } from "react-native";
 import Modal from "react-native-modal";
 
 import downVector from "../assets/images/downVector.png";
@@ -55,7 +55,7 @@ const SingleSelectorModal = ({ title, data, value, setValue, isError, setIsError
                 setSearch(text);
               }}
               className=" text-3xl font-garamond w-[90%]"
-              placeholder="Search"
+              placeholder={I18nManager.isRTL ? "بحث" : "Search"}
             ></TextInput>
 
             <TouchableOpacity

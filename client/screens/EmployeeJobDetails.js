@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, View, ScrollView } from "react-native";
+import { Text, View, ScrollView, I18nManager } from "react-native";
 import { useSelector } from "react-redux";
 
 const EmployeeJobDetails = ({ route, navigation }) => {
@@ -13,7 +13,7 @@ const EmployeeJobDetails = ({ route, navigation }) => {
         <View className=" w-[90%] mb-8 ">
           <View className="mb-8">
             <Text className=" font-garamond-semibold text-4xl">{job?.jobTitle}</Text>
-            <Text className=" font-garamond text-[15px] opacity-50">posted 2 hourse ago</Text>
+            <Text className=" font-garamond text-[15px] opacity-50">{job?.date}</Text>
           </View>
 
           <View className="flex flex-row justify-between items-center mb-8">
@@ -28,21 +28,21 @@ const EmployeeJobDetails = ({ route, navigation }) => {
 
         <View className="w-full flex justify-between items-center py-6 border-t-[1px]">
           <View className="w-[90%] flex flex-row justify-between items-center">
-            <Text className=" font-garamond text-lg">Job Type</Text>
+            <Text className=" font-garamond text-lg">نوع الوظيفة</Text>
             <Text className=" font-garamond text-lg">{job?.type}</Text>
           </View>
         </View>
 
         <View className="w-full flex justify-between items-center py-6 border-t-[1px]">
           <View className="w-[90%] flex flex-row justify-between items-center">
-            <Text className=" font-garamond text-lg">Category</Text>
+            <Text className=" font-garamond text-lg">الفئة</Text>
             <Text className=" font-garamond text-lg">{job?.category}</Text>
           </View>
         </View>
 
         <View className="w-full flex justify-center items-center py-6 border-y-[1px] mb-5">
           <View className="w-[90%]">
-            <Text className=" font-garamond text-lg">Skills</Text>
+            <Text className=" font-garamond text-lg">المهارات</Text>
             <View className="flex flex-row flex-wrap">
               {job?.skills?.length > 0 &&
                 job?.skills?.map((skill, index) => (
@@ -55,7 +55,7 @@ const EmployeeJobDetails = ({ route, navigation }) => {
         </View>
 
         <View className="flex justify-center w-[90%]">
-          <Text className="text-2xl font-garamond mb-2">Cover Letter</Text>
+          <Text className="text-2xl font-garamond mb-2">رسالة التغطية</Text>
 
           <Text className=" font-garamond ">{job?.coverLetter}</Text>
         </View>

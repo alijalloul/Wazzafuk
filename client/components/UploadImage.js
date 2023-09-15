@@ -1,5 +1,5 @@
 import React, { memo, useState } from "react";
-import { Image, View, TouchableOpacity, Text, TouchableWithoutFeedback } from "react-native";
+import { Image, View, TouchableOpacity, Text, TouchableWithoutFeedback, I18nManager } from "react-native"; // Import I18nManager
 import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
 
@@ -22,6 +22,11 @@ const UploadImage = ({ width, isButton, image, setImage }) => {
   const removeImage = () => {
     setImage("");
   };
+
+  const translateText = (englishText, arabicText) => {
+    return I18nManager.isRTL ? arabicText : englishText;
+  };
+
   return (
     <View className="flex justify-center items-center">
       <TouchableWithoutFeedback
@@ -40,7 +45,7 @@ const UploadImage = ({ width, isButton, image, setImage }) => {
           }}
           className={`${isButton ? "flex items-center justify-center bg-white border-[1px] border-[#FE6F07] w-24 py-2 rounded-xl mr-2 " : "hidden"}`}
         >
-          <Text className="text-[15px] font-garamond text-[#FE6F07]">{image ? "Edit" : "+ Add Image"}</Text>
+          <Text className="text-[15px] font-garamond text-[#FE6F07]">{image ? translateText("Edit", "تعديل") : translateText("+ Add Image", "+ إضافة صورة")}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -49,7 +54,7 @@ const UploadImage = ({ width, isButton, image, setImage }) => {
           }}
           className={` ${image ? "flex items-center justify-center bg-white border-[1px] border-red-500 w-24 py-2 rounded-xl" : "hidden"}`}
         >
-          <Text className="text-[15px] font-garamond text-red-500">Remove</Text>
+          <Text className="text-[15px] font-garamond text-red-500">{translateText("Remove", "إزالة")}</Text>
         </TouchableOpacity>
       </View>
     </View>
