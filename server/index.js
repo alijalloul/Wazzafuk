@@ -43,13 +43,46 @@ mongoose
   .then(() => app.listen(PORT, () => console.log(`Successfully connected to port ${PORT}`)))
   .catch((error) => console.log("There was an error: ", error));
 
+import twilio from "twilio";
+
+const accountSid = "AC55983b99746d2951fcecaa4f785b423e";
+const authToken = process.env.TWILIO_TOKEN;
+const verifySid = "VA698e332966b15cbd5f4f83b2a7bf8590";
+const client = new twilio(accountSid, authToken);
+
 app.get("/", async (req, res) => {
   res.status(500).send("Server is RUNNING");
 });
 
+app.post("/send-otp", async (req, res) => {
+  console.log("verification");
+
+  const { phoneNumber } = req.body;
+
+  try {
+    const existingUser = await userDB.findOne({ phoneNumber });
+
+    if (existingUser) {
+      console.log("same User");
+      return res.status(400).json({ message: "Account already exists." });
+    }
+
+    const verification = await client.verify.v2.services(verifySid).verifications.create({
+      to: `+961${phoneNumber}`,
+      channel: "sms",
+    });
+    console.log(verification);
+
+    res.status(200).json({ verification: verification });
+  } catch (error) {
+    console.log("Error from verification backend: ", error);
+    res.status(500).json({ message: error });
+  }
+});
 app.post("/users/signup", async (req, res) => {
   console.log("signup user");
-  const { name, telephone, password, pushToken } = req.body;
+  const { name, telephone, password, pushToken, otp } = req.body;
+  console.log(otp);
 
   try {
     const existingUser = await userDB.findOne({ telephone });
@@ -59,13 +92,25 @@ app.post("/users/signup", async (req, res) => {
       return res.status(400).json({ message: "Account already exists." });
     }
 
-    const hashedPass = await bcrypt.hash(password, 12);
+    const verificationCheck = await client.verify.v2.services(verifySid).verificationChecks.create({
+      to: `+961${telephone}`,
+      code: otp,
+    });
 
-    const result = await userDB.create({ name, telephone, password: hashedPass, pushToken });
-    const token = jwt.sign({ telephone: result.telephone, id: result._id }, "sk");
+    console.log("verificationCheck: ", verificationCheck);
 
-    res.status(200).json({ result, token });
+    if (verificationCheck.status === "approved") {
+      const hashedPass = await bcrypt.hash(password, 12);
+
+      const result = await userDB.create({ name, telephone, password: hashedPass, pushToken });
+      const token = jwt.sign({ telephone: result.telephone, id: result._id }, "sk");
+
+      res.status(200).json({ result, token });
+    } else {
+      res.status(400).send("Invalid OTP");
+    }
   } catch (error) {
+    console.log("Error from signup backend: ", error);
     res.status(500).json({ message: error });
   }
 });

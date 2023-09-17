@@ -10,7 +10,7 @@ import user from "../assets/images/userBlack.png";
 
 import RenderTextInput from "../components/RenderTextInput";
 
-import { signup } from "../redux/User";
+import { editUser, sendotp, checkforsignuperrors } from "../redux/User";
 import Spinner from "../components/Spinner";
 
 const SignUp = ({ navigation }) => {
@@ -28,6 +28,9 @@ const SignUp = ({ navigation }) => {
   const [telephoneError, setTelephoneError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
 
+  const [telephoneErrorMessage, setTelephoneErrorMessage] = useState("");
+  const [passwordErroMessager, setPasswordErrorMessage] = useState("");
+
   useEffect(() => {
     if (errorType) {
       setTelephoneError(true);
@@ -42,6 +45,11 @@ const SignUp = ({ navigation }) => {
       error = true;
     }
     if (telephone === "") {
+      setTelephoneErrorMessage(translateText("This field can not be empty", "هذا الحقل لا يمكن أن يكون فارغًا"));
+      setTelephoneError(true);
+      error = true;
+    } else if (telephone.length < 8) {
+      setTelephoneErrorMessage(translateText("Your phone number should be 8 characters long", " يجب أن يتكون رقم هاتفك من ٨ أحرف"));
       setTelephoneError(true);
       error = true;
     }
@@ -51,9 +59,10 @@ const SignUp = ({ navigation }) => {
     }
 
     if (!error) {
-      const res = await signup({ ...userInfo, name: name, telephone: telephone, password: password }, navigation, dispatch);
+      await editUser({ ...userInfo, name: name, telephone: telephone, password: password }, null, null, dispatch);
+      const res = await sendotp(telephone, navigation, dispatch);
 
-      setErrorType(res);
+      setTelephoneErrorMessage(res);
     }
   };
 
@@ -99,11 +108,7 @@ const SignUp = ({ navigation }) => {
                   placeholder={translateText("Phone Number", "رقم الهاتف")}
                   isError={telephoneError}
                   setIsError={setTelephoneError}
-                  errorMessage={
-                    errorType
-                      ? translateText("This phone number is taken. Try logging in", "تم استخدام هذا الرقم مسبقًا. جرب تسجيل الدخول")
-                      : translateText("This field can not be empty", "هذا الحقل لا يمكن أن يكون فارغًا")
-                  }
+                  errorMessage={telephoneErrorMessage}
                   isArabic={I18nManager.isRTL && true}
                 />
               </View>

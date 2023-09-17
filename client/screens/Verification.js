@@ -1,11 +1,16 @@
 import { I18nManager } from "react-native";
 import React, { useEffect, useState, useRef } from "react";
 import { View, Image, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, ScrollView } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import mail from "../assets/images/mail.png";
+import { signup } from "../redux/User";
 
 const Verification = ({ navigation }) => {
+  const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.user.userInfo);
+
   const [OTP, setOTP] = useState("");
   const otpTextInputRed = useRef(null);
 
@@ -84,7 +89,7 @@ const Verification = ({ navigation }) => {
         <View className="relative w-[90%]">
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("choose");
+              signup({ ...user, otp: OTP }, navigation, dispatch);
             }}
             className="bg-[#FE6F07] w-full py-3 rounded-3xl flex justify-center items-center mb-3"
           >

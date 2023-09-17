@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, I18nManager } from "react-native";
+import { View, Text, TouchableOpacity, I18nManager, Linking } from "react-native";
 import { useDispatch } from "react-redux";
 import * as Updates from "expo-updates";
 
@@ -25,6 +25,7 @@ const ChooseLanguage = ({ navigation }) => {
     } else {
       I18nManager.forceRTL(false);
     }
+    reload();
 
     if (!__DEV__) {
       reload();

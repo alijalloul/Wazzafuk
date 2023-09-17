@@ -30,6 +30,13 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.alizjalloul.wazzafuk"
+    },   
+    "updates": {
+      "fallbackToCacheTimeout": 0,
+      "checkAutomatically": "ON_LOAD",
+      "errorRecovery": "CUSTOM",
+      "enabled": true,
+      "releaseChannel": "default"
     },
     "web": {
       "favicon": "./assets/favicon.png"

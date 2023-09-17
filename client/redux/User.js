@@ -68,7 +68,7 @@ const userSlice = createSlice({
       state.employeesByJobId = [];
       state.jobPosts = state.jobPosts?.filter((item, index) => item._id !== action.payload);
     },
-    errorAPI: (state, action) => {
+    errorAPI: (state) => {
       state.pending = null;
       state.error = true;
     },
@@ -170,6 +170,56 @@ export const deletePost = async (selectedPostId, dispatch) => {
   }
 };
 
+export const checkforsignuperrors = async (user, dispatch) => {
+  dispatch(userSlice.actions.startAPI());
+
+  try {
+    const res = await fetch(`${BASE_URL}/send-otp`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ phoneNumber: phoneNumber }),
+    });
+
+    const body = await res.json();
+
+    console.log(body);
+
+    navigation.navigate("verification");
+  } catch (error) {
+    dispatch(userSlice.actions.errorAPI());
+    console.log("error: ", error);
+  }
+};
+
+export const sendotp = async (phoneNumber, navigation, dispatch) => {
+  dispatch(userSlice.actions.startAPI());
+
+  try {
+    const res = await fetch(`${BASE_URL}/send-otp`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ phoneNumber: phoneNumber }),
+    });
+
+    const data = await res.json();
+
+    if (res.status !== 200) {
+      dispatch(userSlice.actions.errorAPI());
+
+      return data.message;
+    }
+
+    navigation.navigate("verification");
+  } catch (error) {
+    dispatch(userSlice.actions.errorAPI());
+    console.log("error: ", error);
+  }
+};
+
 export const signup = async (userInfo, navigation, dispatch) => {
   dispatch(userSlice.actions.startAPI());
 
@@ -186,18 +236,12 @@ export const signup = async (userInfo, navigation, dispatch) => {
 
     const data = await res.json();
 
-    if (res.status !== 200) {
-      dispatch(userSlice.actions.errorAPI());
-
-      return data.message;
-    }
-
     dispatch(userSlice.actions.loginSuccess(data));
 
     await AsyncStorage.setItem("profile", JSON.stringify({ ...data }));
     await AsyncStorage.setItem("screenName", "verification");
 
-    navigation.navigate("verification");
+    navigation.navigate("CV");
   } catch (error) {
     dispatch(userSlice.actions.errorAPI());
     console.log("error: ", error);
