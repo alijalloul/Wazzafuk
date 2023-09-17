@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || "http://192.168.1.3:5000";
+const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || "http://192.168.0.2:5000";
 
 const postSlice = createSlice({
   name: "post",

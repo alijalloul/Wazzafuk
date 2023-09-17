@@ -1,5 +1,5 @@
 import { I18nManager } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Image, Text, TouchableOpacity, ScrollView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -15,6 +15,7 @@ const LogIn = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const pending = useSelector((state) => state.user.pending);
+  const [errorType, setErrorType] = useState(null);
 
   const [telephone, setTelephone] = useState("");
   const [password, setPassword] = useState("");
@@ -22,20 +23,37 @@ const LogIn = ({ navigation }) => {
   const [telephoneError, setTelephoneError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
 
-  const handleLogIn = () => {
-    let error = false;
+  useEffect(() => {
+    if (errorType === "User doesn't exist") {
+      setTelephoneError(true);
+    } else {
+      setTelephoneError(false);
+    }
 
+    if (errorType === "Invalid password") {
+      setPasswordError(true);
+    } else {
+      setPasswordError(false);
+    }
+  }, [errorType]);
+  const handleLogIn = async () => {
     if (telephone === "") {
       setTelephoneError(true);
-      error = true;
-    }
-    if (password === "") {
-      setPasswordError(true);
-      error;
+    } else {
+      setTelephoneError(false);
     }
 
-    if (!error) {
-      login({ telephone: telephone, password: password }, navigation, dispatch);
+    if (password === "") {
+      setPasswordError(true);
+    } else {
+      setPasswordError(false);
+    }
+
+    if (password !== "" && telephone !== "") {
+      const res = await login({ telephone: telephone, password: password }, navigation, dispatch);
+
+      console.log("res: ", res);
+      setErrorType(res);
     }
   };
 
@@ -72,7 +90,11 @@ const LogIn = ({ navigation }) => {
                   placeholder={translateText("Phone Number", "رقم الهاتف")}
                   isError={telephoneError}
                   setIsError={setTelephoneError}
-                  errorMessage={translateText("This field can not be empty", "هذا الحقل لا يمكن أن يكون فارغًا")}
+                  errorMessage={
+                    errorType === "User doesn't exist"
+                      ? translateText("User doesn't exist", "المستخدم غير موجود")
+                      : telephone === "" && translateText("This field can not be empty", "هذا الحقل لا يمكن أن يكون فارغًا")
+                  }
                   isArabic={I18nManager.isRTL && true}
                 />
               </View>
@@ -87,7 +109,11 @@ const LogIn = ({ navigation }) => {
                   placeholder={translateText("Password", "كلمة المرور")}
                   isError={passwordError}
                   setIsError={setPasswordError}
-                  errorMessage={translateText("This field can not be empty", "هذا الحقل لا يمكن أن يكون فارغًا")}
+                  errorMessage={
+                    errorType === "Invalid password"
+                      ? translateText("Invalid password", "رمز مرور خاطئ")
+                      : password === "" && translateText("This field can not be empty", "هذا الحقل لا يمكن أن يكون فارغًا")
+                  }
                   isArabic={I18nManager.isRTL && true}
                 />
               </View>
@@ -106,7 +132,7 @@ const LogIn = ({ navigation }) => {
                 }}
                 className="bg-[#FE6F07] w-full py-3 rounded-3xl flex justify-center items-center"
               >
-                <Text className="text-white font-garamond-bold text-xl">{translateText("Sign Up", "سجل")}</Text>
+                <Text className="text-white font-garamond-bold text-xl"> {translateText("Log In", "تسجيل الدخول")}</Text>
               </TouchableOpacity>
 
               <View className=" relative flex justify-center items-center w-full my-4">
@@ -120,7 +146,7 @@ const LogIn = ({ navigation }) => {
                 }}
                 className="bg-white border-[1px] border-gray-400 w-full py-3 rounded-3xl flex justify-center items-center"
               >
-                <Text className=" font-garamond-bold text-xl">{translateText("Log In", "تسجيل الدخول")}</Text>
+                <Text className=" font-garamond-bold text-xl">{translateText("Sign Up", "سجل")}</Text>
               </TouchableOpacity>
             </View>
           </View>

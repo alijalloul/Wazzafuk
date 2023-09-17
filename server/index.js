@@ -88,8 +88,6 @@ app.post("/users/login", async (req, res) => {
     const isEmployee = await employeeDB.findOne({ telephone: telephone });
     const user = isEmployee ? { ...(await employeeDB.findOne({ telephone: telephone }))._doc, type: "employee" } : { ...(await employerDB.findOne({ telephone: telephone }))._doc, type: "employer" };
 
-    console.log(user);
-
     res.status(200).json({ result: user, token });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -100,7 +98,6 @@ app.patch("/user", auth, async (req, res) => {
   console.log("update user");
 
   const body = req.body;
-  console.log(body.type);
 
   try {
     await userDB.findByIdAndUpdate(body._id, { name: body.name }, { new: true });
@@ -126,7 +123,6 @@ app.patch("/user", auth, async (req, res) => {
       }
     }
 
-    console.log({ ...newUser._doc, type: body.type });
     res.status(200).json({ ...newUser._doc, type: body.type });
   } catch (error) {
     res.status(500).json({ message: error.message });

@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || "http://192.168.1.3:5000";
+const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || "http://192.168.0.2:5000";
 
 const userSlice = createSlice({
   name: "user",
@@ -20,7 +20,6 @@ const userSlice = createSlice({
   reducers: {
     startAPI: (state) => {
       state.pending = true;
-      state.errorType = null;
     },
     editLanguageSuccess: (state, action) => {
       state.pending = false;
@@ -72,7 +71,6 @@ const userSlice = createSlice({
     errorAPI: (state, action) => {
       state.pending = null;
       state.error = true;
-      state.errorType = action.payload?.errorType;
     },
   },
 });
@@ -188,10 +186,10 @@ export const signup = async (userInfo, navigation, dispatch) => {
 
     const data = await res.json();
 
-    if (res.status === 400) {
-      dispatch(userSlice.actions.errorAPI({ errorType: "user already exists" }));
+    if (res.status !== 200) {
+      dispatch(userSlice.actions.errorAPI());
 
-      return;
+      return data.message;
     }
 
     dispatch(userSlice.actions.loginSuccess(data));
@@ -219,6 +217,12 @@ export const login = async (userInfo, navigation, dispatch) => {
     });
 
     const data = await res.json();
+
+    if (res.status !== 200) {
+      dispatch(userSlice.actions.errorAPI());
+
+      return data.message;
+    }
 
     dispatch(userSlice.actions.loginSuccess(data));
 

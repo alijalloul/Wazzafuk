@@ -46,8 +46,6 @@ export async function getJobPostsAppliedToByUser(req, res) {
       })
     );
 
-    console.log(jobPosts);
-
     res.status(200).json({ data: jobPosts, numberOfPages: Math.ceil(totalPosts / LIMIT) });
   } catch (error) {
     console.error(error);
@@ -135,7 +133,6 @@ export async function updateJobPost(req, res) {
 export async function deleteJobPost(req, res) {
   console.log("deleteJobPost"); // Added log
   const { id } = req.params;
-  console.log(id);
 
   try {
     await jobPostDB.findByIdAndRemove(id);
@@ -183,8 +180,6 @@ export async function getJobPostsBySearch(req, res) {
       .limit(LIMIT)
       .skip(startIndex);
 
-    console.log(totalPosts);
-
     res.json({ data: posts, numberOfPages: Math.ceil(totalPosts / LIMIT) });
   } catch (error) {
     res.status(409).json({ message: error.message });
@@ -226,8 +221,6 @@ export async function getJobPostsByFilter(req, res) {
     const totalPosts = await jobPostDB.countDocuments(filter);
 
     const posts = await jobPostDB.find(filter).sort({ _id: -1 }).limit(LIMIT).skip(startIndex);
-
-    console.log(totalPosts);
 
     res.json({ data: posts, numberOfPages: Math.ceil(totalPosts / LIMIT) });
   } catch (err) {

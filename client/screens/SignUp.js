@@ -18,7 +18,7 @@ const SignUp = ({ navigation }) => {
 
   const userInfo = useSelector((state) => state.user.userInfo);
   const pending = useSelector((state) => state.user.pending);
-  const errorType = useSelector((state) => state.user.errorType);
+  const [errorType, setErrorType] = useState(null);
 
   const [name, setName] = useState("");
   const [telephone, setTelephone] = useState("");
@@ -28,7 +28,13 @@ const SignUp = ({ navigation }) => {
   const [telephoneError, setTelephoneError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
 
-  const handleNext = () => {
+  useEffect(() => {
+    if (errorType) {
+      setTelephoneError(true);
+    }
+  }, [errorType]);
+
+  const handleNext = async () => {
     let error = false;
 
     if (name === "") {
@@ -45,15 +51,11 @@ const SignUp = ({ navigation }) => {
     }
 
     if (!error) {
-      signup({ ...userInfo, name: name, telephone: telephone, password: password }, navigation, dispatch);
+      const res = await signup({ ...userInfo, name: name, telephone: telephone, password: password }, navigation, dispatch);
+
+      setErrorType(res);
     }
   };
-
-  useEffect(() => {
-    if (errorType === "user already exists") {
-      setTelephoneError(true);
-    }
-  }, [errorType]);
 
   const translateText = (englishText, arabicText) => {
     return I18nManager.isRTL ? arabicText : englishText;
@@ -98,7 +100,7 @@ const SignUp = ({ navigation }) => {
                   isError={telephoneError}
                   setIsError={setTelephoneError}
                   errorMessage={
-                    errorType === "user already exists"
+                    errorType
                       ? translateText("This phone number is taken. Try logging in", "تم استخدام هذا الرقم مسبقًا. جرب تسجيل الدخول")
                       : translateText("This field can not be empty", "هذا الحقل لا يمكن أن يكون فارغًا")
                   }
