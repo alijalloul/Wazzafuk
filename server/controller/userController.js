@@ -1,6 +1,7 @@
 import jobPostDB from "../schema/jobPostSchema.js";
 import applicationDB from "../schema/applicationSchema.js";
 import employeeDB from "../schema/employeeSchema.js";
+import employerDB from "../schema/employerSchema.js";
 
 import { Expo } from "expo-server-sdk";
 let expo = new Expo({ accessToken: "2iTxaACfLEfIcLrhRHHBXy3LJMOApmSA8ySCP1ok" });
@@ -217,7 +218,7 @@ export async function getJobPostsByFilter(req, res) {
         },
         { category: criteria.category || { $exists: true } },
         { skills: criteria.skills || { $exists: true } },
-        { jobExperience: criteria.jobExperience || { $exists: true } },
+        { jobExpeerience: criteria.jobExperience || { $exists: true } },
         { jobType: criteria.jobType || { $exists: true } },
       ],
     };
@@ -243,6 +244,19 @@ export async function applyForJob(req, res) {
       employee_id: body.employee_id,
       job_id: body.job_id,
     });
+
+    const employerPushToken = (await employerDB.findById(body.employer_id)).pushToken;
+    const employeeName = (await employeeDB.findById(body.employee_id)).name;
+    const jobTitle = (await jobPostDB.findById(body.job_id)).jobTitle;
+
+    const message = {
+      to: employerPushToken,
+      sound: "default",
+      title: "Someone has applied to your job",
+      body: `${employeeName} has applied to "${jobTitle}"`,
+    };
+
+    await expo.sendPushNotificationsAsync([message]);
 
     if (applied) {
       return res.status(404).json({ message: "You have already applied to this job" });

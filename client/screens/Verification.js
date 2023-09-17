@@ -1,5 +1,7 @@
+import { I18nManager } from "react-native";
 import React, { useEffect, useState, useRef } from "react";
-import { View, Image, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, ScrollView, I18nManager } from "react-native";
+import { View, Image, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, ScrollView } from "react-native";
+import { useSelector } from "react-redux";
 
 import mail from "../assets/images/mail.png";
 
@@ -16,8 +18,6 @@ const Verification = ({ navigation }) => {
       keyboardDidHideListener.remove();
     };
   }, []);
-
-  console.log("I18nManager.isRTL: ", I18nManager.isRTL);
 
   const translateText = (englishText, arabicText) => {
     return I18nManager.isRTL ? arabicText : englishText;

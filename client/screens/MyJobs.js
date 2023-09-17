@@ -1,13 +1,14 @@
+import { I18nManager } from "react-native";
 import React, { memo, useCallback, useState } from "react";
-import { View, TouchableOpacity, Text, ScrollView, RefreshControl, I18nManager } from "react-native";
+import { View, TouchableOpacity, Text, ScrollView, RefreshControl } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 import PostJobModal from "../components/PostJob/PostJobModal";
 import Pagination from "../components/Pagination";
 import EmployeeJobs from "../components/EmployeeJobs";
 
-const translateText = (text, arabicText) => {
-  return I18nManager.isRTL ? arabicText : text;
+const translateText = (englishText, arabicText) => {
+  return I18nManager.isRTL ? arabicText : englishText;
 };
 
 const MyJobs = ({ navigation }) => {
@@ -43,7 +44,7 @@ const MyJobs = ({ navigation }) => {
           }}
           className={`${user?.type === "employee" ? "hidden" : "self-end w-32 h-12 flex justify-center items-center mr-3 mb-3 bg-[#FE6F07] rounded-xl"}`}
         >
-          <Text className="text-lg font-garamond text-white">Post Job</Text>
+          <Text className="text-lg font-garamond text-white">{translateText("Post Job", "أضف الوظيفة")}</Text>
         </TouchableOpacity>
       </View>
     );

@@ -1,6 +1,8 @@
+import { I18nManager } from "react-native";
 import React, { useState, memo, useEffect } from "react";
-import { View, TouchableOpacity, Text, ScrollView, Image, I18nManager } from "react-native";
+import { View, TouchableOpacity, Text, ScrollView, Image } from "react-native";
 import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 import Modal from "react-native-modal";
 
@@ -12,8 +14,8 @@ import SingleSelectorModal from "./SingleSelectorModal";
 import SkillModal from "./PostJob/SkillModal";
 import { fetchPosts, fetchPostsByFilter } from "../redux/JobPost";
 
-const translateText = (text, arabicText) => {
-  return I18nManager.isRTL ? arabicText : text;
+const translateText = (englishText, arabicText) => {
+  return I18nManager.isRTL ? arabicText : englishText;
 };
 
 const FilterModal = ({ bottomSheetVisible, setBottomSheetVisible, page, setNumberOfFilters }) => {

@@ -1,3 +1,4 @@
+import { I18nManager } from "react-native";
 import React, { memo, useEffect, useState } from "react";
 import { View, Text, TouchableWithoutFeedback, Image } from "react-native";
 import { useDispatch } from "react-redux";
@@ -9,6 +10,7 @@ import chevronLeft from "../assets/images/chevronLeft.png";
 import doubleChevronLeft from "../assets/images/doubleChevronLeft.png";
 import { changePage, fetchPosts } from "../redux/JobPost";
 import { changeUserPostsPage, fetchJobsByEmployer, fetchPostsAplliedToByUser } from "../redux/User";
+import { useSelector } from "react-redux";
 
 const Pagination = ({ fetchType, userId, page, numberOfPages }) => {
   const dispatch = useDispatch();

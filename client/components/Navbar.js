@@ -1,7 +1,9 @@
+import { I18nManager } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
-import { View, Image, Text, TouchableOpacity, Dimensions, Keyboard, Alert, I18nManager } from "react-native";
+import { View, Image, Text, TouchableOpacity, Dimensions, Keyboard, Alert } from "react-native";
 import { useNavigation, useIsFocused, useRoute, getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { useBackHandler } from "@react-native-community/hooks";
+import { useSelector } from "react-redux";
 
 import homeOrange from "../assets/images/homeOrange.png";
 import graphOrange from "../assets/images/graphOrange.png";
@@ -11,8 +13,8 @@ import graphWhite from "../assets/images/graphWhite.png";
 import userWhite from "../assets/images/userWhite.png";
 import { MotiView, useDynamicAnimation } from "moti";
 
-const translateText = (text, arabicText) => {
-  return I18nManager.isRTL ? arabicText : text;
+const translateText = (englishText, arabicText) => {
+  return I18nManager.isRTL ? arabicText : englishText;
 };
 
 const Navbar = ({ navigation }) => {
@@ -117,7 +119,7 @@ const Navbar = ({ navigation }) => {
 
     if (focusedRouteName === "home") {
       selectorAnimation.animateTo(() => ({
-        translateX: isRTL ? -(navBarSpacing * 0 + 12) : navBarSpacing * 0 + 3,
+        translateX: isRTL ? -(navBarSpacing * 0 + 12) : navBarSpacing * 0 - 3,
       }));
     } else if (focusedRouteName === "myJobs") {
       selectorAnimation.animateTo(() => ({

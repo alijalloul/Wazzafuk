@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const baseURL = "http://192.168.1.3:5000";
+const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || "http://192.168.1.3:5000";
 
 const postSlice = createSlice({
   name: "post",
@@ -48,7 +48,7 @@ export const fetchPosts = async (page, dispatch) => {
   dispatch(postSlice.actions.startAPI());
 
   try {
-    const res = await fetch(`${baseURL}/posts/${page}`, {
+    const res = await fetch(`${BASE_URL}/posts/${page}`, {
       method: "GET",
     });
 
@@ -65,7 +65,7 @@ export const fetchPostsBySearch = async (searchQuery, page, dispatch) => {
   dispatch(postSlice.actions.startAPI());
 
   try {
-    const res = await fetch(`${baseURL}/posts/search/${searchQuery || "none"}/${page}`, {
+    const res = await fetch(`${BASE_URL}/posts/search/${searchQuery || "none"}/${page}`, {
       mode: "cors",
     });
     const data = await res.json();
@@ -92,7 +92,7 @@ export const fetchPostsByFilter = async (company, location, country, category, s
       page: page || "1", // Set a default value for page if it's not provided
     });
 
-    const url = `${baseURL}/filter?${queryParams.toString()}`;
+    const url = `${BASE_URL}/filter?${queryParams.toString()}`;
 
     const res = await fetch(url, {
       mode: "cors",

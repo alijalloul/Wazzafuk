@@ -1,3 +1,4 @@
+import { I18nManager } from "react-native";
 import React from "react";
 import { Image, TouchableOpacity, View, Text } from "react-native";
 

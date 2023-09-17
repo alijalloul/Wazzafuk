@@ -1,5 +1,6 @@
+import { I18nManager } from "react-native";
 import React, { useState, memo } from "react";
-import { View, TouchableOpacity, Text, ScrollView, Image, I18nManager } from "react-native";
+import { View, TouchableOpacity, Text, ScrollView, Image } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 
@@ -17,8 +18,8 @@ import SkillModal from "./SkillModal";
 import { deletePost, createJobPost, updateJobPost } from "../../redux/User";
 import { fetchEmployeesByJobId } from "../../redux/User";
 
-const translateText = (text, arabicText) => {
-  return I18nManager.isRTL ? arabicText : text;
+const translateText = (englishText, arabicText) => {
+  return I18nManager.isRTL ? arabicText : englishText;
 };
 
 const PostJobModal = ({ isBottomSheetVisible, setBottomSheetVisible, navigation, jobsStatus }) => {
@@ -40,8 +41,6 @@ const PostJobModal = ({ isBottomSheetVisible, setBottomSheetVisible, navigation,
     translateText("We are looking for a skilled Software Engineer to join our dynamic team...", "نبحث عن مهندس برمجيات ماهر للانضمام إلى فريقنا الديناميكي...")
   );
 
-  const [date, setDate] = useState(new Date());
-
   const [jobTitleError, setJobTitleError] = useState(false);
   const [companyError, setCompanyError] = useState(false);
   const [locationError, setLocationError] = useState(false);
@@ -49,6 +48,128 @@ const PostJobModal = ({ isBottomSheetVisible, setBottomSheetVisible, navigation,
   const [categoryError, setCategoryError] = useState(false);
 
   const [isEditing, setIsEditing] = useState(false);
+
+  const translateCategoryToEnglish = (arabicCategory) => {
+    const categoryTranslations = {
+      "تكنولوجيا": "Technology",
+      "الرعاىة الصحية": "Healthcare",
+      "تمويل": "Finance",
+      "تعليم": "Education",
+      "تسويق": "Marketing",
+      "مبيعات": "Sales",
+      "تصميم": "Design",
+      "هندسة": "Engineering",
+      "خدمة الزبائن": "Customer Service",
+      "الموارد البشرية": "Human Resources",
+      "إداري": "Administrative",
+      "قانوني": "Legal",
+      "كتابة": "Writing",
+      "فن": "Art",
+      "ترفيه": "Entertainment",
+      "علوم": "Science",
+      "بيع بالتجزئة": "Retail",
+      "خدمة الطعام": "Food Service",
+      "بناء": "Construction",
+      "مواصلات": "Transportation",
+      "خدمات اجتماعية": "Social Services",
+      "تصنيع": "Manufacturing",
+      "وسائط": "Media",
+      "بحث": "Research",
+      "بنيان": "Architecture",
+      "البيئية": "Environmental",
+      "ضيافة": "Hospitality",
+      "العقارات": "Real Estate",
+      "زراعة": "Agriculture",
+      "لياقة بدنية": "Fitness",
+      "موضة": "Fashion",
+      "السيارات": "Automotive",
+      "آخر": "Other",
+    };
+
+    return categoryTranslations[arabicCategory] || arabicCategory;
+  };
+
+  const translateExperienceToEnglish = (arabicCategory) => {
+    const experienceTranslations = {
+      "لا تجربة": "No Experience",
+      "1-2 سنوات": "1-2 years",
+      "3-4 سنوات": "3-4 years",
+      "5+ سنوات": "5+ years",
+    };
+
+    return experienceTranslations[arabicCategory] || arabicCategory;
+  };
+
+  const translateTypeToEnglish = (arabicCategory) => {
+    const typeTranslations = {
+      "دوام كامل": "Full-Time",
+      "دوام جزئي": "Part-Time",
+      "عقد": "Contract",
+    };
+
+    return typeTranslations[arabicCategory] || arabicCategory;
+  };
+
+  const translateCategoryToArabic = (englishCategory) => {
+    const categoryTranslations = {
+      "Technology": "تكنولوجيا",
+      "Healthcare": "الرعاية الصحية",
+      "Finance": "تمويل",
+      "Education": "تعليم",
+      "Marketing": "تسويق",
+      "Sales": "مبيعات",
+      "Design": "تصميم",
+      "Engineering": "هندسة",
+      "Customer Service": "خدمة الزبائن",
+      "Human Resources": "الموارد البشرية",
+      "Administrative": "إداري",
+      "Legal": "قانوني",
+      "Writing": "كتابة",
+      "Art": "فن",
+      "Entertainment": "ترفيه",
+      "Science": "علوم",
+      "Retail": "بيع بالتجزئة",
+      "Food Service": "خدمة الطعام",
+      "Construction": "بناء",
+      "Transportation": "مواصلات",
+      "Social Services": "خدمات اجتماعية",
+      "Manufacturing": "تصنيع",
+      "Media": "وسائط",
+      "Research": "بحث",
+      "Architecture": "بنيان",
+      "Environmental": "البيئية",
+      "Hospitality": "ضيافة",
+      "Real Estate": "العقارات",
+      "Agriculture": "زراعة",
+      "Fitness": "لياقة بدنية",
+      "Fashion": "موضة",
+      "Automotive": "السيارات",
+      "Other": "آخر",
+    };
+
+    return categoryTranslations[englishCategory] || englishCategory;
+  };
+
+  const translateExperienceToArabic = (englishCategory) => {
+    const experienceTranslations = {
+      "No Experience": "لا تجربة",
+      "1-2 years": "1-2 سنوات",
+      "3-4 years": "3-4 سنوات",
+      "5+ years": "5+ سنوات",
+    };
+
+    return experienceTranslations[englishCategory] || englishCategory;
+  };
+
+  const translateTypeToArabic = (englishCategory) => {
+    const typeTranslations = {
+      "Full-Time": "دوام كامل",
+      "Part-Time": "دوام جزئي",
+      "Contract": "عقد",
+    };
+
+    return typeTranslations[englishCategory] || englishCategory;
+  };
 
   const closeModal = () => {
     setBottomSheetVisible(false);
@@ -63,10 +184,14 @@ const PostJobModal = ({ isBottomSheetVisible, setBottomSheetVisible, navigation,
     setExperienceRequired("");
     setJobType("");
     setDescription("");
-    setDate(null);
   };
 
   const saveWorkExperience = () => {
+    const categoryEN = translateCategoryToEnglish(category);
+    console.log("category in english ", categoryEN);
+    const experienceRequiredEN = translateExperienceToEnglish(experienceRequired);
+    const jobTypeEN = translateTypeToEnglish(jobType);
+
     let error = false;
 
     if (jobTitle.trim() === "") {
@@ -98,10 +223,10 @@ const PostJobModal = ({ isBottomSheetVisible, setBottomSheetVisible, navigation,
               company,
               location,
               country,
-              category,
+              category: categoryEN,
               skills,
-              experienceRequired,
-              jobType,
+              experienceRequired: experienceRequiredEN,
+              jobType: jobTypeEN,
               description,
               date: new Date(),
               employer_id: employerID,
@@ -116,10 +241,10 @@ const PostJobModal = ({ isBottomSheetVisible, setBottomSheetVisible, navigation,
               company,
               location,
               country,
-              category,
+              category: categoryEN,
               skills,
-              experienceRequired,
-              jobType,
+              experienceRequired: experienceRequiredEN,
+              jobType: jobTypeEN,
               description,
               date: new Date(),
               employer_id: employerID,
@@ -133,39 +258,39 @@ const PostJobModal = ({ isBottomSheetVisible, setBottomSheetVisible, navigation,
   };
 
   const categories = [
-    "Technology",
-    "Healthcare",
-    "Finance",
-    "Education",
-    "Marketing",
-    "Sales",
-    "Design",
-    "Engineering",
-    "Customer Service",
-    "Human Resources",
-    "Administrative",
-    "Legal",
-    "Writing",
-    "Art",
-    "Entertainment",
-    "Science",
-    "Retail",
-    "Food Service",
-    "Construction",
-    "Transportation",
-    "Social Services",
-    "Manufacturing",
-    "Media",
-    "Research",
-    "Architecture",
-    "Environmental",
-    "Hospitality",
-    "Real Estate",
-    "Agriculture",
-    "Fitness",
-    "Fashion",
-    "Automotive",
-    "Other",
+    translateText("Technology", "تكنولوجيا"),
+    translateText("Healthcare", "الرعاىة الصحية"),
+    translateText("Finance", "تمويل"),
+    translateText("Education", "تعليم"),
+    translateText("Marketing", "تسويق"),
+    translateText("Sales", "مبيعات"),
+    translateText("Design", "تصميم"),
+    translateText("Engineering", "هندسة"),
+    translateText("Customer Service", "خدمة الزبائن"),
+    translateText("Human Resources", "الموارد البشرية"),
+    translateText("Administrative", "إداري"),
+    translateText("Legal", "قانوني"),
+    translateText("Writing", "كتابة"),
+    translateText("Art", "فن"),
+    translateText("Entertainment", "ترفيه"),
+    translateText("Science", "علوم"),
+    translateText("Retail", "بيع بالتجزئة"),
+    translateText("Food Service", "خدمة الطعام"),
+    translateText("Construction", "بناء"),
+    translateText("Transportation", "مواصلات"),
+    translateText("Social Services", "خدمات اجتماعية"),
+    translateText("Manufacturing", "تصنيع"),
+    translateText("Media", "وسائط"),
+    translateText("Research", "بحث"),
+    translateText("Architecture", "بنيان"),
+    translateText("Environmental", "البيئية"),
+    translateText("Hospitality", "ضيافة"),
+    translateText("Real Estate", "العقارات"),
+    translateText("Agriculture", "زراعة"),
+    translateText("Fitness", "لياقة بدنية"),
+    translateText("Fashion", "موضة"),
+    translateText("Automotive", "السيارات"),
+    translateText("Other", "آخر"),
   ];
 
   const CheckMarkForm = ({ value, setValue, conditional }) => {
@@ -190,7 +315,6 @@ const PostJobModal = ({ isBottomSheetVisible, setBottomSheetVisible, navigation,
       <TouchableOpacity
         onPress={() => {
           setIsEditing(true);
-          setWorkIndex(index);
 
           setJobTitle(jobs[index].jobTitle);
           setCompany(jobs[index].company);
@@ -201,7 +325,6 @@ const PostJobModal = ({ isBottomSheetVisible, setBottomSheetVisible, navigation,
           setExperienceRequired(jobs[index].experienceRequired);
           setJobType(jobs[index].jobType);
           setDescription(jobs[index].description);
-          setDate(jobs[index].date);
 
           setId(jobs[index]._id);
 
@@ -243,7 +366,7 @@ const PostJobModal = ({ isBottomSheetVisible, setBottomSheetVisible, navigation,
               className="flex justify-center w-full border-[1px] rounded-2xl p-5 mb-4 h-64"
             >
               <View className="flex flex-row justify-between items-center">
-                <Text className=" font-garamond text-3xl">{translateText(job?.jobTitle, "عنوان الوظيفة")}</Text>
+                <Text className=" font-garamond text-3xl">{job?.jobTitle}</Text>
 
                 <View className="flex flex-row justify-end items-center">
                   {<EditBtn index={index} />}
@@ -251,7 +374,19 @@ const PostJobModal = ({ isBottomSheetVisible, setBottomSheetVisible, navigation,
                 </View>
               </View>
 
-              <Text className=" font-garamond text-[12px] opacity-50 mb-5">{translateText(job?.description?.substring(0, 200), "نبذة عن الوظيفة...")}</Text>
+              <Text className=" font-garamond text-[12px] opacity-50 mb-5">{moment(job?.date).fromNow()}</Text>
+
+              <View className="mb-3 flex flex-row justify-between">
+                <Text className=" font-garamond text-[15px] ">{job?.country}</Text>
+                <Text className=" font-garamond text-[15px] ">{job?.location}</Text>
+              </View>
+
+              <View className="mb-3 flex flex-row justify-between">
+                <Text className=" font-garamond text-[15px] ">{translateExperienceToArabic(job?.experienceRequired)}</Text>
+                <Text className=" font-garamond text-[15px] ">{translateTypeToArabic(job?.jobType)}</Text>
+              </View>
+
+              <Text className=" font-garamond text-[15px] opacity-50 leading-6">{job?.description?.substring(0, 200)}</Text>
             </TouchableOpacity>
           ))}
       </View>

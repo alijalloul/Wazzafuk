@@ -1,16 +1,16 @@
+import { I18nManager } from "react-native";
 import React, { useState } from "react";
-import { Text, View, TouchableOpacity, ScrollView, I18nManager } from "react-native";
+import { Text, View, TouchableOpacity, ScrollView } from "react-native";
 import { useSelector } from "react-redux";
 
 import RenderTextInput from "../components/RenderTextInput";
+import { handleApply } from "../redux/User";
 
 const translateText = (englishText, arabicText) => {
   return I18nManager.isRTL ? arabicText : englishText;
 };
 
 const JobPostDetails = ({ route, navigation }) => {
-  const baseURL = "http://192.168.1.3:5000";
-
   const { jobId, employerId } = route.params;
 
   const accountType = useSelector((state) => state.user.userInfo).type;
@@ -25,20 +25,8 @@ const JobPostDetails = ({ route, navigation }) => {
   const [coverLetter, setCoverLetter] = useState("");
   const [coverLetterError, setCoverLetterError] = useState(false);
 
-  const handleApply = async () => {
-    try {
-      await fetch(`${baseURL}/application`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ job_id, employee_id, employer_id, status, category, coverLetter }),
-      });
-
-      navigation.navigate("HomeTabs");
-    } catch (error) {
-      console.log("error message: ", error);
-    }
+  const handleApplyButton = () => {
+    handleApply(job_id, employee_id, employer_id, status, category, coverLetter, navigation);
   };
 
   return (
@@ -105,7 +93,7 @@ const JobPostDetails = ({ route, navigation }) => {
 
       <TouchableOpacity
         onPress={() => {
-          coverLetter.trim() === "" ? setCoverLetterError(true) : handleApply();
+          coverLetter.trim() === "" ? setCoverLetterError(true) : handleApplyButton();
         }}
         className={` ${accountType === "employer" || applied ? "hidden" : "self-end justify-self-end w-32 h-12 flex justify-center items-center mr-3 my-3 bg-[#FE6F07] rounded-xl"}`}
       >

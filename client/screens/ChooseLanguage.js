@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, I18nManager } from "react-native";
 import { useDispatch } from "react-redux";
+import * as Updates from "expo-updates";
 
 import { editAppLanguage } from "../redux/User";
+import { useEffect } from "react";
 
 const ChooseLanguage = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -13,11 +15,21 @@ const ChooseLanguage = ({ navigation }) => {
     return language === "arabic" ? arabicText : englishText;
   };
 
-  if (language === "arabic") {
-    I18nManager.forceRTL(true);
-  } else {
-    I18nManager.forceRTL(false);
-  }
+  const reload = async () => {
+    await Updates.reloadAsync();
+  };
+
+  useEffect(() => {
+    if (language === "arabic") {
+      I18nManager.forceRTL(true);
+    } else {
+      I18nManager.forceRTL(false);
+    }
+
+    if (!__DEV__) {
+      reload();
+    }
+  }, [language]);
 
   return (
     <View className="bg-white flex-1 justify-center items-center">

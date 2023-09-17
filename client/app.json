@@ -23,7 +23,7 @@
         "WRITE_EXTERNAL_STORAGE",
         "READ_EXTERNAL_STORAGE",
         "CAMERA_ROLL",
-        "NOTIFICATIONS"
+        "NOTIFICATIONS"      
       ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",

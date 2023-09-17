@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const baseURL = "http://192.168.1.3:5000";
+const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || "http://192.168.1.3:5000";
 
 const userSlice = createSlice({
   name: "user",
@@ -118,7 +118,7 @@ export const createJobPost = async (postsInfo, dispatch) => {
   dispatch(userSlice.actions.startAPI());
 
   try {
-    const res = await fetch(`${baseURL}/post`, {
+    const res = await fetch(`${BASE_URL}/post`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -140,7 +140,7 @@ export const updateJobPost = async (postsInfo, dispatch) => {
   try {
     const token = JSON.parse(await AsyncStorage.getItem("profile")).token;
 
-    const res = await fetch(`${baseURL}/post`, {
+    const res = await fetch(`${BASE_URL}/post`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -162,7 +162,7 @@ export const deletePost = async (selectedPostId, dispatch) => {
   dispatch(userSlice.actions.startAPI());
 
   try {
-    await fetch(`${baseURL}/post/${selectedPostId}`, {
+    await fetch(`${BASE_URL}/post/${selectedPostId}`, {
       method: "DELETE",
     });
     dispatch(userSlice.actions.deleteSuccess(selectedPostId));
@@ -175,8 +175,10 @@ export const deletePost = async (selectedPostId, dispatch) => {
 export const signup = async (userInfo, navigation, dispatch) => {
   dispatch(userSlice.actions.startAPI());
 
+  console.log("base URL: ", BASE_URL);
+
   try {
-    const res = await fetch(`${baseURL}/users/signup`, {
+    const res = await fetch(`${BASE_URL}/users/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -208,7 +210,7 @@ export const login = async (userInfo, navigation, dispatch) => {
   dispatch(userSlice.actions.startAPI());
 
   try {
-    const res = await fetch(`${baseURL}/users/login`, {
+    const res = await fetch(`${BASE_URL}/users/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -250,7 +252,7 @@ export const updateUser = async (newUser, navigation, dispatch) => {
   try {
     const token = JSON.parse(await AsyncStorage.getItem("profile")).token;
 
-    const res = await fetch(`${baseURL}/user`, {
+    const res = await fetch(`${BASE_URL}/user`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -288,7 +290,7 @@ export const fetchJobsByEmployer = async (userId, page, dispatch) => {
   dispatch(userSlice.actions.startAPI());
 
   try {
-    const res = await fetch(`${baseURL}/employer/${userId}/${page}/posts`, {
+    const res = await fetch(`${BASE_URL}/employer/${userId}/${page}/posts`, {
       method: "GET",
     });
 
@@ -305,7 +307,7 @@ export const fetchPostsAplliedToByUser = async (userId, page, dispatch) => {
   dispatch(userSlice.actions.startAPI());
 
   try {
-    const res = await fetch(`${baseURL}/employee/${userId}/${page}/posts`, {
+    const res = await fetch(`${BASE_URL}/employee/${userId}/${page}/posts`, {
       method: "GET",
     });
 
@@ -322,7 +324,7 @@ export const fetchEmployeesByJobId = async (jobId, dispatch) => {
   dispatch(userSlice.actions.startAPI());
 
   try {
-    const res = await fetch(`${baseURL}/job/${jobId}/employees`, {
+    const res = await fetch(`${BASE_URL}/job/${jobId}/employees`, {
       method: "GET",
     });
 
@@ -339,7 +341,7 @@ export const hireEmployee = async (jobId, employeeId, navigation, dispatch) => {
   dispatch(userSlice.actions.startAPI());
 
   try {
-    await fetch(`${baseURL}/job/${jobId}/employee/${employeeId}`, {
+    await fetch(`${BASE_URL}/job/${jobId}/employee/${employeeId}`, {
       method: "GET",
     });
 
@@ -349,6 +351,22 @@ export const hireEmployee = async (jobId, employeeId, navigation, dispatch) => {
   } catch (error) {
     dispatch(userSlice.actions.errorAPI());
     console.log("error: ", error);
+  }
+};
+
+export const handleApply = async (job_id, employee_id, employer_id, status, category, coverLetter, navigation) => {
+  try {
+    await fetch(`${BASE_URL}/application`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ job_id, employee_id, employer_id, status, category, coverLetter }),
+    });
+
+    navigation.navigate("HomeTabs");
+  } catch (error) {
+    console.log("error message: ", error);
   }
 };
 

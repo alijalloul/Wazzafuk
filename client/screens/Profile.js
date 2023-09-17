@@ -1,3 +1,4 @@
+import { I18nManager } from "react-native";
 import React, { useEffect, useState } from "react";
 import { View, TouchableOpacity, Text, ScrollView, Image } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
@@ -6,7 +7,7 @@ import * as FileSystem from "expo-file-system";
 import * as Notifications from "expo-notifications";
 import { StorageAccessFramework } from "expo-file-system";
 import * as DocumentPicker from "expo-document-picker";
-import { I18nManager } from "react-native"; // Import I18nManager
+import * as Updates from "expo-updates";
 
 import UploadImage from "../components/UploadImage";
 import TextInputEditor from "../components/Profile/TextInputEditor";
@@ -16,13 +17,13 @@ import EducationPicker from "../components/Picker/EducationPicker";
 import LanguagePicker from "../components/Picker/LanguagePicker";
 import ContactInfoEditor from "../components/Profile/ContactInfoEditor";
 
-import { updateUser, logout } from "../redux/User";
+import { updateUser, logout, editAppLanguage } from "../redux/User";
 
 import blobTop from "../assets/images/blobTop.png";
 import Spinner from "../components/Spinner";
 
-const translateText = (text, arabicText) => {
-  return I18nManager.isRTL ? arabicText : text;
+const translateText = (englishText, arabicText) => {
+  return I18nManager.isRTL ? arabicText : englishText;
 };
 
 const Profile = ({ navigation }) => {
@@ -31,6 +32,7 @@ const Profile = ({ navigation }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.userInfo);
   const pending = useSelector((state) => state.user.pending);
+  const appLanguage = useSelector((state) => state.user.appLanguage);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -42,6 +44,24 @@ const Profile = ({ navigation }) => {
   const [workExperience, setWorkExperience] = useState([]);
   const [education, setEducation] = useState([]);
   const [languageArr, setLanguageArr] = useState([]);
+  const [language, setLanguage] = useState(appLanguage);
+  console.log(appLanguage, " : ", language);
+
+  const reload = async () => {
+    await Updates.reloadAsync();
+  };
+
+  useEffect(() => {
+    if (language === "arabic") {
+      I18nManager.forceRTL(true);
+    } else {
+      I18nManager.forceRTL(false);
+    }
+
+    if (!__DEV__) {
+      reload();
+    }
+  }, [language]);
 
   useEffect(() => {
     if (isFocused) {
@@ -281,11 +301,32 @@ const Profile = ({ navigation }) => {
                   navigation,
                   dispatch
                 );
+
+                appLanguage !== language && editAppLanguage(language, null, dispatch);
               }}
-              className="w-full h-12 flex justify-center items-center bottom-0 right-0 bg-[#FE6F07] rounded-xl"
+              className="w-full h-12 flex justify-center items-center bottom-0 right-0 bg-[#FE6F07] rounded-xl  mb-8"
             >
               <Text className="text-lg font-garamond text-white">{translateText("Save", "حفظ")}</Text>
             </TouchableOpacity>
+
+            <View className="w-full border-2 border-[#FE6F07] rounded-2xl flex-row justify-center items-center">
+              <TouchableOpacity
+                onPress={() => {
+                  setLanguage("english");
+                }}
+                className={`${language === "english" ? "bg-[#FE6F07] " : "bg-white"} rounded-xl  w-[50%] py-5  flex justify-center items-center `}
+              >
+                <Text className={`${language === "english" ? " text-white " : "text-[#FE6F07]"} font-garamond-bold text-xl`}>English</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  setLanguage("arabic");
+                }}
+                className={`${language === "arabic" ? "bg-[#FE6F07] " : "bg-white"} rounded-xl  w-[50%] py-5  flex justify-center items-center`}
+              >
+                <Text className={`${language === "arabic" ? " text-white " : "text-[#FE6F07]"} font-garamond-bold text-xl`}>عربي</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </ScrollView>

@@ -1,4 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
+import { I18nManager } from "react-native";
 import React from "react";
 import { Image, TouchableOpacity } from "react-native";
 import { useSelector } from "react-redux";
@@ -7,7 +8,6 @@ const HeaderRight = () => {
   const navigation = useNavigation();
 
   const profileImage = useSelector((state) => state.user.userInfo)?.image;
-  console.log("profielImage:");
 
   return (
     <TouchableOpacity onPress={() => navigation.navigate("profile")} className="bg-gray-300 rounded-full w-14 h-14 m-5 overflow-hidden">

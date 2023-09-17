@@ -1,7 +1,7 @@
+import { I18nManager } from "react-native";
 import React from "react";
 import { View, Text, ScrollView, Image, TouchableOpacity } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import { I18nManager } from "react-native"; // Import I18nManager
 
 import blobTop from "../assets/images/blobTop.png";
 import { hireEmployee } from "../redux/User";

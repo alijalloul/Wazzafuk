@@ -1,7 +1,8 @@
+import { I18nManager } from "react-native";
 import React, { memo, useState } from "react";
 import { View, Image, Text, TouchableOpacity, ScrollView } from "react-native";
 import Modal from "react-native-modal";
-import { I18nManager } from "react-native";
+import { useSelector } from "react-redux";
 
 import pen from "../../assets/images/pen.png";
 import trash from "../../assets/images/trash.png";
@@ -9,8 +10,8 @@ import trash from "../../assets/images/trash.png";
 import RenderTextInput from "../RenderTextInput";
 import SingleSelectorModal from "../SingleSelectorModal";
 
-const translateText = (text, arabicText) => {
-  return I18nManager.isRTL ? arabicText : text;
+const translateText = (englishText, arabicText) => {
+  return I18nManager.isRTL ? arabicText : englishText;
 };
 
 const EducationPicker = ({ headerText, headerSize, education, setEducation }) => {

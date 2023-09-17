@@ -1,5 +1,6 @@
+import { I18nManager } from "react-native";
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, I18nManager } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { LinearGradient } from "expo-linear-gradient";
 import { MotiView, MotiText, useDynamicAnimation } from "moti";

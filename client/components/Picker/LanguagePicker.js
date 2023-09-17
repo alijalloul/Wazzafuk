@@ -1,13 +1,15 @@
+import { I18nManager } from "react-native";
 import React, { memo, useState } from "react";
-import { View, Image, Text, TouchableOpacity, ScrollView, I18nManager } from "react-native";
+import { View, Image, Text, TouchableOpacity, ScrollView } from "react-native";
 import Modal from "react-native-modal";
+import { useSelector } from "react-redux";
 
 import downVector from "../../assets/images/downVector.png";
 import trash from "../../assets/images/trash.png";
 import SingleSelectorModal from "../SingleSelectorModal";
 
-const translateText = (text, arabicText) => {
-  return I18nManager.isRTL ? arabicText : text;
+const translateText = (englishText, arabicText) => {
+  return I18nManager.isRTL ? arabicText : englishText;
 };
 
 const LanguagePicker = ({ headerSize, headerText, languageArr, setLanguageArr }) => {

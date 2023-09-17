@@ -1,6 +1,7 @@
+import { I18nManager } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { View, Image, Text, TouchableOpacity, TextInput, ScrollView, I18nManager } from "react-native";
+import { View, Image, Text, TouchableOpacity, TextInput, ScrollView } from "react-native";
 
 import blobright from "../assets/images/blobright.png";
 import phone from "../assets/images/phone.png";
@@ -69,7 +70,6 @@ const SignUp = ({ navigation }) => {
 
         <View className="flex-1 w-[90%]">
           <Text className="pl-5 pt-20 text-[40px] text-white font-garamond w-[50%]">{translateText("Create Account", "إنشاء حساب")}</Text>
-
           <View className=" mt-32">
             <View className="mb-10">
               <View className="mb-4">

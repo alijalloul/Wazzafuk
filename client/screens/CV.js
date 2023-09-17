@@ -1,8 +1,8 @@
+import { I18nManager } from "react-native";
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import * as DocumentPicker from "expo-document-picker";
-import { I18nManager } from "react-native";
 
 import { editUser, updateUser } from "../redux/User";
 import Spinner from "../components/Spinner";

@@ -1,11 +1,13 @@
+import { I18nManager } from "react-native";
 import React, { useState, useRef, useEffect } from "react";
-import { View, TouchableOpacity, Image, TextInput, Text, I18nManager } from "react-native";
+import { View, TouchableOpacity, Image, TextInput, Text } from "react-native";
+import { useSelector } from "react-redux";
 
 import pen from "../../assets/images/pen.png";
 import check from "../../assets/images/check.png";
 
-const translateText = (text, arabicText) => {
-  return I18nManager.isRTL ? arabicText : text;
+const translateText = (englishText, arabicText) => {
+  return I18nManager.isRTL ? arabicText : englishText;
 };
 
 const ContactInfoEditor = ({ textSize, textColor, value, setValue, placeholder }) => {

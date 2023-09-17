@@ -1,7 +1,9 @@
+import { I18nManager } from "react-native";
 import React, { memo, useState } from "react";
-import { Image, View, TouchableOpacity, Text, TouchableWithoutFeedback, I18nManager } from "react-native"; // Import I18nManager
+import { Image, View, TouchableOpacity, Text, TouchableWithoutFeedback } from "react-native"; // Import I18nManager
 import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
+import { useSelector } from "react-redux";
 
 const UploadImage = ({ width, isButton, image, setImage }) => {
   const addImage = async () => {

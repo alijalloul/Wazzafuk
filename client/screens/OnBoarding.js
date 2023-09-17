@@ -1,5 +1,6 @@
+import { I18nManager } from "react-native";
 import React, { useEffect } from "react";
-import { View, Image, Text, TouchableOpacity, I18nManager } from "react-native";
+import { View, Image, Text, TouchableOpacity } from "react-native";
 
 import CustomeBackHeader from "../components/Header/CustomBackHeader";
 

@@ -1,11 +1,13 @@
+import { I18nManager } from "react-native";
 import React, { useRef, useState, useEffect } from "react";
-import { View, TouchableOpacity, Text, Image, TextInput, I18nManager } from "react-native";
+import { View, TouchableOpacity, Text, Image, TextInput } from "react-native";
+import { useSelector } from "react-redux";
 
 import pen from "../../assets/images/pen.png";
 import check from "../../assets/images/check.png";
 
-const translateText = (text, arabicText) => {
-  return I18nManager.isRTL ? arabicText : text;
+const translateText = (englishText, arabicText) => {
+  return I18nManager.isRTL ? arabicText : englishText;
 };
 
 const IntroductionPicker = ({ introduction, setIntroduction, placeholder }) => {

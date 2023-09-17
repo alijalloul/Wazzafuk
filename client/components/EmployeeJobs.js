@@ -1,10 +1,11 @@
+import { I18nManager } from "react-native";
 import React from "react";
-import { View, TouchableOpacity, Text, I18nManager } from "react-native";
+import { View, TouchableOpacity, Text } from "react-native";
 import { useSelector } from "react-redux";
 import moment from "moment";
 
-const translateText = (text, arabicText) => {
-  return I18nManager.isRTL ? arabicText : text;
+const translateText = (englishText, arabicText) => {
+  return I18nManager.isRTL ? arabicText : englishText;
 };
 
 const EmployeeJobs = ({ navigation, jobsStatus }) => {

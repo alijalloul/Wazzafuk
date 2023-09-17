@@ -1,7 +1,8 @@
+import { I18nManager } from "react-native";
 import React, { useEffect, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
-import { View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, ScrollView, I18nManager } from "react-native";
+import { View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, ScrollView } from "react-native";
 
 import { editUser } from "../redux/User";
 

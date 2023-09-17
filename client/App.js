@@ -43,7 +43,6 @@ import EmployeeJobDetails from "./screens/EmployeeJobDetails.js";
 import ContactInfo from "./screens/ContactInfo.js";
 import HeaderRight from "./components/Header/HeaderRight.js";
 import ChooseLanguage from "./screens/ChooseLanguage.js";
-import { I18nManager } from "react-native";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -93,6 +92,8 @@ async function registerForPushNotificationsAsync() {
     token = await Notifications.getExpoPushTokenAsync({
       projectId: Constants.expoConfig.extra.eas.projectId,
     });
+
+    console.log("pushToken: ", token);
   } else {
     alert("Must use physical device for Push Notifications");
   }
@@ -152,11 +153,6 @@ const App = () => {
 
           setLanguage(value3);
           editAppLanguage(value3, null, dispatch);
-          if (value3 === "arabic") {
-            I18nManager.forceRTL(true);
-          } else {
-            I18nManager.forceRTL(false);
-          }
         }
       } catch (error) {
         console.log("error message from App.js: ", error);

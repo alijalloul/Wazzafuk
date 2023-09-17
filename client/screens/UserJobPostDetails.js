@@ -1,6 +1,7 @@
 import moment from "moment";
+import { I18nManager } from "react-native";
 import React from "react";
-import { Text, View, ScrollView, TouchableOpacity, Image, I18nManager } from "react-native";
+import { Text, View, ScrollView, TouchableOpacity, Image } from "react-native";
 import { useSelector } from "react-redux";
 
 const translateText = (englishText, arabicText) => {
@@ -8,8 +9,6 @@ const translateText = (englishText, arabicText) => {
 };
 
 const UserJobPostDetails = ({ route, navigation }) => {
-  const baseURL = "http://192.168.1.3:5000";
-
   const { itemId } = route.params;
 
   const employees = useSelector((state) => state.user.employeesByJobId);

@@ -11,8 +11,8 @@ import { fetchPostsBySearch } from "../redux/JobPost";
 import FilterModal from "../components/FilterModal";
 import HeaderLeft from "../components/Header/HeaderLeft";
 
-const translateText = (text, arabicText) => {
-  return I18nManager.isRTL ? arabicText : text;
+const translateText = (englishText, arabicText) => {
+  return I18nManager.isRTL ? arabicText : englishText;
 };
 
 const Home = ({ navigation }) => {
@@ -54,7 +54,7 @@ const Home = ({ navigation }) => {
   }, []);
 
   return (
-    <ScrollView className="flex-1 bg-white py-8 " contentContainerStyle={{ alignItems: "center" }} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+    <ScrollView className="flex-1 bg-white pb-8 " contentContainerStyle={{ alignItems: "center" }} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
       <View className="w-[90%]">
         <View className="mb-5">
           <Text className="font-garamond text-xl text-gray-500">

@@ -1,5 +1,6 @@
+import { I18nManager } from "react-native";
 import React, { useState } from "react";
-import { View, Image, Text, TouchableOpacity, ScrollView, I18nManager } from "react-native";
+import { View, Image, Text, TouchableOpacity, ScrollView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 import blobleft from "../assets/images/blobleft.png";
