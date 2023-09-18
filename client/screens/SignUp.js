@@ -1,17 +1,16 @@
-import { I18nManager } from "react-native";
 import React, { useEffect, useState } from "react";
+import { I18nManager, Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { View, Image, Text, TouchableOpacity, TextInput, ScrollView } from "react-native";
 
 import blobright from "../assets/images/blobright.png";
-import phone from "../assets/images/phone.png";
 import key from "../assets/images/key.png";
+import phone from "../assets/images/phone.png";
 import user from "../assets/images/userBlack.png";
 
 import RenderTextInput from "../components/RenderTextInput";
 
-import { editUser, sendotp, checkforsignuperrors } from "../redux/User";
 import Spinner from "../components/Spinner";
+import { editUser, sendotp } from "../redux/User";
 
 const SignUp = ({ navigation }) => {
   const dispatch = useDispatch();

@@ -1,15 +1,14 @@
-import { I18nManager } from "react-native";
 import React, { useEffect, useState } from "react";
-import { View, Image, Text, TouchableOpacity, ScrollView } from "react-native";
+import { I18nManager, Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 import blobleft from "../assets/images/blobleft.png";
-import phone from "../assets/images/phone.png";
 import key from "../assets/images/key.png";
+import phone from "../assets/images/phone.png";
 
 import RenderTextInput from "../components/RenderTextInput";
-import { login } from "../redux/User";
 import Spinner from "../components/Spinner";
+import { login } from "../redux/User";
 
 const LogIn = ({ navigation }) => {
   const dispatch = useDispatch();

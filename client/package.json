@@ -38,6 +38,7 @@
     "expo-splash-screen": "~0.20.5",
     "expo-status-bar": "~1.6.0",
     "expo-updates": "~0.18.13",
+    "fiction-expo-restart": "^2.0.0",
     "moment": "^2.29.4",
     "moti": "^0.25.3",
     "nativewind": "^2.0.11",

@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, I18nManager, Linking } from "react-native";
+import { I18nManager, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch } from "react-redux";
-import * as Updates from "expo-updates";
 
-import { editAppLanguage } from "../redux/User";
 import { useEffect } from "react";
+import { editAppLanguage } from "../redux/User";
 
 const ChooseLanguage = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -15,20 +14,11 @@ const ChooseLanguage = ({ navigation }) => {
     return language === "arabic" ? arabicText : englishText;
   };
 
-  const reload = async () => {
-    await Updates.reloadAsync();
-  };
-
   useEffect(() => {
     if (language === "arabic") {
       I18nManager.forceRTL(true);
     } else {
       I18nManager.forceRTL(false);
-    }
-    reload();
-
-    if (!__DEV__) {
-      reload();
     }
   }, [language]);
 

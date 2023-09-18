@@ -1,7 +1,7 @@
-import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
 
-import User from "./User.js";
 import JobPost from "./JobPost.js";
+import User from "./User.js";
 
 export default configureStore({
   reducer: {

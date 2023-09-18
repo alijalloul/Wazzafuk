@@ -1,14 +1,14 @@
-import { I18nManager } from "react-native";
 import React, { useEffect, useState } from "react";
+import { I18nManager } from "react-native";
 
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, ScrollView } from "react-native";
 
 import { editUser } from "../redux/User";
 
-import UploadImage from "../components/UploadImage";
-import RenderTextInput from "../components/RenderTextInput";
 import CustomeBackHeader from "../components/Header/CustomBackHeader";
+import RenderTextInput from "../components/RenderTextInput";
+import UploadImage from "../components/UploadImage";
 
 const Introduction = ({ navigation }) => {
   const dispatch = useDispatch();

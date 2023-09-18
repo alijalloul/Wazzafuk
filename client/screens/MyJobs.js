@@ -1,11 +1,10 @@
-import { I18nManager } from "react-native";
 import React, { memo, useCallback, useState } from "react";
-import { View, TouchableOpacity, Text, ScrollView, RefreshControl } from "react-native";
+import { I18nManager, RefreshControl, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
-import PostJobModal from "../components/PostJob/PostJobModal";
-import Pagination from "../components/Pagination";
 import EmployeeJobs from "../components/EmployeeJobs";
+import Pagination from "../components/Pagination";
+import PostJobModal from "../components/PostJob/PostJobModal";
 
 const translateText = (englishText, arabicText) => {
   return I18nManager.isRTL ? arabicText : englishText;

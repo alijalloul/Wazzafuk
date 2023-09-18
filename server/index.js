@@ -1,10 +1,10 @@
-import express from "express";
-import mongoose from "mongoose";
-import cors from "cors";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import cors from "cors";
 import * as dotenv from "dotenv";
+import express from "express";
 import https from "https";
+import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 
 import employeeDB from "./schema/employeeSchema.js";
 import employerDB from "./schema/employerSchema.js";
@@ -175,17 +175,17 @@ app.patch("/user", auth, async (req, res) => {
 });
 
 import {
-  getJobPostsPostedByUser,
-  getJobPostsAppliedToByUser,
-  getAppliedEmployees,
-  hireEmployee,
-  createJobPost,
-  updateJobPost,
-  deleteJobPost,
-  getJobPosts,
   applyForJob,
-  getJobPostsBySearch,
+  createJobPost,
+  deleteJobPost,
+  getAppliedEmployees,
+  getJobPosts,
+  getJobPostsAppliedToByUser,
   getJobPostsByFilter,
+  getJobPostsBySearch,
+  getJobPostsPostedByUser,
+  hireEmployee,
+  updateJobPost,
 } from "./controller/userController.js";
 
 // Retrieve job posts for a specific employer

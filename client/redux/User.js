@@ -1,5 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createSlice } from "@reduxjs/toolkit";
 
 const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || "http://192.168.0.2:5000";
 

@@ -1,6 +1,5 @@
-import { I18nManager } from "react-native";
-import React, { useEffect, useState, useRef } from "react";
-import { View, Image, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, ScrollView } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { I18nManager, Image, Keyboard, KeyboardAvoidingView, ScrollView, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 import mail from "../assets/images/mail.png";

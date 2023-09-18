@@ -1,12 +1,11 @@
-import { I18nManager } from "react-native";
 import React, { memo, useEffect, useState } from "react";
-import { View, TouchableOpacity, Text, ScrollView } from "react-native"; // Import I18nManager
+import { I18nManager, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 import { editUser } from "../redux/User";
 
-import WorkExperiencePicker from "../components/Picker/WorkExperiencePicker";
 import CustomeBackHeader from "../components/Header/CustomBackHeader";
+import WorkExperiencePicker from "../components/Picker/WorkExperiencePicker";
 
 const Work = ({ navigation }) => {
   const dispatch = useDispatch();

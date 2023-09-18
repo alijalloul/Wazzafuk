@@ -1,9 +1,8 @@
-import { I18nManager } from "react-native";
-import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
 import { LinearGradient } from "expo-linear-gradient";
-import { MotiView, MotiText, useDynamicAnimation } from "moti";
+import { MotiText, MotiView, useDynamicAnimation } from "moti";
+import React, { useEffect, useState } from "react";
+import { I18nManager, Text, TouchableOpacity, View } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 
 import { editUser } from "../redux/User";
 

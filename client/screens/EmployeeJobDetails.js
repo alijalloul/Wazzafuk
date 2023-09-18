@@ -1,6 +1,5 @@
-import { I18nManager } from "react-native";
-import React, { useState } from "react";
-import { Text, View, ScrollView } from "react-native";
+import React from "react";
+import { ScrollView, Text, View } from "react-native";
 import { useSelector } from "react-redux";
 
 const EmployeeJobDetails = ({ route, navigation }) => {

@@ -1,12 +1,11 @@
-import { I18nManager } from "react-native";
-import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
 import * as DocumentPicker from "expo-document-picker";
+import React, { useEffect, useState } from "react";
+import { I18nManager, Text, TouchableOpacity, View } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 
-import { editUser, updateUser } from "../redux/User";
-import Spinner from "../components/Spinner";
 import CustomeBackHeader from "../components/Header/CustomBackHeader";
+import Spinner from "../components/Spinner";
+import { editUser, updateUser } from "../redux/User";
 
 const CV = ({ navigation }) => {
   const dispatch = useDispatch();

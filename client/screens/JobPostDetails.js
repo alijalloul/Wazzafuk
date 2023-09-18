@@ -1,6 +1,5 @@
-import { I18nManager } from "react-native";
 import React, { useState } from "react";
-import { Text, View, TouchableOpacity, ScrollView } from "react-native";
+import { I18nManager, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
 
 import RenderTextInput from "../components/RenderTextInput";

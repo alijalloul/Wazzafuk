@@ -34,10 +34,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0,
       "checkAutomatically": "ON_LOAD",
-      "errorRecovery": "CUSTOM",
       "enabled": true,
-      "releaseChannel": "default"
-    },
+      "useClassicUpdates": true
+    },    
     "web": {
       "favicon": "./assets/favicon.png"
     },

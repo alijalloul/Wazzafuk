@@ -1,12 +1,11 @@
-import { I18nManager } from "react-native";
 import React, { memo, useEffect, useState } from "react";
-import { View, TouchableOpacity, Text, ScrollView } from "react-native";
+import { I18nManager, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
-import LanguagePicker from "../components/Picker/LanguagePicker";
-import { updateUser } from "../redux/User";
-import Spinner from "../components/Spinner";
 import CustomeBackHeader from "../components/Header/CustomBackHeader";
+import LanguagePicker from "../components/Picker/LanguagePicker";
+import Spinner from "../components/Spinner";
+import { updateUser } from "../redux/User";
 
 const translateText = (englishText, arabicText) => {
   return I18nManager.isRTL ? arabicText : englishText;

@@ -1,23 +1,22 @@
-import { I18nManager } from "react-native";
-import React, { useEffect, useState } from "react";
-import { View, TouchableOpacity, Text, ScrollView, Image } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
-import { useDispatch, useSelector } from "react-redux";
-import * as FileSystem from "expo-file-system";
-import * as Notifications from "expo-notifications";
-import { StorageAccessFramework } from "expo-file-system";
 import * as DocumentPicker from "expo-document-picker";
+import * as FileSystem from "expo-file-system";
+import { StorageAccessFramework } from "expo-file-system";
+import * as Notifications from "expo-notifications";
 import * as Updates from "expo-updates";
+import React, { useEffect, useState } from "react";
+import { I18nManager, Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 
-import UploadImage from "../components/UploadImage";
-import TextInputEditor from "../components/Profile/TextInputEditor";
-import IntroductionPicker from "../components/Profile/IntroductionPicker";
-import WorkExperiencePicker from "../components/Picker/WorkExperiencePicker";
 import EducationPicker from "../components/Picker/EducationPicker";
 import LanguagePicker from "../components/Picker/LanguagePicker";
+import WorkExperiencePicker from "../components/Picker/WorkExperiencePicker";
 import ContactInfoEditor from "../components/Profile/ContactInfoEditor";
+import IntroductionPicker from "../components/Profile/IntroductionPicker";
+import TextInputEditor from "../components/Profile/TextInputEditor";
+import UploadImage from "../components/UploadImage";
 
-import { updateUser, logout, editAppLanguage } from "../redux/User";
+import { editAppLanguage, logout, updateUser } from "../redux/User";
 
 import blobTop from "../assets/images/blobTop.png";
 import Spinner from "../components/Spinner";

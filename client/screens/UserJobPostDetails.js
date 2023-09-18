@@ -1,7 +1,6 @@
 import moment from "moment";
-import { I18nManager } from "react-native";
 import React from "react";
-import { Text, View, ScrollView, TouchableOpacity, Image } from "react-native";
+import { I18nManager, Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
 
 const translateText = (englishText, arabicText) => {

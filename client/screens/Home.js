@@ -1,15 +1,15 @@
-import { Text, TouchableOpacity, ScrollView, TextInput, View, Image, RefreshControl, I18nManager } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { memo, useCallback, useEffect, useLayoutEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { memo, useCallback, useEffect, useLayoutEffect, useState } from "react";
+import { I18nManager, Image, RefreshControl, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 
 import searchIMG from "../assets/images/search.png";
 
-import Pagination from "../components/Pagination";
-import JobPosts from "../components/JobPosts";
-import { fetchPostsBySearch } from "../redux/JobPost";
 import FilterModal from "../components/FilterModal";
 import HeaderLeft from "../components/Header/HeaderLeft";
+import JobPosts from "../components/JobPosts";
+import Pagination from "../components/Pagination";
+import { fetchPostsBySearch } from "../redux/JobPost";
 
 const translateText = (englishText, arabicText) => {
   return I18nManager.isRTL ? arabicText : englishText;

@@ -1,10 +1,9 @@
-import { I18nManager } from "react-native";
-import React, { memo, useState, useEffect } from "react";
-import { View, TouchableOpacity, Text, ScrollView } from "react-native";
+import React, { memo, useEffect, useState } from "react";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
-import EducationPicker from "../components/Picker/EducationPicker";
 import CustomeBackHeader from "../components/Header/CustomBackHeader";
+import EducationPicker from "../components/Picker/EducationPicker";
 
 import { editUser } from "../redux/User";
 
@@ -13,7 +12,7 @@ const Education = ({ navigation }) => {
   const userInfo = useSelector((state) => state.user.userInfo);
 
   const translateText = (text, arabicText) => {
-    return I18nManager.isRTL ? arabicText : text;
+    return I18nOManager.isRTL ? arabicText : text;
   };
 
   const [education, setEducation] = useState(

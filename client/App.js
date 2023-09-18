@@ -1,48 +1,46 @@
-import { useRef } from "react";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Constants from "expo-constants";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
-import { useNavigation } from "@react-navigation/native";
-import Constants from "expo-constants";
+import { useRef } from "react";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Provider } from "react-redux";
 
-import "react-native-reanimated";
 import "react-native-gesture-handler";
+import "react-native-reanimated";
 
 import Store from "./redux/Store.js";
 
-import OnBoarding from "./screens/OnBoarding.js";
-import LogIn from "./screens/LogIn.js";
-import SignUp from "./screens/SignUp.js";
-import Choose from "./screens/Choose.js";
-import Verification from "./screens/Verification.js";
-import CV from "./screens/CV.js";
-import Introduction from "./screens/Introduction.js";
-import Work from "./screens/Work.js";
-import Education from "./screens/Education.js";
-import Language from "./screens/Language.js";
-import Home from "./screens/Home.js";
-import Profile from "./screens/Profile.js";
-import MyJobs from "./screens/MyJobs.js";
-import JobPostDetails from "./screens/JobPostDetails.js";
-import UserJobPostDetails from "./screens/UserJobPostDetails.js";
-import UserDetails from "./screens/UserDetails.js";
 import Navbar from "./components/Navbar.js";
+import CV from "./screens/CV.js";
+import Choose from "./screens/Choose.js";
+import Education from "./screens/Education.js";
+import Home from "./screens/Home.js";
+import Introduction from "./screens/Introduction.js";
+import JobPostDetails from "./screens/JobPostDetails.js";
+import Language from "./screens/Language.js";
+import LogIn from "./screens/LogIn.js";
+import MyJobs from "./screens/MyJobs.js";
+import OnBoarding from "./screens/OnBoarding.js";
+import Profile from "./screens/Profile.js";
+import SignUp from "./screens/SignUp.js";
+import UserDetails from "./screens/UserDetails.js";
+import UserJobPostDetails from "./screens/UserJobPostDetails.js";
+import Verification from "./screens/Verification.js";
+import Work from "./screens/Work.js";
 
-import CustomBackHeader from "./components/Header/CustomBackHeader.js";
 
 import { useFonts } from "expo-font";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { editAppLanguage, editUser } from "./redux/User.js";
-import EmployeeJobDetails from "./screens/EmployeeJobDetails.js";
-import ContactInfo from "./screens/ContactInfo.js";
 import HeaderRight from "./components/Header/HeaderRight.js";
+import { editAppLanguage, editUser } from "./redux/User.js";
 import ChooseLanguage from "./screens/ChooseLanguage.js";
+import ContactInfo from "./screens/ContactInfo.js";
+import EmployeeJobDetails from "./screens/EmployeeJobDetails.js";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();

@@ -1,11 +1,9 @@
-import { I18nManager } from "react-native";
 import React, { useEffect } from "react";
-import { View, Image, Text, TouchableOpacity } from "react-native";
+import { I18nManager, Image, Text, TouchableOpacity, View } from "react-native";
 
 import CustomeBackHeader from "../components/Header/CustomBackHeader";
 
 import baladieh from "../assets/images/baladieh.jpeg";
-import { useSelector } from "react-redux";
 
 const OnBoarding = ({ navigation }) => {
   useEffect(() => {
