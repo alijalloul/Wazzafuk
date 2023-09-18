@@ -1,8 +1,6 @@
-import { I18nManager } from "react-native";
-import React, { useState, memo, useEffect } from "react";
-import { View, TouchableOpacity, Text, ScrollView, Image } from "react-native";
+import React, { memo, useState } from "react";
+import { I18nManager, Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
 
 import Modal from "react-native-modal";
 
@@ -10,9 +8,9 @@ import RenderTextInput from "./RenderTextInput";
 
 import check from "../assets/images/checkWhite.png";
 
-import SingleSelectorModal from "./SingleSelectorModal";
-import SkillModal from "./PostJob/SkillModal";
 import { fetchPosts, fetchPostsByFilter } from "../redux/JobPost";
+import SkillModal from "./PostJob/SkillModal";
+import SingleSelectorModal from "./SingleSelectorModal";
 
 const translateText = (englishText, arabicText) => {
   return I18nManager.isRTL ? arabicText : englishText;

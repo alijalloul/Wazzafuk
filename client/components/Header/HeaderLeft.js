@@ -1,6 +1,5 @@
-import { I18nManager } from "react-native";
 import React from "react";
-import { Image, TouchableOpacity, View, Text } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 
 import Filter from "../../assets/images/filter.png";
 

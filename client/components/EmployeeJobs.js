@@ -1,8 +1,7 @@
-import { I18nManager } from "react-native";
-import React from "react";
-import { View, TouchableOpacity, Text } from "react-native";
-import { useSelector } from "react-redux";
 import moment from "moment";
+import React from "react";
+import { I18nManager, Text, TouchableOpacity, View } from "react-native";
+import { useSelector } from "react-redux";
 
 const translateText = (englishText, arabicText) => {
   return I18nManager.isRTL ? arabicText : englishText;

@@ -1,8 +1,7 @@
-import { I18nManager } from "react-native";
-import React from "react";
-import { TouchableOpacity, Text, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import React from "react";
+import { Alert, I18nManager, TouchableOpacity } from "react-native";
 
 const translateText = (englishText, arabicText) => {
   return I18nManager.isRTL ? arabicText : englishText;

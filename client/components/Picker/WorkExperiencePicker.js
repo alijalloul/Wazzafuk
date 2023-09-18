@@ -1,11 +1,9 @@
-import { I18nManager } from "react-native";
-import React, { useState, memo } from "react";
-import { View, TouchableOpacity, Text, ScrollView, Image } from "react-native";
+import React, { memo, useState } from "react";
+import { I18nManager, Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Modal from "react-native-modal";
-import { useSelector } from "react-redux";
 
-import SingleSelectorModal from "../SingleSelectorModal";
 import RenderTextInput from "../RenderTextInput";
+import SingleSelectorModal from "../SingleSelectorModal";
 
 import pen from "../../assets/images/pen.png";
 import trash from "../../assets/images/trash.png";

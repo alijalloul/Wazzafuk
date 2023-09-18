@@ -1,22 +1,20 @@
-import { I18nManager } from "react-native";
-import React, { useState, memo } from "react";
-import { View, TouchableOpacity, Text, ScrollView, Image } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
+import React, { memo, useState } from "react";
+import { I18nManager, Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 
 import Modal from "react-native-modal";
 
 import RenderTextInput from "../RenderTextInput";
 
+import check from "../../assets/images/checkWhite.png";
 import pen from "../../assets/images/pen.png";
 import trash from "../../assets/images/trash.png";
-import check from "../../assets/images/checkWhite.png";
 
 import SingleSelectorModal from "../SingleSelectorModal";
 import SkillModal from "./SkillModal";
 
-import { deletePost, createJobPost, updateJobPost } from "../../redux/User";
-import { fetchEmployeesByJobId } from "../../redux/User";
+import { createJobPost, deletePost, fetchEmployeesByJobId, updateJobPost } from "../../redux/User";
 
 const translateText = (englishText, arabicText) => {
   return I18nManager.isRTL ? arabicText : englishText;

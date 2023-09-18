@@ -1,10 +1,8 @@
-import { I18nManager } from "react-native";
-import React, { useRef, useState, useEffect } from "react";
-import { View, TouchableOpacity, Text, Image, TextInput } from "react-native";
-import { useSelector } from "react-redux";
+import React, { useEffect, useRef, useState } from "react";
+import { I18nManager, Image, Text, TextInput, TouchableOpacity, View } from "react-native";
 
-import pen from "../../assets/images/pen.png";
 import check from "../../assets/images/check.png";
+import pen from "../../assets/images/pen.png";
 
 const translateText = (englishText, arabicText) => {
   return I18nManager.isRTL ? arabicText : englishText;

@@ -1,8 +1,6 @@
-import { I18nManager } from "react-native";
-import React, { useState, memo, useEffect } from "react";
-import { View, Image, Text, TouchableOpacity, TextInput, FlatList, ScrollView } from "react-native";
+import React, { memo, useState } from "react";
+import { Image, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Modal from "react-native-modal";
-import { useSelector } from "react-redux";
 
 import downVector from "../../assets/images/downVector.png";
 

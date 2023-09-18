@@ -1,7 +1,5 @@
-import { I18nManager } from "react-native";
 import React, { memo } from "react";
-import { View, Text, TextInput, Image } from "react-native";
-import { useSelector } from "react-redux";
+import { Image, Text, TextInput, View } from "react-native";
 
 const RenderTextInput = ({ isMultiline, isNumpad, title, icon, value, setValue, placeholder, isError, setIsError, errorMessage, isArabic }) => {
   return (

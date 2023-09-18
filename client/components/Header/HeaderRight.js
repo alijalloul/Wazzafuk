@@ -1,5 +1,4 @@
 import { useNavigation } from "@react-navigation/native";
-import { I18nManager } from "react-native";
 import React from "react";
 import { Image, TouchableOpacity } from "react-native";
 import { useSelector } from "react-redux";

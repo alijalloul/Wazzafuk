@@ -1,17 +1,15 @@
-import { I18nManager } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
-import { View, Image, Text, TouchableOpacity, Dimensions, Keyboard, Alert } from "react-native";
-import { useNavigation, useIsFocused, useRoute, getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { useBackHandler } from "@react-native-community/hooks";
-import { useSelector } from "react-redux";
+import { getFocusedRouteNameFromRoute, useIsFocused, useNavigation, useRoute } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
+import { Alert, Dimensions, I18nManager, Image, Keyboard, Text, TouchableOpacity, View, BackHandler } from "react-native";
 
-import homeOrange from "../assets/images/homeOrange.png";
-import graphOrange from "../assets/images/graphOrange.png";
-import userOrange from "../assets/images/userOrange.png";
-import homeWhite from "../assets/images/homeWhite.png";
-import graphWhite from "../assets/images/graphWhite.png";
-import userWhite from "../assets/images/userWhite.png";
 import { MotiView, useDynamicAnimation } from "moti";
+import graphOrange from "../assets/images/graphOrange.png";
+import graphWhite from "../assets/images/graphWhite.png";
+import homeOrange from "../assets/images/homeOrange.png";
+import homeWhite from "../assets/images/homeWhite.png";
+import userOrange from "../assets/images/userOrange.png";
+import userWhite from "../assets/images/userWhite.png";
 
 const translateText = (englishText, arabicText) => {
   return I18nManager.isRTL ? arabicText : englishText;
@@ -47,7 +45,7 @@ const Navbar = ({ navigation }) => {
 
   const handleBackPress = () => {
     if (focusedRouteName === "profile" && isFocused) {
-      Alert.alert(translateText("Confirm Navigation", "تأكيد الملاحة"), translateText("Do you want to leave this screen without saving?", "هل ترغب في مغادرة هذا الشاشة دون حفظ؟"), [
+      Alert.alert(translateText("Confirm Exit", "تأكيد الخروج"), translateText("Do you want to exit the app without saving?", "هل ترغب في مغادرة الاب دون حفظ؟"), [
         {
           text: translateText("No", "لا"),
           style: "cancel",
@@ -55,7 +53,13 @@ const Navbar = ({ navigation }) => {
         {
           text: translateText("Yes", "نعم"),
           onPress: () => {
-            navigation.goBack(); // Navigate back when confirmed
+            if (Platform.OS === "android") {
+              // For Android, use react-native-exit-app to exit the app
+              BackHandler.exitApp(); // You may need to import exitApp from 'react-native-exit-app'
+            } else {
+              // For iOS, you can use navigation.goBack()
+              BackHandler.exitApp(); // You may need to import exitApp from 'react-native-exit-app'
+            }
           },
         },
       ]);
