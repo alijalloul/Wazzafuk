@@ -4,11 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 
 import mail from "../assets/images/mail.png";
 import { signup } from "../redux/User";
+import Spinner from "../components/Spinner";
 
 const Verification = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.user.userInfo);
+  const pending = useSelector((state) => state.user.pending);
 
   const [OTP, setOTP] = useState("");
   const otpTextInputRed = useRef(null);
@@ -28,8 +30,12 @@ const Verification = ({ navigation }) => {
   };
 
   return (
-    <KeyboardAvoidingView behavior="height" enabled className="bg-white flex-1">
-      <ScrollView contentContainerStyle={{ flexGrow: 1, alignItems: "center", justifyContent: "center" }}>
+    <View className="flex-1 justify-center bg-white">
+      <View className={`${pending ? "z-30 absolute w-full h-full justify-center items-center" : "hidden"}`}>
+        <Spinner />
+      </View>
+      <View className={`${pending ? " bg-white z-20 absolute h-full w-full opacity-50 " : "hidden"}`}></View>
+      <ScrollView className="bg-white flex-1" contentContainerStyle={{ alignItems: "center", justifyContent: "center" }}>
         <View className={`w-full aspect-[9/7]`}>
           <Image source={mail} style={{ resizeMode: "cover" }} className="w-full h-full" />
         </View>
@@ -99,7 +105,7 @@ const Verification = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </ScrollView>
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 
