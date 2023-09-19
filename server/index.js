@@ -69,16 +69,36 @@ app.post("/send-otp", async (req, res) => {
 
     const verification = await client.verify.v2.services(verifySid).verifications.create({
       to: `+961${phoneNumber}`,
-      channel: "sms",
+      channel: "whatsapp",
     });
     console.log(verification);
 
-    res.status(200).json({ verification: verification });
+    res.status(200).json();
   } catch (error) {
     console.log("Error from verification backend: ", error);
     res.status(500).json({ message: error });
   }
 });
+
+app.post("/resend-otp", async (req, res) => {
+  console.log("re send verification code");
+
+  const { phoneNumber } = req.body;
+
+  try {
+    const verification = await client.verify.v2.services(verifySid).verifications.create({
+      to: `+961${phoneNumber}`,
+      channel: "whatsapp",
+    });
+    console.log(verification);
+
+    res.status(200).json();
+  } catch (error) {
+    console.log("Error from verification backend: ", error);
+    res.status(500).json({ message: error });
+  }
+});
+
 app.post("/users/signup", async (req, res) => {
   console.log("signup user");
   const { name, telephone, password, pushToken, otp } = req.body;

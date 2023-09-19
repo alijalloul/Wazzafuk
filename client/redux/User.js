@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createSlice } from "@reduxjs/toolkit";
 
-const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || "http://192.168.0.2:5000";
+const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || "http://192.168.1.3:5000";
 
 const userSlice = createSlice({
   name: "user",
@@ -32,6 +32,9 @@ const userSlice = createSlice({
     logoutSuccess: (state) => {
       state.pending = false;
       state.userInfo = null;
+    },
+    sendOtpSuccess: (state) => {
+      state.pending = false;
     },
     createSuccess: (state, action) => {
       state.pending = false;
@@ -170,7 +173,7 @@ export const deletePost = async (selectedPostId, dispatch) => {
   }
 };
 
-export const checkforsignuperrors = async (user, dispatch) => {
+export const sendotp = async (phoneNumber, dispatch) => {
   dispatch(userSlice.actions.startAPI());
 
   try {
@@ -182,22 +185,28 @@ export const checkforsignuperrors = async (user, dispatch) => {
       body: JSON.stringify({ phoneNumber: phoneNumber }),
     });
 
-    const body = await res.json();
+    if (res.status !== 200) {
+      const data = await res.json();
 
-    console.log(body);
+      dispatch(userSlice.actions.errorAPI());
 
-    navigation.navigate("verification");
+      return data.message;
+    }
+
+    dispatch(userSlice.actions.sendOtpSuccess());
   } catch (error) {
     dispatch(userSlice.actions.errorAPI());
     console.log("error: ", error);
   }
 };
 
-export const sendotp = async (phoneNumber, navigation, dispatch) => {
+export const resendotp = async (phoneNumber, dispatch) => {
   dispatch(userSlice.actions.startAPI());
 
+  console.log(phoneNumber);
+
   try {
-    const res = await fetch(`${BASE_URL}/send-otp`, {
+    const res = await fetch(`${BASE_URL}/resend-otp`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -205,15 +214,15 @@ export const sendotp = async (phoneNumber, navigation, dispatch) => {
       body: JSON.stringify({ phoneNumber: phoneNumber }),
     });
 
-    const data = await res.json();
-
     if (res.status !== 200) {
+      const data = await res.json();
+
       dispatch(userSlice.actions.errorAPI());
 
       return data.message;
     }
 
-    navigation.navigate("verification");
+    dispatch(userSlice.actions.sendOtpSuccess());
   } catch (error) {
     dispatch(userSlice.actions.errorAPI());
     console.log("error: ", error);
@@ -239,9 +248,9 @@ export const signup = async (userInfo, navigation, dispatch) => {
     dispatch(userSlice.actions.loginSuccess(data));
 
     await AsyncStorage.setItem("profile", JSON.stringify({ ...data }));
-    await AsyncStorage.setItem("screenName", "verification");
+    await AsyncStorage.setItem("screenName", "choose");
 
-    navigation.navigate("CV");
+    navigation.navigate("choose");
   } catch (error) {
     dispatch(userSlice.actions.errorAPI());
     console.log("error: ", error);

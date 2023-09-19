@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState } from "react";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, Text, TouchableOpacity, View, I18nManager } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 import CustomeBackHeader from "../components/Header/CustomBackHeader";
@@ -12,7 +12,7 @@ const Education = ({ navigation }) => {
   const userInfo = useSelector((state) => state.user.userInfo);
 
   const translateText = (text, arabicText) => {
-    return I18nOManager.isRTL ? arabicText : text;
+    return I18nManager.isRTL ? arabicText : text;
   };
 
   const [education, setEducation] = useState(

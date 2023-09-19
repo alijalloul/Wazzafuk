@@ -1,17 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
-import { I18nManager, Image, Keyboard, KeyboardAvoidingView, ScrollView, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import { I18nManager, Image, Keyboard, ScrollView, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 import mail from "../assets/images/mail.png";
-import { signup } from "../redux/User";
 import Spinner from "../components/Spinner";
+import { resendotp, signup } from "../redux/User";
 
 const Verification = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.user.userInfo);
   const pending = useSelector((state) => state.user.pending);
+  const phoneNumber = useSelector((state) => state.user.userInfo)?.telephone;
 
+  console.log("pending: ", pending);
   const [OTP, setOTP] = useState("");
   const otpTextInputRed = useRef(null);
 
@@ -45,7 +47,7 @@ const Verification = ({ navigation }) => {
 
           <View className="flex justify-center items-center mb-3">
             <Text className=" font-garamond text-[16px]">{translateText("Please enter the code sent to", "الرجاء إدخال الرمز المرسل إليه")}</Text>
-            <Text className=" font-garamond text-[#FE6F07] text-[16px]">76131445</Text>
+            <Text className=" font-garamond text-[#FE6F07] text-[16px]">{phoneNumber}</Text>
           </View>
 
           <TouchableOpacity
@@ -100,7 +102,12 @@ const Verification = ({ navigation }) => {
           >
             <Text className="text-white font-garamond-bold text-xl">{translateText("Verify", "تحقق")}</Text>
           </TouchableOpacity>
-          <TouchableOpacity className="bg-white w-full py-3 rounded-3xl flex justify-center items-center">
+          <TouchableOpacity
+            onPress={() => {
+              resendotp(phoneNumber, dispatch);
+            }}
+            className="bg-white w-full py-3 rounded-3xl flex justify-center items-center"
+          >
             <Text className="text-[#FE6F07] font-garamond-bold text-xl">{translateText("Resend Code", "إعادة إرسال الرمز")}</Text>
           </TouchableOpacity>
         </View>

@@ -59,7 +59,8 @@ const SignUp = ({ navigation }) => {
 
     if (!error) {
       await editUser({ ...userInfo, name: name, telephone: telephone, password: password }, null, null, dispatch);
-      const res = await sendotp(telephone, navigation, dispatch);
+      const res = await sendotp(telephone, dispatch);
+      navigation.navigate("verification");
 
       setTelephoneErrorMessage(res);
     }
