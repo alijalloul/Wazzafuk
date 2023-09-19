@@ -173,7 +173,7 @@ export const deletePost = async (selectedPostId, dispatch) => {
   }
 };
 
-export const sendotp = async (phoneNumber, dispatch) => {
+export const sendotp = async (phoneNumber, navigation, dispatch) => {
   dispatch(userSlice.actions.startAPI());
 
   try {
@@ -194,6 +194,7 @@ export const sendotp = async (phoneNumber, dispatch) => {
     }
 
     dispatch(userSlice.actions.sendOtpSuccess());
+    navigation.navigate("verification");
   } catch (error) {
     dispatch(userSlice.actions.errorAPI());
     console.log("error: ", error);

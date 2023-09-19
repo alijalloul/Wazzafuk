@@ -59,10 +59,12 @@ const SignUp = ({ navigation }) => {
 
     if (!error) {
       await editUser({ ...userInfo, name: name, telephone: telephone, password: password }, null, null, dispatch);
-      const res = await sendotp(telephone, dispatch);
-      navigation.navigate("verification");
+      const res = await sendotp(telephone, navigation, dispatch);
 
-      setTelephoneErrorMessage(res);
+      if (res) {
+        setTelephoneErrorMessage(translateText("This phone number is already in use, try loggin in", "رقم الهاتف مستعمل"));
+        setTelephoneError(true);
+      }
     }
   };
 

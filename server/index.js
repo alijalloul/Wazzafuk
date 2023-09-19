@@ -60,7 +60,8 @@ app.post("/send-otp", async (req, res) => {
   const { phoneNumber } = req.body;
 
   try {
-    const existingUser = await userDB.findOne({ phoneNumber });
+    const existingUser = await userDB.findOne({ telephone: phoneNumber });
+    console.log(existingUser);
 
     if (existingUser) {
       console.log("same User");

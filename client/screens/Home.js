@@ -88,7 +88,7 @@ const Home = ({ navigation }) => {
 
       <JobPosts navigation={navigation} />
 
-      <Pagination fetchType={translateText("posts", "المشاركات")} page={page} numberOfPages={numberOfPages} />
+      <Pagination fetchType={"posts"} page={page} numberOfPages={numberOfPages} />
 
       <FilterModal bottomSheetVisible={bottomSheetVisible} setBottomSheetVisible={setBottomSheetVisible} navigation={navigation} page={page} setNumberOfFilters={setNumberOfFilters} />
     </ScrollView>
